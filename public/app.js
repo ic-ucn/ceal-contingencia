@@ -59,85 +59,104 @@
     {
       id: "faq-asistencia-1",
       category: "asistencia",
-      question: "¿Se tomará asistencia durante la contingencia?",
-      answer: "No. Mientras dure la contingencia, las actividades académicas no tendrán registro de asistencia. Si detectas un registro o presión asociada, repórtalo para respaldo colectivo.",
+      question: "¿El paro sigue vigente para el miércoles 22 de abril?",
+      answer: "Sí. El acta del pleno deja explícito que el paro es válido para el miércoles 22 y que luego debe definirse la forma de revalidación.",
       status: "confirmed",
-      updated: "Actualizado hoy · 10:15"
+      updated: "Acta pleno 21 abr",
+      source: "Acta Pleno 21 de abril"
     },
     {
       id: "faq-evaluaciones-1",
       category: "evaluaciones",
-      question: "¿Habrá evaluaciones esta semana?",
-      answer: "Está en revisión. El CEAL consolidará la información oficial y la publicará en esta sección apenas exista confirmación.",
+      question: "¿Se recalendarizaron las evaluaciones?",
+      answer: "En el pleno se informó que la universidad rechazó inicialmente recalendarizar evaluaciones y luego autorizó la recalendarización solo para la jornada del martes 21. No se informaron garantías explícitas para los días siguientes si continuaba la paralización.",
       status: "review",
-      updated: "Actualizado hoy · 10:15"
+      updated: "Acta pleno 21 abr",
+      source: "Acta Pleno 21 de abril"
     },
     {
       id: "faq-evaluaciones-2",
       category: "evaluaciones",
-      question: "¿Qué pasa si ya tengo una evaluación programada?",
-      answer: "Guarda el respaldo de la programación y revisa las actualizaciones oficiales. Si recibes instrucciones contradictorias, envía un reporte con captura o documento adjunto.",
-      status: "confirmed",
-      updated: "Actualizado hoy · 10:15"
+      question: "¿Qué hago si un docente mantiene una evaluación sin claridad oficial?",
+      answer: "Guarda la instrucción, la fecha y cualquier respaldo. En el pleno se levantó expresamente la tensión por recalendarizaciones y por posibles presiones a estudiantes movilizados, por lo que conviene reportarlo con evidencia.",
+      status: "review",
+      updated: "Acta pleno 21 abr",
+      source: "Acta Pleno 21 de abril"
     },
     {
       id: "faq-pleno-1",
       category: "pleno",
-      question: "¿Dónde puedo ver los acuerdos del pleno?",
-      answer: "Los acuerdos se centralizan en la pestaña Acuerdos. Cada publicación incluye estado, fecha y próximos pasos para evitar información dispersa.",
+      question: "¿Qué se comprometió la universidad en seguridad?",
+      answer: "Federación informó que el Director de Servicios, Cristian Zuleta, se comprometió a actualizar el Protocolo de Emergencias con indicaciones para amenazas como tiroteo a más tardar el lunes 27 de abril, y a presentar un Plan de Seguridad Integral durante la semana del 25 de mayo.",
       status: "confirmed",
-      updated: "Actualizado hoy · 10:15"
+      updated: "Acta pleno 21 abr",
+      source: "Acta Pleno 21 de abril"
     },
     {
       id: "faq-pleno-2",
       category: "pleno",
-      question: "¿Habrá cambio de fechas en el calendario académico?",
-      answer: "La información se marcará como confirmada solo cuando exista respaldo oficial. Mientras tanto, se mantiene en revisión.",
+      question: "¿Cuándo son la pintatón y la marcha del miércoles 22?",
+      answer: "El acta indica pintatón de lienzos el miércoles 22 a las 12:00 en el recreo FEUCN y marcha convocada a las 15:00 en la pérgola de avenida Brasil. La ruta no se difundiría públicamente por seguridad.",
       status: "confirmed",
-      updated: "Actualizado hoy · 10:15"
+      updated: "Acta pleno 21 abr",
+      source: "Acta Pleno 21 de abril"
     },
     {
       id: "faq-contacto-1",
       category: "contacto",
-      question: "¿A quién contacto si tengo un caso urgente?",
-      answer: "Envía un reporte con la opción de seguimiento activada o una nueva duda desde esta plataforma. Si tu caso requiere respuesta inmediata, usa además los canales oficiales del CEAL.",
-      status: "none",
-      updated: "Pendiente de respuesta oficial"
+      question: "¿Por dónde se bajan acuerdos y consultas de base?",
+      answer: "El pleno reafirma que los alcances de las bases deben levantarse a través de los centros de estudiantes y que los acuerdos deben difundirse a las carreras para evitar desinformación.",
+      status: "confirmed",
+      updated: "Acta pleno 21 abr",
+      source: "Acta Pleno 21 de abril"
     },
     {
       id: "faq-asistencia-2",
       category: "asistencia",
-      question: "¿Las clases se recuperarán?",
-      answer: "Está en revisión. Cuando se confirme un plan de recuperación, se informará junto con los acuerdos correspondientes.",
+      question: "¿Hay garantías para los días siguientes si sigue la paralización?",
+      answer: "No. En el pleno se transparentó que, si continuaba la paralización de actividades, no existían garantías explícitas para los otros días respecto de recalendarizaciones y resguardo académico.",
       status: "review",
-      updated: "Actualizado hoy · 10:15"
+      updated: "Acta pleno 21 abr",
+      source: "Acta Pleno 21 de abril"
     }
   ];
 
   const AGREEMENTS = [
     {
       id: "agr-1",
-      title: "Asistencia durante la contingencia",
-      summary: "Centralizar los casos de asistencia y respaldos para evitar registros inconsistentes durante el periodo informado.",
+      title: "Actualización del protocolo de emergencias",
+      summary: "Dirección de Servicios se comprometió a actualizar el Protocolo de Emergencias con indicaciones para amenazas como tiroteo a más tardar el lunes 27 de abril.",
       status: "confirmed",
-      date: "Hoy · 10:15",
-      area: "Académico"
+      date: "21 abr 2026",
+      area: "Seguridad",
+      source: "Acta Pleno 21 de abril"
     },
     {
       id: "agr-2",
-      title: "Evaluaciones y recalendarización",
-      summary: "Levantamiento de evaluaciones programadas, evidencia de instrucciones contradictorias y seguimiento de respuestas oficiales.",
+      title: "Plan de seguridad integral",
+      summary: "Se informó el compromiso de presentar durante la semana del 25 de mayo una propuesta de plan de seguridad integral con medidas como registro de ingreso al campus.",
       status: "review",
-      date: "Hoy · 09:40",
-      area: "Evaluaciones"
+      date: "Semana 25 may 2026",
+      area: "Seguridad",
+      source: "Acta Pleno 21 de abril"
     },
     {
       id: "agr-3",
-      title: "Canal único de reportes anónimos",
-      summary: "Uso de un formulario unificado para sistematizar incidencias y dudas sin solicitar datos personales.",
+      title: "Recalendarización de evaluaciones",
+      summary: "La recalendarización fue autorizada para la jornada del martes 21 tras presión estudiantil, pero el pleno dejó explícito que no había garantías para los días siguientes si seguía la paralización.",
+      status: "review",
+      date: "21 abr 2026",
+      area: "Evaluaciones",
+      source: "Acta Pleno 21 de abril"
+    },
+    {
+      id: "agr-4",
+      title: "Paro y movilización del 22 de abril",
+      summary: "El pleno reafirma que el paro es válido para el miércoles 22. Además, se convoca pintatón a las 12:00 en el recreo FEUCN y marcha a las 15:00 en la pérgola de avenida Brasil.",
       status: "confirmed",
-      date: "Ayer · 18:30",
-      area: "Gestión CEAL"
+      date: "22 abr 2026",
+      area: "Movilización",
+      source: "Acta Pleno 21 de abril"
     }
   ];
 
@@ -259,7 +278,7 @@
         <section class="hero-grid" aria-labelledby="faq-title">
           <div>
             <p class="eyebrow">Centro oficial CEAL</p>
-            <h1 id="faq-title">Preguntas frecuentes</h1>
+            <h1 id="faq-title">FAQ</h1>
             <p class="lead">Consulta respuestas y filtra por tema.</p>
             <div class="meta-row" aria-label="Estado de actualización">
               <span aria-hidden="true">◷</span><span>${escapeHTML(config.updateLabel)}</span><span class="dot"></span><span>${FAQS.length} respuestas cargadas</span>
@@ -294,7 +313,7 @@
 
         <section class="card faq-section-intro" aria-labelledby="faq-section-title">
           <div>
-            <h2 id="faq-section-title">Sección de preguntas frecuentes</h2>
+            <h2 id="faq-section-title">FAQ</h2>
             <p>Respuestas publicadas.</p>
           </div>
           <div class="meta-row">
@@ -363,7 +382,7 @@
         </button>
         <div id="answer-${faq.id}" class="faq-answer">
           <p>${escapeHTML(faq.answer)}</p>
-          <div class="meta-row"><span>${escapeHTML(faq.updated)}</span><span class="dot"></span><span>Categoría: ${escapeHTML(categoryLabel(faq.category))}</span></div>
+          <div class="meta-row"><span>${escapeHTML(faq.updated)}</span><span class="dot"></span><span>Categoría: ${escapeHTML(categoryLabel(faq.category))}</span>${faq.source ? `<span class="dot"></span><span>Fuente: ${escapeHTML(faq.source)}</span>` : ""}</div>
         </div>
       </article>`;
   }
@@ -501,7 +520,7 @@
   }
 
   function renderAgreements() {
-    const filters = ["todos", "Académico", "Evaluaciones", "Gestión CEAL"];
+    const filters = ["todos", "Seguridad", "Evaluaciones", "Movilización"];
     const agreements = state.agreementFilter === "todos"
       ? AGREEMENTS
       : AGREEMENTS.filter((item) => item.area === state.agreementFilter);
@@ -525,7 +544,7 @@
                 <header>
                   <div>
                     <h2>${escapeHTML(agreement.title)}</h2>
-                    <div class="meta-row"><span>${escapeHTML(agreement.area)}</span><span class="dot"></span><span>${escapeHTML(agreement.date)}</span></div>
+                    <div class="meta-row"><span>${escapeHTML(agreement.area)}</span><span class="dot"></span><span>${escapeHTML(agreement.date)}</span>${agreement.source ? `<span class="dot"></span><span>Fuente: ${escapeHTML(agreement.source)}</span>` : ""}</div>
                   </div>
                   ${statusBadge(agreement.status)}
                 </header>
@@ -1109,7 +1128,7 @@
 
   if ("serviceWorker" in navigator && window.location.protocol !== "file:") {
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("sw.js?v=12").catch(() => {});
+      navigator.serviceWorker.register("sw.js?v=13").catch(() => {});
     });
   }
 
