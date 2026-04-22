@@ -1,4 +1,4 @@
-/*
+﻿/*
   Configuracion editable sin recompilar.
 
   Modos soportados:
@@ -27,10 +27,11 @@ window.CEAL_CONFIG = {
     Completa estos campos para usar Pages + Supabase y eliminar el backend local.
     Con supabaseUrl + supabaseAnonKey, la app escribe directo en Postgres/Storage.
   */
-  supabaseUrl: "",
-  supabaseAnonKey: "",
+  supabaseUrl: "https://phfosnvqqorcbilcojfz.supabase.co",
+  supabaseAnonKey: "sb_publishable_EMPr6rvxY27jMo1ruzjQwA_4YamZpP4",
   supabaseBucket: "ceal-evidence",
   supabaseQuestionsTable: "questions",
   supabaseReportsTable: "reports",
   supabaseEvidenceTable: "report_evidence"
 };
+
