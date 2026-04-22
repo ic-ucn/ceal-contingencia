@@ -109,6 +109,34 @@ window.CEAL_CONFIG = {
 
 Con eso la app ya puede recibir preguntas, reportes y adjuntos sin backend Node propio.
 
+## Scripts de activación rápida
+
+### Configurar Pages + Supabase
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\configure-supabase-pages.ps1 `
+  -SupabaseUrl "https://TU-PROYECTO.supabase.co" `
+  -SupabaseAnonKey "TU_ANON_KEY"
+```
+
+Si quieres que además haga commit y push:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\configure-supabase-pages.ps1 `
+  -SupabaseUrl "https://TU-PROYECTO.supabase.co" `
+  -SupabaseAnonKey "TU_ANON_KEY" `
+  -CommitAndPush
+```
+
+### Smoke test
+
+```bash
+npm run smoke:local
+npm run smoke:public
+```
+
+El smoke test valida homepage local, `api/health` local y, opcionalmente, la homepage pública.
+
 ## Despliegue
 
 ### Opción A: Node completo
