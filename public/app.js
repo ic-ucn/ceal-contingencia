@@ -24,6 +24,7 @@
   const ROUTES = new Set(["inicio", "reportar", "acuerdos"]);
 
   const FAQ_CATEGORIES = [
+    { id: "todas", label: "Todas", icon: "=" },
     { id: "asistencia", label: "Asistencia", icon: "▣" },
     { id: "evaluaciones", label: "Evaluaciones", icon: "▤" },
     { id: "pleno", label: "Pleno", icon: "◌" },
@@ -162,7 +163,7 @@
 
   const state = {
     route: getRouteFromHash(),
-    faqFilter: "asistencia",
+    faqFilter: "todas",
     faqQuery: "",
     openFaqId: "faq-asistencia-1",
     agreementFilter: "todos",
@@ -364,7 +365,7 @@
   function getFilteredFaqs() {
     const query = normalizeText(state.faqQuery);
     return FAQS.filter((faq) => {
-      const matchesCategory = faq.category === state.faqFilter;
+      const matchesCategory = state.faqFilter === "todas" || faq.category === state.faqFilter;
       const haystack = normalizeText(`${faq.question} ${faq.answer} ${faq.updated}`);
       const matchesQuery = !query || haystack.includes(query);
       return matchesCategory && matchesQuery;
@@ -875,7 +876,7 @@
         <label class="field-grid">
           <strong>Categoría</strong>
           <select class="select" id="questionCategory" required>
-            ${FAQ_CATEGORIES.map((category) => `<option value="${category.id}" ${category.id === state.faqFilter ? "selected" : ""}>${escapeHTML(category.label)}</option>`).join("")}
+            ${FAQ_CATEGORIES.filter((category) => category.id !== "todas").map((category) => `<option value="${category.id}" ${category.id === state.faqFilter ? "selected" : ""}>${escapeHTML(category.label)}</option>`).join("")}
           </select>
         </label>
         <label class="field-grid">
@@ -1032,7 +1033,9 @@
     const filter = target.closest?.("[data-faq-filter]");
     if (filter) {
       state.faqFilter = filter.dataset.faqFilter;
-      state.openFaqId = FAQS.find((faq) => faq.category === state.faqFilter)?.id || "";
+      state.openFaqId = state.faqFilter === "todas"
+        ? (FAQS[0]?.id || "")
+        : (FAQS.find((faq) => faq.category === state.faqFilter)?.id || "");
       render();
       return;
     }
@@ -1128,7 +1131,7 @@
 
   if ("serviceWorker" in navigator && window.location.protocol !== "file:") {
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("sw.js?v=13").catch(() => {});
+      navigator.serviceWorker.register("sw.js?v=14").catch(() => {});
     });
   }
 
