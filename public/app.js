@@ -255,6 +255,15 @@
       source: "Acta Pleno 21 de abril"
     },
     {
+      id: "faq-pleno-3",
+      category: "pleno",
+      question: "¿Cuál es la finalidad del paro y hay petitorio redactado?",
+      answer: "Con lo informado en los plenos, el paro busca presionar por garantías reales de seguridad, actualización y cumplimiento de protocolos, y resguardo académico frente a la contingencia. También se ha usado para evitar la desarticulación de la movilización mientras siguen las negociaciones. Hasta ahora no está incorporado en la app un petitorio único y cerrado como documento rector; lo que sí tenemos son actas, acuerdos y referencias a petitorios o propuestas discutidas en pleno.",
+      status: "review",
+      updated: "Plenos 20 y 21 abr",
+      source: "Acta Pleno 21 de abril + Pleno extraordinario 20 abril"
+    },
+    {
       id: "faq-contacto-1",
       category: "contacto",
       question: "¿Por dónde se bajan acuerdos y consultas de base?",
