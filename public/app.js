@@ -226,7 +226,7 @@
     {
       id: "faq-evaluaciones-2",
       category: "evaluaciones",
-      question: "¿Qué hago si un docente mantiene una evaluación sin claridad oficial?",
+      question: "¿Qué hago si un docente mantiene una evaluación sin claridad pública?",
       answer: "Guarda la instrucción, la fecha y cualquier respaldo. En el pleno se levantó expresamente la tensión por recalendarizaciones y por posibles presiones a estudiantes movilizados, por lo que conviene reportarlo con evidencia.",
       status: "review",
       updated: "Acta pleno 21 abr",
@@ -383,7 +383,7 @@
     const map = {
       confirmed: { label: "Confirmado", className: "status-confirmed", icon: "OK" },
       review: { label: "En revision", className: "status-review", icon: "REV" },
-      none: { label: "Sin respuesta oficial", className: "status-none", icon: "?" }
+      none: { label: "Sin respuesta publicada", className: "status-none", icon: "?" }
     };
     const item = map[status] || map.review;
     return `<span class="status-badge ${item.className}"><span aria-hidden="true">${item.icon}</span>${item.label}</span>`;
@@ -455,8 +455,8 @@
         <section class="hero-grid" aria-labelledby="faq-title">
           <div class="hero-main">
             <div class="hero-copy">
-              <p class="eyebrow">Centro oficial CEAL</p>
-              <h1 id="faq-title">Estado oficial hoy</h1>
+              <p class="eyebrow">Centro CEAL</p>
+              <h1 id="faq-title">Estado hoy</h1>
               <p class="lead">Paro vigente para el miércoles 22 de abril. Aquí se concentra el estado actual, los hitos del día y el acceso a respuestas y acuerdos.</p>
               <div class="status-inline-row">
                 <span class="status-badge status-review"><span aria-hidden="true">REV</span>Paro vigente hoy</span>
@@ -477,7 +477,7 @@
 
           <aside class="glass-card status-panel" aria-label="Estado de la contingencia">
             <div class="big-icon" aria-hidden="true">CEAL</div>
-            <h2>Información oficial</h2>
+            <h2>Información base</h2>
             <p>Estado vigente, acuerdos y canales base.</p>
             <div class="kpi-grid" aria-label="Resumen">
               <div class="kpi"><strong>${FAQS.length}</strong><span>FAQ</span></div>
@@ -487,7 +487,7 @@
           </aside>
         </section>
 
-        <section class="status-dashboard" aria-label="Resumen oficial">
+        <section class="status-dashboard" aria-label="Resumen de contingencia">
           <article class="card status-highlight">
             <div class="status-highlight-head">
               <div>
@@ -556,7 +556,7 @@
               <ul class="help-list">
                 <li><span class="bullet">OK</span><span><strong>Confirmado:</strong> con respaldo.</span></li>
                 <li><span class="bullet">REV</span><span><strong>En revision:</strong> pendiente de validacion.</span></li>
-                <li><span class="bullet">?</span><span><strong>Sin respuesta:</strong> sin definición oficial.</span></li>
+                <li><span class="bullet">?</span><span><strong>Sin respuesta:</strong> sin definición publicada.</span></li>
               </ul>
             </div>
           </aside>
@@ -576,7 +576,7 @@
             <div>
               <p class="section-kicker">Fuentes</p>
               <h2>Canales base</h2>
-              <p>Referencias oficiales y de coordinación.</p>
+              <p>Referencias y canales de coordinación.</p>
             </div>
           </div>
           <div class="sources-grid">
@@ -1614,7 +1614,7 @@
 
   if ("serviceWorker" in navigator && window.location.protocol !== "file:") {
     window.addEventListener("load", () => {
-        navigator.serviceWorker.register("sw.js?v=27").catch(() => {});
+        navigator.serviceWorker.register("sw.js?v=28").catch(() => {});
       });
   }
 
