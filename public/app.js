@@ -403,6 +403,14 @@
       </svg>`;
   }
 
+  function iconShield() {
+    return `
+      <svg class="shield-svg" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 3.5 5.8 6v5.1c0 4.3 2.6 8.2 6.2 9.4 3.6-1.2 6.2-5.1 6.2-9.4V6L12 3.5Z"></path>
+        <path d="m9.7 12.2 1.6 1.6 3.3-3.5"></path>
+      </svg>`;
+  }
+
   function render() {
     state.route = getRouteFromHash();
 
@@ -765,7 +773,7 @@
         <section class="report-grid">
           <form class="form-card" id="reportForm" novalidate>
             <div class="confidential-card">
-              <div class="shield" aria-hidden="true">OK</div>
+              <div class="shield" aria-hidden="true">${iconShield()}</div>
               <div>
                 <h3>Confidencial.</h3>
                 <p>Describe el hecho y adjunta respaldo si cuentas con él.</p>
@@ -1614,7 +1622,7 @@
 
   if ("serviceWorker" in navigator && window.location.protocol !== "file:") {
     window.addEventListener("load", () => {
-        navigator.serviceWorker.register("sw.js?v=28").catch(() => {});
+        navigator.serviceWorker.register("sw.js?v=29").catch(() => {});
       });
   }
 
