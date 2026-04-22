@@ -3,15 +3,18 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import crypto from "node:crypto";
+import { DatabaseSync } from "node:sqlite";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PUBLIC_DIR = path.join(__dirname, "public");
 const DATA_DIR = path.join(__dirname, "data");
 const UPLOAD_DIR = path.join(DATA_DIR, "uploads");
+const DB_PATH = path.join(DATA_DIR, "ceal.sqlite");
+const SCHEMA_PATH = path.join(__dirname, "db", "schema.sql");
 const PORT = Number(process.env.PORT || 3000);
 const ADMIN_TOKEN = process.env.CEAL_ADMIN_TOKEN || "";
-const MAX_BODY_BYTES = Number(process.env.MAX_BODY_BYTES || 15 * 1024 * 1024);
+const MAX_BODY_BYTES = Number(process.env.MAX_BODY_BYTES || 70 * 1024 * 1024);
 const MAX_FILE_BYTES = Number(process.env.MAX_FILE_BYTES || 10 * 1024 * 1024);
 
 const MIME = {
@@ -34,6 +37,7 @@ const MIME = {
 
 await fs.mkdir(DATA_DIR, { recursive: true });
 await fs.mkdir(UPLOAD_DIR, { recursive: true });
+const db = await initializeDatabase();
 
 const server = createServer(async (req, res) => {
   try {
@@ -47,7 +51,7 @@ const server = createServer(async (req, res) => {
     }
 
     if (url.pathname === "/api/health") {
-      sendJSON(res, 200, { ok: true, app: "ceal-contingencia-app", time: new Date().toISOString() });
+      sendJSON(res, 200, { ok: true, app: "ceal-contingencia-app", storage: "sqlite", dbPath: DB_PATH, time: new Date().toISOString() });
       return;
     }
 
@@ -70,7 +74,7 @@ const server = createServer(async (req, res) => {
         sendJSON(res, 401, { ok: false, error: "Admin token requerido." });
         return;
       }
-      const records = await readNDJSON(path.join(DATA_DIR, "reports.ndjson"));
+      const records = listReports();
       sendJSON(res, 200, { ok: true, count: records.length, records });
       return;
     }
@@ -80,7 +84,7 @@ const server = createServer(async (req, res) => {
         sendJSON(res, 401, { ok: false, error: "Admin token requerido." });
         return;
       }
-      const records = await readNDJSON(path.join(DATA_DIR, "questions.ndjson"));
+      const records = listQuestions();
       sendJSON(res, 200, { ok: true, count: records.length, records });
       return;
     }
@@ -149,6 +153,170 @@ function sendJSON(res, status, payload) {
   res.end(JSON.stringify(payload, null, 2));
 }
 
+async function initializeDatabase() {
+  const schema = await fs.readFile(SCHEMA_PATH, "utf8");
+  const instance = new DatabaseSync(DB_PATH);
+  instance.exec(schema);
+  await migrateLegacyData(instance);
+  return instance;
+}
+
+async function migrateLegacyData(instance) {
+  const legacyQuestions = await readNDJSON(path.join(DATA_DIR, "questions.ndjson"));
+  for (const record of legacyQuestions) {
+    saveQuestionRecord(instance, {
+      id: record.id,
+      createdAt: record.createdAt,
+      category: record.category,
+      categoryLabel: record.categoryLabel || "Contacto",
+      question: record.question,
+      source: record.source || "web",
+      status: record.status || "received",
+      storedIn: record.storedIn || "legacy"
+    });
+  }
+
+  const legacyReports = await readNDJSON(path.join(DATA_DIR, "reports.ndjson"));
+  for (const record of legacyReports) {
+    saveReportRecord(instance, {
+      id: record.id,
+      createdAt: record.createdAt,
+      problemType: record.problemType,
+      problemTypeLabel: record.problemTypeLabel,
+      curriculum: record.curriculum || null,
+      curriculumLabel: record.curriculumLabel || null,
+      subject: record.subject,
+      subjectKey: record.subjectKey || null,
+      subjectOther: record.subjectOther || null,
+      date: record.date,
+      description: record.description,
+      followUp: Boolean(record.followUp),
+      source: record.source || "web",
+      status: record.status || "received",
+      storedIn: record.storedIn || "legacy",
+      evidence: Array.isArray(record.evidence) ? record.evidence : []
+    });
+  }
+}
+
+function saveQuestionRecord(instance, record) {
+  instance.prepare(`
+    INSERT OR REPLACE INTO questions (
+      id, created_at, category, category_label, question, source, status, stored_in
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  `).run(
+    record.id,
+    record.createdAt,
+    record.category,
+    record.categoryLabel,
+    record.question,
+    record.source,
+    record.status,
+    record.storedIn || "db"
+  );
+}
+
+function saveReportRecord(instance, record) {
+  instance.prepare(`
+    INSERT OR REPLACE INTO reports (
+      id, created_at, problem_type, problem_type_label, curriculum, curriculum_label,
+      subject, subject_key, subject_other, incident_date, description, follow_up, source, status, stored_in
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `).run(
+    record.id,
+    record.createdAt,
+    record.problemType,
+    record.problemTypeLabel,
+    record.curriculum || null,
+    record.curriculumLabel || null,
+    record.subject,
+    record.subjectKey || null,
+    record.subjectOther || null,
+    record.date,
+    record.description,
+    record.followUp ? 1 : 0,
+    record.source,
+    record.status,
+    record.storedIn || "db"
+  );
+
+  instance.prepare("DELETE FROM report_evidence WHERE report_id = ?").run(record.id);
+  for (const evidence of record.evidence || []) {
+    instance.prepare(`
+      INSERT INTO report_evidence (
+        report_id, original_name, mime_type, size_bytes, stored, stored_path, reason
+      ) VALUES (?, ?, ?, ?, ?, ?, ?)
+    `).run(
+      record.id,
+      evidence.name,
+      evidence.type,
+      Number(evidence.size || 0),
+      evidence.stored ? 1 : 0,
+      evidence.path || null,
+      evidence.reason || null
+    );
+  }
+}
+
+function listQuestions() {
+  return db.prepare(`
+    SELECT id, created_at, category, category_label, question, source, status, stored_in
+    FROM questions
+    ORDER BY created_at DESC
+  `).all().map((row) => ({
+    id: row.id,
+    createdAt: row.created_at,
+    category: row.category,
+    categoryLabel: row.category_label,
+    question: row.question,
+    source: row.source,
+    status: row.status,
+    storedIn: row.stored_in
+  }));
+}
+
+function listReports() {
+  const evidenceStatement = db.prepare(`
+    SELECT original_name, mime_type, size_bytes, stored, stored_path, reason, created_at
+    FROM report_evidence
+    WHERE report_id = ?
+    ORDER BY id ASC
+  `);
+
+  return db.prepare(`
+    SELECT id, created_at, problem_type, problem_type_label, curriculum, curriculum_label,
+           subject, subject_key, subject_other, incident_date, description, follow_up,
+           source, status, stored_in
+    FROM reports
+    ORDER BY created_at DESC
+  `).all().map((row) => ({
+    id: row.id,
+    createdAt: row.created_at,
+    problemType: row.problem_type,
+    problemTypeLabel: row.problem_type_label,
+    curriculum: row.curriculum,
+    curriculumLabel: row.curriculum_label,
+    subject: row.subject,
+    subjectKey: row.subject_key,
+    subjectOther: row.subject_other,
+    date: row.incident_date,
+    description: row.description,
+    followUp: Boolean(row.follow_up),
+    source: row.source,
+    status: row.status,
+    storedIn: row.stored_in,
+    evidence: evidenceStatement.all(row.id).map((item) => ({
+      name: item.original_name,
+      type: item.mime_type,
+      size: item.size_bytes,
+      stored: Boolean(item.stored),
+      path: item.stored_path,
+      reason: item.reason,
+      createdAt: item.created_at
+    }))
+  }));
+}
+
 function readJSONBody(req) {
   return new Promise((resolve, reject) => {
     const chunks = [];
@@ -198,16 +366,21 @@ async function createReport(payload) {
     createdAt,
     problemType: String(payload.problemType || ""),
     problemTypeLabel: String(payload.problemTypeLabel || ""),
+    curriculum: String(payload.curriculum || ""),
+    curriculumLabel: String(payload.curriculumLabel || ""),
     subject: String(payload.subject || "").trim(),
+    subjectKey: String(payload.subjectKey || ""),
+    subjectOther: String(payload.subjectOther || "").trim(),
     date: String(payload.date || ""),
     description: String(payload.description || "").trim(),
     followUp: Boolean(payload.followUp),
     evidence,
     source: String(payload.source || "web"),
-    status: "received"
+    status: "received",
+    storedIn: "db"
   };
 
-  await appendNDJSON(path.join(DATA_DIR, "reports.ndjson"), record);
+  saveReportRecord(db, record);
   return record;
 }
 
@@ -226,10 +399,11 @@ async function createQuestion(payload) {
     categoryLabel: String(payload.categoryLabel || "Contacto"),
     question,
     source: String(payload.source || "web"),
-    status: "received"
+    status: "received",
+    storedIn: "db"
   };
 
-  await appendNDJSON(path.join(DATA_DIR, "questions.ndjson"), record);
+  saveQuestionRecord(db, record);
   return record;
 }
 
@@ -238,8 +412,14 @@ function validateReport(payload) {
   const subject = String(payload.subject || "").trim();
   const description = String(payload.description || "").trim();
   const date = String(payload.date || "");
+  const curriculum = String(payload.curriculum || "").trim();
+  const curriculumLabel = String(payload.curriculumLabel || "").trim();
+  const problemTypeLabel = String(payload.problemTypeLabel || "").trim();
 
   if (!payload.problemType) errors.push("Selecciona el tipo de problema.");
+  if (!problemTypeLabel) errors.push("Falta el nombre del tipo de problema.");
+  if (!curriculum) errors.push("Selecciona la malla.");
+  if (!curriculumLabel) errors.push("Falta el nombre de la malla.");
   if (!subject) errors.push("Indica asignatura o unidad.");
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) errors.push("Fecha inválida.");
   if (date && new Date(`${date}T00:00:00`) > new Date()) errors.push("La fecha no puede ser futura.");

@@ -9,7 +9,7 @@
     "check": "node --check server.mjs"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=22"
   },
   "keywords": [
     "ceal",

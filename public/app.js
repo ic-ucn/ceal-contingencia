@@ -28,7 +28,8 @@
     { id: "asistencia", label: "Asistencia", icon: "▣" },
     { id: "evaluaciones", label: "Evaluaciones", icon: "▤" },
     { id: "pleno", label: "Pleno", icon: "◌" },
-    { id: "contacto", label: "Contacto", icon: "✉" }
+    { id: "contacto", label: "Contacto", icon: "✉" },
+    { id: "otro", label: "Otro", icon: "..." }
   ];
 
   const ISSUE_TYPES = [
@@ -55,6 +56,144 @@
     "Unidad administrativa",
     "Otro"
   ];
+
+  const CURRICULUMS = [
+    { id: "malla_o", label: "Malla O" },
+    { id: "malla_p", label: "Malla P" },
+    { id: "general", label: "General / unidad" }
+  ];
+
+  const CURRICULUM_SUBJECTS = {
+    malla_o: [
+      "Introducción a la Física",
+      "Mecánica",
+      "Ecuaciones Diferenciales",
+      "Electromagnetismo",
+      "Óptica y Física Moderna",
+      "Cálculo I",
+      "Cálculo II",
+      "Cálculo III",
+      "Estadística",
+      "Métodos Numéricos",
+      "Álgebra I",
+      "Álgebra II",
+      "Dinámica",
+      "Estática",
+      "Mecánica de Fluidos",
+      "Mecánica de Suelos I",
+      "Mecánica de Suelos II",
+      "Análisis y Diseño Sísmico de Edificios",
+      "Comunicación Efectiva I",
+      "Comunicación Efectiva II",
+      "Química General",
+      "Materiales de Ingeniería",
+      "Termodinámica",
+      "Análisis Estructural",
+      "Hidráulica",
+      "Diseño en Acero",
+      "Fundaciones",
+      "Mecánica de Rocas",
+      "Inglés 1",
+      "Inglés 2",
+      "Inglés 3",
+      "Inglés 4",
+      "Dibujo de Ingeniería",
+      "Metodologías Constructivas",
+      "Mecánica de Sólidos",
+      "Hormigón Armado",
+      "Programación",
+      "Electrotecnia",
+      "Ingeniería Económica",
+      "Ingeniería y Desarrollo Sustentable",
+      "Ingeniería Sanitaria y Ambiental",
+      "Modelos de Tráfico",
+      "Elementos Finitos Aplicados",
+      "Construcción de Obras Industriales",
+      "Programación y Gestión de Obras",
+      "Dinámica de Estructuras",
+      "Proyecto Gestión y Administración de Construcción",
+      "Proyecto Diseño de Infraestructura Vial",
+      "Proyecto Diseño de Estructuras Industriales",
+      "Proyecto Diseño de Obras Hidráulicas",
+      "Proyecto Introducción a la Ingeniería I",
+      "Proyecto Introducción a la Ingeniería II",
+      "Emprendimiento",
+      "Ética y Moral Profesional",
+      "Electivo Profesional I",
+      "Electivo Profesional II",
+      "Capstone Project",
+      "Formación General Electiva",
+      "Diálogo FE-Cultura",
+      "Diálogo FE-Ciencia",
+      "Identidad, Universidad y Equidad de Género",
+      "__other__"
+    ],
+    malla_p: [
+      "Introducción al Cálculo",
+      "Geometría Euclidiana",
+      "Introducción a la Física",
+      "Introducción a la Ingeniería",
+      "Inglés I",
+      "Formación en Identidad UCN Nivel I",
+      "Comunicación Efectiva I",
+      "Cálculo 1",
+      "Álgebra 1",
+      "Física 1",
+      "Química General",
+      "Inglés II",
+      "Dibujo Planimétrico de Ingeniería",
+      "Comunicación Efectiva II",
+      "Cálculo 2",
+      "Álgebra 2",
+      "Física 2",
+      "Introducción a la Programación",
+      "Mecánica Racional",
+      "Geomensura",
+      "Probabilidad y Estadística",
+      "Ecuaciones Diferenciales",
+      "Termodinámica",
+      "Geología para Ingeniería",
+      "Estática Aplicada",
+      "Formación en Identidad UCN Nivel II",
+      "Formación General Electiva",
+      "Cálculo Numérico",
+      "Ingeniería Económica",
+      "Mecánica de Fluidos",
+      "Mecánica de Sólidos",
+      "Análisis Estructural",
+      "Máquinas y Equipos",
+      "Diseño en Hormigón Armado",
+      "Materiales de Ingeniería",
+      "Hidráulica General",
+      "Mecánica de Suelos 1",
+      "Ingeniería en Tránsito",
+      "Hidrología",
+      "Procesos Constructivos",
+      "Diseño en Acero",
+      "Ingeniería Sanitaria y Ambiental",
+      "Mecánica de Suelos 2",
+      "BIM Aplicado a Ingeniería Civil",
+      "Formación en Identidad UCN Nivel III",
+      "Práctica en Obras",
+      "Dinámica de Estructuras",
+      "Fundaciones",
+      "Programación de Obras",
+      "Ingeniería para el Desarrollo Sustentable",
+      "Formación Profesional Electiva",
+      "Proyecto de Infraestructura Vial",
+      "Diseño Sísmico de Edificios",
+      "Gestión y Administración de Obras",
+      "Construcción y Montaje de Obras Industriales",
+      "Proyecto de Estructuras Industriales",
+      "Proyecto de Obras Hidráulicas",
+      "Proyecto Integrador 1",
+      "Aspectos Legales de Ingeniería Civil",
+      "Proyecto Integrador 2",
+      "Práctica Ingeniero Ayudante",
+      "__other__"
+    ],
+    general: SUBJECTS.map((subject) => subject === "Otro" ? "__other__" : subject)
+  };
 
   const FAQS = [
     {
@@ -161,19 +300,25 @@
     }
   ];
 
+  function emptyReportDraft() {
+    return {
+      type: "asistencia",
+      curriculum: "",
+      subject: "",
+      subjectOther: "",
+      date: "",
+      description: "",
+      followUp: true
+    };
+  }
+
   const state = {
     route: getRouteFromHash(),
     faqFilter: "todas",
     faqQuery: "",
     openFaqId: "faq-asistencia-1",
     agreementFilter: "todos",
-    report: loadJSON(STORAGE.reportDraft, {
-      type: "asistencia",
-      subject: "",
-      date: "",
-      description: "",
-      followUp: true
-    }),
+    report: { ...emptyReportDraft(), ...loadJSON(STORAGE.reportDraft, emptyReportDraft()) },
     files: [],
     isSubmitting: false
   };
@@ -205,8 +350,10 @@
   function saveJSON(key, value) {
     try {
       localStorage.setItem(key, JSON.stringify(value));
+      return true;
     } catch (_) {
       // El almacenamiento local puede fallar si el navegador está en modo privado o si se supera la cuota.
+      return false;
     }
   }
 
@@ -273,36 +420,93 @@
     const reports = loadJSON(STORAGE.reports, []);
     const questions = loadJSON(STORAGE.questions, []);
     const filteredFaqs = getFilteredFaqs();
+    const officialSources = [
+      { label: "WhatsApp", meta: "Comunidad", href: "https://chat.whatsapp.com/KIxFl5bAHBuHnOnyZb6wUH?mode=gi_t" },
+      { label: "Instagram", meta: "@ceicucn", href: "https://instagram.com/ceicucn" },
+      { label: "Pleno base", meta: "Acta 21 abr" },
+      { label: "UCN", meta: "Comunicados" }
+    ];
 
     return `
       <div class="page-stack">
         <section class="hero-grid" aria-labelledby="faq-title">
-          <div>
-            <p class="eyebrow">Centro oficial CEAL</p>
-            <h1 id="faq-title">FAQ</h1>
-            <p class="lead">Consulta respuestas y filtra por tema.</p>
-            <div class="meta-row" aria-label="Estado de actualización">
-              <span aria-hidden="true">◷</span><span>${escapeHTML(config.updateLabel)}</span><span class="dot"></span><span>${FAQS.length} respuestas cargadas</span>
+          <div class="hero-main">
+            <div class="hero-copy">
+              <p class="eyebrow">Centro oficial CEAL</p>
+              <h1 id="faq-title">Estado oficial hoy</h1>
+              <p class="lead">Paro vigente para el miércoles 22 de abril. Aquí se concentra el estado actual, los hitos del día y el acceso a respuestas y acuerdos.</p>
+              <div class="status-inline-row">
+                <span class="status-badge status-review"><span aria-hidden="true">●</span>Paro vigente hoy</span>
+                <span class="status-badge status-confirmed"><span aria-hidden="true">✓</span>Fuente base: Acta pleno 21 abr</span>
+              </div>
+              <div class="meta-row" aria-label="Estado de actualización">
+                <span aria-hidden="true">◷</span><span>${escapeHTML(config.updateLabel)}</span><span class="dot"></span><span>${FAQS.length} respuestas cargadas</span>
+              </div>
+            </div>
+
+            <div class="search-card hero-search" aria-label="Buscar preguntas frecuentes">
+              <label class="search-input">
+                ${iconSearch()}
+                <input id="faqSearch" type="search" inputmode="search" autocomplete="off" placeholder="Buscar una pregunta..." value="${escapeHTML(state.faqQuery)}" />
+              </label>
             </div>
           </div>
 
           <aside class="glass-card status-panel" aria-label="Estado de la contingencia">
             <div class="big-icon" aria-hidden="true">🛡</div>
-            <h2>Contingencia estudiantil</h2>
-            <p>FAQ, reportes y dudas.</p>
+            <h2>Información oficial</h2>
+            <p>Estado vigente, acuerdos y canales base.</p>
             <div class="kpi-grid" aria-label="Resumen">
               <div class="kpi"><strong>${FAQS.length}</strong><span>FAQ</span></div>
-              <div class="kpi"><strong>${reports.length}</strong><span>Reportes</span></div>
-              <div class="kpi"><strong>${questions.length}</strong><span>Dudas</span></div>
+              <div class="kpi"><strong>${AGREEMENTS.length}</strong><span>Acuerdos</span></div>
+              <div class="kpi"><strong>${officialSources.length}</strong><span>Fuentes</span></div>
             </div>
           </aside>
         </section>
 
-        <section class="search-card" aria-label="Buscar preguntas frecuentes">
-          <label class="search-input">
-            ${iconSearch()}
-            <input id="faqSearch" type="search" inputmode="search" autocomplete="off" placeholder="Buscar una pregunta..." value="${escapeHTML(state.faqQuery)}" />
-          </label>
+        <section class="status-dashboard" aria-label="Resumen oficial">
+          <article class="card status-highlight">
+            <div class="status-highlight-head">
+              <div>
+                <p class="section-kicker">Estado actual</p>
+                <h2>Paro válido para el miércoles 22 de abril</h2>
+              </div>
+              <span class="status-badge status-review">Activo</span>
+            </div>
+            <p>El acta del pleno del 21 de abril deja explícito que el paro es válido para el miércoles 22. La forma de revalidación queda sujeta a la definición posterior del proceso.</p>
+          </article>
+
+          <div class="status-mini-grid">
+            <article class="card status-mini-card">
+              <p class="section-kicker">Hitos del 22 de abril</p>
+              <h3>Pintatón y marcha</h3>
+              <ul class="help-list compact-list">
+                <li><span class="bullet">12:00</span><span>Pintatón de lienzos en recreo FEUCN.</span></li>
+                <li><span class="bullet">15:00</span><span>Marcha convocada en la pérgola de avenida Brasil.</span></li>
+              </ul>
+            </article>
+
+            <article class="card status-mini-card">
+              <p class="section-kicker">Última actualización</p>
+              <h3>Acta del pleno 21 de abril</h3>
+              <p>La portada usa esa acta como fuente base para el estado vigente y para las respuestas publicadas.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="card sources-card" aria-label="Fuentes principales">
+          <div class="sources-head">
+            <div>
+              <p class="section-kicker">Fuentes</p>
+              <h2>Canales base</h2>
+            </div>
+            <a class="btn btn-navy" href="#acuerdos" data-route="acuerdos">Ver acuerdos del pleno</a>
+          </div>
+          <div class="sources-grid">
+            ${officialSources.map((source) => source.href
+              ? `<a class="source-link" href="${escapeHTML(source.href)}" target="_blank" rel="noreferrer"><strong>${escapeHTML(source.label)}</strong><span>${escapeHTML(source.meta)}</span></a>`
+              : `<div class="source-link is-static"><strong>${escapeHTML(source.label)}</strong><span>${escapeHTML(source.meta)}</span></div>`).join("")}
+          </div>
         </section>
 
         <section class="category-row" aria-label="Filtros de preguntas frecuentes">
@@ -389,12 +593,33 @@
   }
 
   function categoryLabel(id) {
+    if (id === "otro") return "Otro";
     return FAQ_CATEGORIES.find((item) => item.id === id)?.label || id;
+  }
+
+  function curriculumLabel(id) {
+    return CURRICULUMS.find((item) => item.id === id)?.label || "General / unidad";
+  }
+
+  function getCurriculumSubjects(curriculum) {
+    if (!curriculum) return [];
+    return CURRICULUM_SUBJECTS[curriculum] || CURRICULUM_SUBJECTS.general;
+  }
+
+  function subjectOptionLabel(subject) {
+    return subject === "__other__" ? "Otro" : subject;
+  }
+
+  function resolveReportSubject(report) {
+    if (report.subject === "__other__") return String(report.subjectOther || "").trim();
+    return String(report.subject || "").trim();
   }
 
   function renderReport() {
     const descriptionLength = state.report.description?.length || 0;
     const reports = loadJSON(STORAGE.reports, []);
+    const reportSubjects = getCurriculumSubjects(state.report.curriculum);
+    const showOtherSubject = state.report.subject === "__other__";
 
     return `
       <div class="page-stack">
@@ -425,13 +650,22 @@
             </div>
 
             <div class="section-step">
-              <label class="step-label" for="subjectInput"><span class="step-number">2</span> Asignatura o unidad</label>
-              <div class="input-wrap">
+              <div class="step-label"><span class="step-number">2</span> Malla y ramo</div>
+              <div class="field-grid">
+                <label class="field-label" for="curriculumInput">Malla</label>
+                <select class="select" id="curriculumInput" name="curriculum" required>
+                  <option value="">Selecciona una malla</option>
+                  ${CURRICULUMS.map((curriculum) => `<option value="${curriculum.id}" ${curriculum.id === state.report.curriculum ? "selected" : ""}>${escapeHTML(curriculum.label)}</option>`).join("")}
+                </select>
+                <label class="field-label" for="subjectSelect">Ramo o unidad</label>
+                <select class="select" id="subjectSelect" name="subjectSelect" required ${state.report.curriculum ? "" : "disabled"}>
+                  <option value="">Selecciona un ramo</option>
+                  ${reportSubjects.map((subject) => `<option value="${escapeHTML(subject)}" ${subject === state.report.subject ? "selected" : ""}>${escapeHTML(subjectOptionLabel(subject))}</option>`).join("")}
+                </select>
+                ${showOtherSubject ? `<input class="form-control" id="subjectOtherInput" name="subjectOther" placeholder="Especifica ramo o unidad" value="${escapeHTML(state.report.subjectOther || "")}" autocomplete="off" />` : ""}
                 <span class="input-icon" aria-hidden="true">⌄</span>
-                <input class="form-control" id="subjectInput" name="subject" list="subjectList" placeholder="Selecciona o escribe" value="${escapeHTML(state.report.subject)}" autocomplete="off" required />
-                <datalist id="subjectList">
-                  ${SUBJECTS.map((subject) => `<option value="${escapeHTML(subject)}"></option>`).join("")}
-                </datalist>
+                <input type="hidden" id="subjectInput" name="subject" value="${escapeHTML(resolveReportSubject(state.report))}" />
+                <span class="sr-only">Selección de ramo controlada por los selectores superiores.</span>
               </div>
             </div>
 
@@ -468,11 +702,11 @@
             </div>
 
             <div class="section-step">
-              <div class="step-label"><span class="step-number">6</span> ¿Quieres seguimiento?</div>
-              <p style="margin: -6px 0 0; color: var(--text-soft);">Activa seguimiento si quieres avances.</p>
+              <div class="step-label"><span class="step-number">6</span> ¿Marcar para seguimiento interno?</div>
+              <p style="margin: -6px 0 0; color: var(--text-soft);">Sirve para priorizar revisión interna. No abre un canal de respuesta personal.</p>
               <div class="follow-grid" role="group" aria-label="Preferencia de seguimiento">
-                <button class="toggle-button" type="button" data-follow="true" aria-pressed="${Boolean(state.report.followUp)}"><span class="chip-icon" aria-hidden="true">✓</span>Sí, quiero seguimiento</button>
-                <button class="toggle-button" type="button" data-follow="false" aria-pressed="${!state.report.followUp}"><span class="chip-icon" aria-hidden="true">×</span>No, prefiero mantenerlo cerrado</button>
+                <button class="toggle-button" type="button" data-follow="true" aria-pressed="${Boolean(state.report.followUp)}"><span class="chip-icon" aria-hidden="true">✓</span>Sí, marcar seguimiento interno</button>
+                <button class="toggle-button" type="button" data-follow="false" aria-pressed="${!state.report.followUp}"><span class="chip-icon" aria-hidden="true">×</span>No, solo registrar el caso</button>
               </div>
             </div>
 
@@ -486,7 +720,7 @@
             <div class="rail-card">
               <h2>Guía</h2>
               <ul class="help-list">
-                <li><span class="bullet">1</span><span>Indica fecha, asignatura y hecho.</span></li>
+                <li><span class="bullet">1</span><span>Indica malla, ramo, fecha y hecho.</span></li>
                 <li><span class="bullet">2</span><span>Adjunta respaldo si existe.</span></li>
                 <li><span class="bullet">3</span><span>No agregues datos sensibles.</span></li>
               </ul>
@@ -520,11 +754,15 @@
       </div>`).join("");
   }
 
-  function renderAgreements() {
-    const filters = ["todos", "Seguridad", "Evaluaciones", "Movilización"];
-    const agreements = state.agreementFilter === "todos"
+  function getFilteredAgreements() {
+    return state.agreementFilter === "todos"
       ? AGREEMENTS
       : AGREEMENTS.filter((item) => item.area === state.agreementFilter);
+  }
+
+  function renderAgreements() {
+    const filters = ["todos", "Seguridad", "Evaluaciones", "Movilización"];
+    const agreements = getFilteredAgreements();
 
     return `
       <div class="page-stack">
@@ -540,17 +778,20 @@
 
         <section class="content-grid">
           <div class="agreement-grid">
-            ${agreements.map((agreement) => `
-              <article class="agreement-card">
-                <header>
-                  <div>
-                    <h2>${escapeHTML(agreement.title)}</h2>
-                    <div class="meta-row"><span>${escapeHTML(agreement.area)}</span><span class="dot"></span><span>${escapeHTML(agreement.date)}</span>${agreement.source ? `<span class="dot"></span><span>Fuente: ${escapeHTML(agreement.source)}</span>` : ""}</div>
+              ${agreements.map((agreement, index) => `
+                <article class="agreement-card">
+                  <header>
+                    <div>
+                      <h2>${escapeHTML(agreement.title)}</h2>
+                      <div class="meta-row"><span>${escapeHTML(agreement.area)}</span><span class="dot"></span><span>${escapeHTML(agreement.date)}</span>${agreement.source ? `<span class="dot"></span><span>Fuente: ${escapeHTML(agreement.source)}</span>` : ""}</div>
+                    </div>
+                    ${statusBadge(agreement.status)}
+                  </header>
+                  <p>${escapeHTML(agreement.summary)}</p>
+                  <div class="agreement-actions">
+                    <button class="btn btn-soft" type="button" data-open-agreement="${index}">Abrir detalle</button>
                   </div>
-                  ${statusBadge(agreement.status)}
-                </header>
-                <p>${escapeHTML(agreement.summary)}</p>
-              </article>`).join("")}
+                </article>`).join("")}
           </div>
 
           <aside class="rail">
@@ -573,6 +814,43 @@
           </aside>
         </section>
       </div>`;
+  }
+
+  function openAgreementModal(index) {
+    const agreements = getFilteredAgreements();
+    if (!agreements.length) return;
+    const safeIndex = Math.max(0, Math.min(index, agreements.length - 1));
+    const agreement = agreements[safeIndex];
+    const previousDisabled = safeIndex === 0;
+    const nextDisabled = safeIndex === agreements.length - 1;
+
+    showModal(`
+      <div class="detail-modal" data-agreement-index="${safeIndex}">
+        <div class="modal-head">
+          <div>
+            <p class="eyebrow" style="margin-bottom:8px;">Acuerdo del pleno</p>
+            <h2>${escapeHTML(agreement.title)}</h2>
+            <div class="meta-row">
+              <span>${escapeHTML(agreement.area)}</span>
+              <span class="dot"></span>
+              <span>${escapeHTML(agreement.date)}</span>
+              ${agreement.source ? `<span class="dot"></span><span>Fuente: ${escapeHTML(agreement.source)}</span>` : ""}
+            </div>
+          </div>
+          <button class="icon-button modal-close" type="button" data-close-modal aria-label="Cerrar">×</button>
+        </div>
+        <div class="detail-status-row">
+          ${statusBadge(agreement.status)}
+          <span class="detail-count">${safeIndex + 1} de ${agreements.length}</span>
+        </div>
+        <div class="detail-body">
+          <p>${escapeHTML(agreement.summary)}</p>
+        </div>
+        <div class="detail-nav">
+          <button class="btn btn-soft" type="button" data-prev-agreement ${previousDisabled ? "disabled" : ""}>← Anterior</button>
+          <button class="btn btn-soft" type="button" data-next-agreement ${nextDisabled ? "disabled" : ""}>Siguiente →</button>
+        </div>
+      </div>`);
   }
 
   function renderEmpty(title, body) {
@@ -605,6 +883,29 @@
       reportForm.addEventListener("change", updateReportDraftFromDOM);
       reportForm.addEventListener("submit", submitReport);
 
+      const curriculumInput = document.getElementById("curriculumInput");
+      const subjectSelect = document.getElementById("subjectSelect");
+      if (curriculumInput) {
+        curriculumInput.addEventListener("change", () => {
+          state.report.curriculum = curriculumInput.value;
+          const subjects = getCurriculumSubjects(state.report.curriculum);
+          if (!subjects.includes(state.report.subject)) {
+            state.report.subject = "";
+            state.report.subjectOther = "";
+          }
+          saveJSON(STORAGE.reportDraft, state.report);
+          render();
+        });
+      }
+      if (subjectSelect) {
+        subjectSelect.addEventListener("change", () => {
+          state.report.subject = subjectSelect.value;
+          if (state.report.subject !== "__other__") state.report.subjectOther = "";
+          saveJSON(STORAGE.reportDraft, state.report);
+          render();
+        });
+      }
+
       const dropzone = document.getElementById("dropzone");
       const evidenceInput = document.getElementById("evidenceInput");
       if (evidenceInput) evidenceInput.addEventListener("change", (event) => addFiles(event.target.files));
@@ -623,12 +924,19 @@
   }
 
   function updateReportDraftFromDOM() {
+    const curriculum = document.getElementById("curriculumInput");
+    const subjectSelect = document.getElementById("subjectSelect");
     const subject = document.getElementById("subjectInput");
+    const subjectOther = document.getElementById("subjectOtherInput");
     const date = document.getElementById("dateInput");
     const description = document.getElementById("descriptionInput");
     const counter = document.getElementById("descriptionCounter");
 
-    if (subject) state.report.subject = subject.value;
+    if (curriculum) state.report.curriculum = curriculum.value;
+    if (subjectSelect) state.report.subject = subjectSelect.value;
+    if (subjectOther) state.report.subjectOther = subjectOther.value;
+    else if (state.report.subject !== "__other__") state.report.subjectOther = "";
+    if (subject) subject.value = resolveReportSubject(state.report);
     if (date) state.report.date = date.value;
     if (description) {
       state.report.description = description.value;
@@ -719,7 +1027,11 @@
       createdAt: new Date().toISOString(),
       problemType: state.report.type,
       problemTypeLabel: ISSUE_TYPES.find((item) => item.id === state.report.type)?.label || state.report.type,
-      subject: state.report.subject.trim(),
+      curriculum: state.report.curriculum,
+      curriculumLabel: curriculumLabel(state.report.curriculum),
+      subject: resolveReportSubject(state.report),
+      subjectKey: state.report.subject,
+      subjectOther: String(state.report.subjectOther || "").trim(),
       date: state.report.date,
       description: state.report.description.trim(),
       followUp: Boolean(state.report.followUp),
@@ -734,17 +1046,19 @@
 
     try {
       const result = await submitRecord("reports", payload);
-      storeLocalSummary(STORAGE.reports, {
+      const stored = storeLocalSummary(STORAGE.reports, {
         id: result.id || payload.id,
         createdAt: payload.createdAt,
         problemTypeLabel: payload.problemTypeLabel,
+        curriculumLabel: payload.curriculumLabel,
         subject: payload.subject,
         date: payload.date,
         followUp: payload.followUp,
         evidenceCount: payload.evidence.length,
         storedIn: result.storedIn || "api"
       });
-      state.report = { type: "asistencia", subject: "", date: "", description: "", followUp: true };
+      if (!stored) throw new Error("No se pudo guardar el reporte en este dispositivo.");
+      state.report = emptyReportDraft();
       state.files = [];
       saveJSON(STORAGE.reportDraft, state.report);
       render();
@@ -758,8 +1072,10 @@
 
   function validateReport(report) {
     const errors = [];
+    const subject = resolveReportSubject(report);
     if (!report.type) errors.push("Selecciona el tipo de problema.");
-    if (!report.subject || !report.subject.trim()) errors.push("Indica la asignatura o unidad.");
+    if (!report.curriculum) errors.push("Selecciona la malla.");
+    if (!subject) errors.push("Indica el ramo o unidad.");
     if (!report.date) errors.push("Selecciona la fecha del incidente.");
     if (report.date && new Date(`${report.date}T00:00:00`) > new Date()) errors.push("La fecha no puede ser futura.");
     const description = String(report.description || "").trim();
@@ -786,10 +1102,11 @@
     } catch (error) {
       if (!config.enableLocalFallback) throw error;
       const safePayload = stripLargeEvidence(payload);
-      storeLocalSummary(resource === "reports" ? STORAGE.reports : STORAGE.questions, {
+      const saved = storeLocalSummary(resource === "reports" ? STORAGE.reports : STORAGE.questions, {
         ...safePayload,
         storedIn: "local"
       });
+      if (!saved) throw new Error("No se pudo guardar el envío localmente.");
       return { id: payload.id, storedIn: "local" };
     }
   }
@@ -816,8 +1133,9 @@
     const exists = list.some((item) => item.id === record.id);
     if (!exists) {
       list.unshift(record);
-      saveJSON(key, list.slice(0, 100));
+      return saveJSON(key, list.slice(0, 100));
     }
+    return true;
   }
 
   function setButtonLoading(button, isLoading, label) {
@@ -828,8 +1146,8 @@
 
   function showSuccessModal(folio, storedIn) {
     const storageLabel = storedIn === "api"
-      ? "Tu reporte fue recibido correctamente."
-      : "Tu reporte quedó registrado correctamente.";
+      ? "Tu reporte fue recibido por el servidor."
+      : "No se pudo enviar al servidor. Quedó guardado solo en este dispositivo.";
 
     showModal(`
       <div class="success-panel">
@@ -846,8 +1164,8 @@
 
   function showQuestionSuccessModal(folio, storedIn) {
     const storageLabel = storedIn === "api"
-      ? "Tu duda fue enviada correctamente para revisión."
-      : "Tu duda quedó registrada correctamente para revisión.";
+      ? "Tu duda fue enviada al servidor para revisión."
+      : "No se pudo enviar al servidor. Quedó guardada solo en este dispositivo.";
 
     showModal(`
       <div class="success-panel">
@@ -863,6 +1181,7 @@
   }
 
   function openQuestionModal() {
+    const suggestedCategory = state.faqFilter !== "todas" ? state.faqFilter : "";
     showModal(`
       <div class="modal-head">
         <div>
@@ -876,7 +1195,8 @@
         <label class="field-grid">
           <strong>Categoría</strong>
           <select class="select" id="questionCategory" required>
-            ${FAQ_CATEGORIES.filter((category) => category.id !== "todas").map((category) => `<option value="${category.id}" ${category.id === state.faqFilter ? "selected" : ""}>${escapeHTML(category.label)}</option>`).join("")}
+            <option value="" disabled ${!suggestedCategory ? "selected" : ""}>Selecciona categoría</option>
+            ${FAQ_CATEGORIES.filter((category) => category.id !== "todas").map((category) => `<option value="${category.id}" ${category.id === suggestedCategory ? "selected" : ""}>${escapeHTML(category.label)}</option>`).join("")}
           </select>
         </label>
         <label class="field-grid">
@@ -896,8 +1216,12 @@
 
   async function submitQuestion(event) {
     event.preventDefault();
-    const category = document.getElementById("questionCategory")?.value || "contacto";
+    const category = document.getElementById("questionCategory")?.value || "";
     const question = document.getElementById("questionText")?.value.trim() || "";
+    if (!category) {
+      toast("Selecciona una categoría.", "error");
+      return;
+    }
     if (question.length < 8) {
       toast("La pregunta debe tener al menos 8 caracteres.", "error");
       return;
@@ -916,13 +1240,14 @@
 
     try {
       const result = await submitRecord("questions", payload);
-      storeLocalSummary(STORAGE.questions, {
+      const stored = storeLocalSummary(STORAGE.questions, {
         id: result.id || payload.id,
         createdAt: payload.createdAt,
         categoryLabel: payload.categoryLabel,
         question: payload.question,
         storedIn: result.storedIn || "api"
       });
+      if (!stored) throw new Error("No se pudo guardar la duda en este dispositivo.");
       closeModal();
       render();
       showQuestionSuccessModal(result.id || payload.id, result.storedIn || "api");
@@ -1088,6 +1413,26 @@
       return;
     }
 
+    const openAgreement = target.closest?.("[data-open-agreement]");
+    if (openAgreement) {
+      openAgreementModal(Number(openAgreement.dataset.openAgreement || 0));
+      return;
+    }
+
+    const previousAgreement = target.closest?.("[data-prev-agreement]");
+    if (previousAgreement) {
+      const index = Number(document.querySelector("[data-agreement-index]")?.dataset.agreementIndex || 0);
+      openAgreementModal(index - 1);
+      return;
+    }
+
+    const nextAgreement = target.closest?.("[data-next-agreement]");
+    if (nextAgreement) {
+      const index = Number(document.querySelector("[data-agreement-index]")?.dataset.agreementIndex || 0);
+      openAgreementModal(index + 1);
+      return;
+    }
+
     const copy = target.closest?.("[data-copy]");
     if (copy) {
       try {
@@ -1117,6 +1462,19 @@
   });
 
   document.addEventListener("keydown", (event) => {
+    if (document.querySelector("[data-agreement-index]")) {
+      const index = Number(document.querySelector("[data-agreement-index]")?.dataset.agreementIndex || 0);
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        openAgreementModal(index - 1);
+        return;
+      }
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        openAgreementModal(index + 1);
+        return;
+      }
+    }
     if (event.key === "Escape") {
       closeModal();
       closeDrawer();
@@ -1131,7 +1489,7 @@
 
   if ("serviceWorker" in navigator && window.location.protocol !== "file:") {
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("sw.js?v=16").catch(() => {});
+      navigator.serviceWorker.register("sw.js?v=21").catch(() => {});
     });
   }
 

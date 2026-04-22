@@ -4,3 +4,7 @@ server.stderr.log
 data/*.ndjson
 data/uploads/*
 !data/uploads/.gitkeep
+
+data/*.sqlite
+server3010.stdout.log
+server3010.stderr.log
