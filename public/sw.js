@@ -1,13 +1,12 @@
-const CACHE_NAME = "ceal-contingencia-v21";
+const CACHE_NAME = "ceal-contingencia-v22";
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./styles.css?v=21",
-  "./app.js?v=21",
-  "./config.js?v=21",
-  "./manifest.webmanifest?v=21",
+  "./styles.css?v=22",
+  "./app.js?v=22",
+  "./manifest.webmanifest?v=22",
   "./assets/app-icon.svg",
-  "./assets/logo-ingenieria-civil.png?v=21"
+  "./assets/logo-ingenieria-civil.png?v=22"
 ];
 
 self.addEventListener("install", (event) => {
@@ -27,6 +26,19 @@ self.addEventListener("fetch", (event) => {
 
   if (url.pathname.startsWith("/api/") || event.request.method !== "GET") {
     event.respondWith(fetch(event.request));
+    return;
+  }
+
+  if (url.pathname.endsWith("/config.js")) {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+          return response;
+        })
+        .catch(() => caches.match(event.request))
+    );
     return;
   }
 

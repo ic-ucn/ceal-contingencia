@@ -8,3 +8,7 @@ data/uploads/*
 data/*.sqlite
 server3010.stdout.log
 server3010.stderr.log
+tunnel.stdout.log
+tunnel.stderr.log
+ops/*.log
+ops/*.state.json

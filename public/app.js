@@ -1489,8 +1489,8 @@
 
   if ("serviceWorker" in navigator && window.location.protocol !== "file:") {
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("sw.js?v=21").catch(() => {});
-    });
+        navigator.serviceWorker.register("sw.js?v=22").catch(() => {});
+      });
   }
 
   render();
