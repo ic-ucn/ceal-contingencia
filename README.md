@@ -111,6 +111,25 @@ Con eso la app ya puede recibir preguntas, reportes y adjuntos sin backend Node 
 
 ## Scripts de activación rápida
 
+### Opción más simple: un solo script
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\finalizar-pages-supabase.ps1
+```
+
+Ese script te pedirá solamente:
+
+- `Project URL`
+- `anon key`
+
+Y después hará todo lo demás:
+
+- actualizar `public/config.js`
+- commit
+- push
+- smoke test local
+- espera activa del deploy en GitHub Pages
+
 ### Configurar Pages + Supabase
 
 ```powershell
