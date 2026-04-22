@@ -3,9 +3,9 @@
 
   const config = {
     appName: "CEAL Contingencia",
-    institutionName: "UCN Â· IngenierÃ­a Civil Â· CEAL",
+    institutionName: "UCN · Ingeniería Civil · CEAL",
     subtitle: "Contingencia estudiantil",
-    updateLabel: "Actualizado hoy Â· 10:15",
+    updateLabel: "Actualizado hoy · 10:15",
     apiBase: "",
     enableLocalFallback: true,
     maxFileMB: 10,
@@ -17,7 +17,7 @@
     supabaseQuestionsTable: "questions",
     supabaseReportsTable: "reports",
     supabaseEvidenceTable: "report_evidence",
-    privacyCopy: "Este reporte es anÃ³nimo. No se solicitan datos personales.",
+    privacyCopy: "Este reporte es anónimo. No se solicitan datos personales.",
     ...(window.CEAL_CONFIG || {})
   };
 
@@ -34,34 +34,34 @@
 
   const FAQ_CATEGORIES = [
     { id: "todas", label: "Todas", icon: "=" },
-    { id: "asistencia", label: "Asistencia", icon: "â–£" },
-    { id: "evaluaciones", label: "Evaluaciones", icon: "â–¤" },
-    { id: "pleno", label: "Pleno", icon: "â—Œ" },
-    { id: "contacto", label: "Contacto", icon: "âœ‰" },
+    { id: "asistencia", label: "Asistencia", icon: "A" },
+    { id: "evaluaciones", label: "Evaluaciones", icon: "E" },
+    { id: "pleno", label: "Pleno", icon: "P" },
+    { id: "contacto", label: "Contacto", icon: "C" },
     { id: "otro", label: "Otro", icon: "..." }
   ];
 
   const ISSUE_TYPES = [
-    { id: "asistencia", label: "Asistencia", icon: "ðŸ‘¥" },
-    { id: "evaluacion", label: "EvaluaciÃ³n", icon: "ðŸ“‹" },
-    { id: "informacion", label: "InformaciÃ³n contradictoria", icon: "â“˜" },
-    { id: "presion", label: "PresiÃ³n docente", icon: "â—”" },
-    { id: "tramite", label: "TrÃ¡mite", icon: "â–¯" },
-    { id: "otro", label: "Otro", icon: "â‹¯" }
+    { id: "asistencia", label: "Asistencia", icon: "A" },
+    { id: "evaluacion", label: "Evaluacion", icon: "E" },
+    { id: "informacion", label: "Informacion contradictoria", icon: "I" },
+    { id: "presion", label: "Presion docente", icon: "P" },
+    { id: "tramite", label: "Tramite", icon: "T" },
+    { id: "otro", label: "Otro", icon: "O" }
   ];
 
   const SUBJECTS = [
-    "CÃ¡lculo I",
-    "CÃ¡lculo II",
-    "Ãlgebra",
-    "FÃ­sica",
-    "QuÃ­mica",
-    "MecÃ¡nica de sÃ³lidos",
-    "TopografÃ­a",
-    "HidrÃ¡ulica",
-    "Materiales de construcciÃ³n",
-    "ProgramaciÃ³n",
-    "PrÃ¡ctica / trÃ¡mite acadÃ©mico",
+    "Cálculo I",
+    "Cálculo II",
+    "Álgebra",
+    "Física",
+    "Química",
+    "Mecánica de sólidos",
+    "Topografía",
+    "Hidráulica",
+    "Materiales de construcción",
+    "Programación",
+    "Práctica / trámite académico",
     "Unidad administrativa",
     "Otro"
   ];
@@ -74,131 +74,131 @@
 
   const CURRICULUM_SUBJECTS = {
     malla_o: [
-      "IntroducciÃ³n a la FÃ­sica",
-      "MecÃ¡nica",
+      "Introducción a la Física",
+      "Mecánica",
       "Ecuaciones Diferenciales",
       "Electromagnetismo",
-      "Ã“ptica y FÃ­sica Moderna",
-      "CÃ¡lculo I",
-      "CÃ¡lculo II",
-      "CÃ¡lculo III",
-      "EstadÃ­stica",
-      "MÃ©todos NumÃ©ricos",
-      "Ãlgebra I",
-      "Ãlgebra II",
-      "DinÃ¡mica",
-      "EstÃ¡tica",
-      "MecÃ¡nica de Fluidos",
-      "MecÃ¡nica de Suelos I",
-      "MecÃ¡nica de Suelos II",
-      "AnÃ¡lisis y DiseÃ±o SÃ­smico de Edificios",
-      "ComunicaciÃ³n Efectiva I",
-      "ComunicaciÃ³n Efectiva II",
-      "QuÃ­mica General",
-      "Materiales de IngenierÃ­a",
-      "TermodinÃ¡mica",
-      "AnÃ¡lisis Estructural",
-      "HidrÃ¡ulica",
-      "DiseÃ±o en Acero",
+      "Optica y Fisica Moderna",
+      "Cálculo I",
+      "Cálculo II",
+      "Cálculo III",
+      "Estadística",
+      "Métodos Numéricos",
+      "Álgebra I",
+      "Álgebra II",
+      "Dinámica",
+      "Estática",
+      "Mecánica de Fluidos",
+      "Mecánica de Suelos I",
+      "Mecánica de Suelos II",
+      "Análisis y Diseño Sísmico de Edificios",
+      "Comunicación Efectiva I",
+      "Comunicación Efectiva II",
+      "Química General",
+      "Materiales de Ingeniería",
+      "Termodinámica",
+      "Análisis Estructural",
+      "Hidráulica",
+      "Diseño en Acero",
       "Fundaciones",
-      "MecÃ¡nica de Rocas",
-      "InglÃ©s 1",
-      "InglÃ©s 2",
-      "InglÃ©s 3",
-      "InglÃ©s 4",
-      "Dibujo de IngenierÃ­a",
-      "MetodologÃ­as Constructivas",
-      "MecÃ¡nica de SÃ³lidos",
-      "HormigÃ³n Armado",
-      "ProgramaciÃ³n",
+      "Mecánica de Rocas",
+      "Inglés 1",
+      "Inglés 2",
+      "Inglés 3",
+      "Inglés 4",
+      "Dibujo de Ingeniería",
+      "Metodologías Constructivas",
+      "Mecánica de Sólidos",
+      "Hormigón Armado",
+      "Programación",
       "Electrotecnia",
-      "IngenierÃ­a EconÃ³mica",
-      "IngenierÃ­a y Desarrollo Sustentable",
-      "IngenierÃ­a Sanitaria y Ambiental",
-      "Modelos de TrÃ¡fico",
+      "Ingeniería Económica",
+      "Ingeniería y Desarrollo Sustentable",
+      "Ingeniería Sanitaria y Ambiental",
+      "Modelos de Tráfico",
       "Elementos Finitos Aplicados",
-      "ConstrucciÃ³n de Obras Industriales",
-      "ProgramaciÃ³n y GestiÃ³n de Obras",
-      "DinÃ¡mica de Estructuras",
-      "Proyecto GestiÃ³n y AdministraciÃ³n de ConstrucciÃ³n",
-      "Proyecto DiseÃ±o de Infraestructura Vial",
-      "Proyecto DiseÃ±o de Estructuras Industriales",
-      "Proyecto DiseÃ±o de Obras HidrÃ¡ulicas",
-      "Proyecto IntroducciÃ³n a la IngenierÃ­a I",
-      "Proyecto IntroducciÃ³n a la IngenierÃ­a II",
+      "Construcción de Obras Industriales",
+      "Programación y Gestión de Obras",
+      "Dinámica de Estructuras",
+      "Proyecto Gestión y Administración de Construcción",
+      "Proyecto Diseño de Infraestructura Vial",
+      "Proyecto Diseño de Estructuras Industriales",
+      "Proyecto Diseño de Obras Hidráulicas",
+      "Proyecto Introducción a la Ingeniería I",
+      "Proyecto Introducción a la Ingeniería II",
       "Emprendimiento",
-      "Ã‰tica y Moral Profesional",
+      "Etica y Moral Profesional",
       "Electivo Profesional I",
       "Electivo Profesional II",
       "Capstone Project",
-      "FormaciÃ³n General Electiva",
-      "DiÃ¡logo FE-Cultura",
-      "DiÃ¡logo FE-Ciencia",
-      "Identidad, Universidad y Equidad de GÃ©nero",
+      "Formación General Electiva",
+      "Diálogo FE-Cultura",
+      "Diálogo FE-Ciencia",
+      "Identidad, Universidad y Equidad de Género",
       "__other__"
     ],
     malla_p: [
-      "IntroducciÃ³n al CÃ¡lculo",
-      "GeometrÃ­a Euclidiana",
-      "IntroducciÃ³n a la FÃ­sica",
-      "IntroducciÃ³n a la IngenierÃ­a",
-      "InglÃ©s I",
-      "FormaciÃ³n en Identidad UCN Nivel I",
-      "ComunicaciÃ³n Efectiva I",
-      "CÃ¡lculo 1",
-      "Ãlgebra 1",
-      "FÃ­sica 1",
-      "QuÃ­mica General",
-      "InglÃ©s II",
-      "Dibujo PlanimÃ©trico de IngenierÃ­a",
-      "ComunicaciÃ³n Efectiva II",
-      "CÃ¡lculo 2",
-      "Ãlgebra 2",
-      "FÃ­sica 2",
-      "IntroducciÃ³n a la ProgramaciÃ³n",
-      "MecÃ¡nica Racional",
+      "Introducción al Cálculo",
+      "Geometría Euclidiana",
+      "Introducción a la Física",
+      "Introducción a la Ingeniería",
+      "Inglés I",
+      "Formación en Identidad UCN Nivel I",
+      "Comunicación Efectiva I",
+      "Cálculo 1",
+      "Álgebra 1",
+      "Física 1",
+      "Química General",
+      "Inglés II",
+      "Dibujo Planimétrico de Ingeniería",
+      "Comunicación Efectiva II",
+      "Cálculo 2",
+      "Álgebra 2",
+      "Física 2",
+      "Introducción a la Programación",
+      "Mecánica Racional",
       "Geomensura",
-      "Probabilidad y EstadÃ­stica",
+      "Probabilidad y Estadística",
       "Ecuaciones Diferenciales",
-      "TermodinÃ¡mica",
-      "GeologÃ­a para IngenierÃ­a",
-      "EstÃ¡tica Aplicada",
-      "FormaciÃ³n en Identidad UCN Nivel II",
-      "FormaciÃ³n General Electiva",
-      "CÃ¡lculo NumÃ©rico",
-      "IngenierÃ­a EconÃ³mica",
-      "MecÃ¡nica de Fluidos",
-      "MecÃ¡nica de SÃ³lidos",
-      "AnÃ¡lisis Estructural",
-      "MÃ¡quinas y Equipos",
-      "DiseÃ±o en HormigÃ³n Armado",
-      "Materiales de IngenierÃ­a",
-      "HidrÃ¡ulica General",
-      "MecÃ¡nica de Suelos 1",
-      "IngenierÃ­a en TrÃ¡nsito",
-      "HidrologÃ­a",
+      "Termodinámica",
+      "Geología para Ingeniería",
+      "Estática Aplicada",
+      "Formación en Identidad UCN Nivel II",
+      "Formación General Electiva",
+      "Cálculo Numérico",
+      "Ingeniería Económica",
+      "Mecánica de Fluidos",
+      "Mecánica de Sólidos",
+      "Análisis Estructural",
+      "Máquinas y Equipos",
+      "Diseño en Hormigón Armado",
+      "Materiales de Ingeniería",
+      "Hidráulica General",
+      "Mecánica de Suelos 1",
+      "Ingeniería en Tránsito",
+      "Hidrología",
       "Procesos Constructivos",
-      "DiseÃ±o en Acero",
-      "IngenierÃ­a Sanitaria y Ambiental",
-      "MecÃ¡nica de Suelos 2",
-      "BIM Aplicado a IngenierÃ­a Civil",
-      "FormaciÃ³n en Identidad UCN Nivel III",
-      "PrÃ¡ctica en Obras",
-      "DinÃ¡mica de Estructuras",
+      "Diseño en Acero",
+      "Ingeniería Sanitaria y Ambiental",
+      "Mecánica de Suelos 2",
+      "BIM Aplicado a Ingeniería Civil",
+      "Formación en Identidad UCN Nivel III",
+      "Práctica en Obras",
+      "Dinámica de Estructuras",
       "Fundaciones",
-      "ProgramaciÃ³n de Obras",
-      "IngenierÃ­a para el Desarrollo Sustentable",
-      "FormaciÃ³n Profesional Electiva",
+      "Programación de Obras",
+      "Ingeniería para el Desarrollo Sustentable",
+      "Formación Profesional Electiva",
       "Proyecto de Infraestructura Vial",
-      "DiseÃ±o SÃ­smico de Edificios",
-      "GestiÃ³n y AdministraciÃ³n de Obras",
-      "ConstrucciÃ³n y Montaje de Obras Industriales",
+      "Diseño Sísmico de Edificios",
+      "Gestión y Administración de Obras",
+      "Construcción y Montaje de Obras Industriales",
       "Proyecto de Estructuras Industriales",
-      "Proyecto de Obras HidrÃ¡ulicas",
+      "Proyecto de Obras Hidráulicas",
       "Proyecto Integrador 1",
-      "Aspectos Legales de IngenierÃ­a Civil",
+      "Aspectos Legales de Ingeniería Civil",
       "Proyecto Integrador 2",
-      "PrÃ¡ctica Ingeniero Ayudante",
+      "Práctica Ingeniero Ayudante",
       "__other__"
     ],
     general: SUBJECTS.map((subject) => subject === "Otro" ? "__other__" : subject)
@@ -208,8 +208,8 @@
     {
       id: "faq-asistencia-1",
       category: "asistencia",
-      question: "Â¿El paro sigue vigente para el miÃ©rcoles 22 de abril?",
-      answer: "SÃ­. El acta del pleno deja explÃ­cito que el paro es vÃ¡lido para el miÃ©rcoles 22 y que luego debe definirse la forma de revalidaciÃ³n.",
+      question: "¿El paro sigue vigente para el miércoles 22 de abril?",
+      answer: "Sí. El acta del pleno deja explícito que el paro es válido para el miércoles 22 y que luego debe definirse la forma de revalidación.",
       status: "confirmed",
       updated: "Acta pleno 21 abr",
       source: "Acta Pleno 21 de abril"
@@ -217,8 +217,8 @@
     {
       id: "faq-evaluaciones-1",
       category: "evaluaciones",
-      question: "Â¿Se recalendarizaron las evaluaciones?",
-      answer: "En el pleno se informÃ³ que la universidad rechazÃ³ inicialmente recalendarizar evaluaciones y luego autorizÃ³ la recalendarizaciÃ³n solo para la jornada del martes 21. No se informaron garantÃ­as explÃ­citas para los dÃ­as siguientes si continuaba la paralizaciÃ³n.",
+      question: "¿Se recalendarizaron las evaluaciones?",
+      answer: "En el pleno se informó que la universidad rechazó inicialmente recalendarizar evaluaciones y luego autorizó la recalendarización solo para la jornada del martes 21. No se informaron garantías explícitas para los días siguientes si continuaba la paralización.",
       status: "review",
       updated: "Acta pleno 21 abr",
       source: "Acta Pleno 21 de abril"
@@ -226,8 +226,8 @@
     {
       id: "faq-evaluaciones-2",
       category: "evaluaciones",
-      question: "Â¿QuÃ© hago si un docente mantiene una evaluaciÃ³n sin claridad oficial?",
-      answer: "Guarda la instrucciÃ³n, la fecha y cualquier respaldo. En el pleno se levantÃ³ expresamente la tensiÃ³n por recalendarizaciones y por posibles presiones a estudiantes movilizados, por lo que conviene reportarlo con evidencia.",
+      question: "¿Qué hago si un docente mantiene una evaluación sin claridad oficial?",
+      answer: "Guarda la instrucción, la fecha y cualquier respaldo. En el pleno se levantó expresamente la tensión por recalendarizaciones y por posibles presiones a estudiantes movilizados, por lo que conviene reportarlo con evidencia.",
       status: "review",
       updated: "Acta pleno 21 abr",
       source: "Acta Pleno 21 de abril"
@@ -235,8 +235,8 @@
     {
       id: "faq-pleno-1",
       category: "pleno",
-      question: "Â¿QuÃ© se comprometiÃ³ la universidad en seguridad?",
-      answer: "FederaciÃ³n informÃ³ que el Director de Servicios, Cristian Zuleta, se comprometiÃ³ a actualizar el Protocolo de Emergencias con indicaciones para amenazas como tiroteo a mÃ¡s tardar el lunes 27 de abril, y a presentar un Plan de Seguridad Integral durante la semana del 25 de mayo.",
+      question: "¿Qué se comprometió la universidad en seguridad?",
+      answer: "Federación informó que el Director de Servicios, Cristian Zuleta, se comprometió a actualizar el Protocolo de Emergencias con indicaciones para amenazas como tiroteo a más tardar el lunes 27 de abril, y a presentar un Plan de Seguridad Integral durante la semana del 25 de mayo.",
       status: "confirmed",
       updated: "Acta pleno 21 abr",
       source: "Acta Pleno 21 de abril"
@@ -244,8 +244,8 @@
     {
       id: "faq-pleno-2",
       category: "pleno",
-      question: "Â¿CuÃ¡ndo son la pintatÃ³n y la marcha del miÃ©rcoles 22?",
-      answer: "El acta indica pintatÃ³n de lienzos el miÃ©rcoles 22 a las 12:00 en el recreo FEUCN y marcha convocada a las 15:00 en la pÃ©rgola de avenida Brasil. La ruta no se difundirÃ­a pÃºblicamente por seguridad.",
+      question: "¿Cuándo son la pintatón y la marcha del miércoles 22?",
+      answer: "El acta indica pintatón de lienzos el miércoles 22 a las 12:00 en el recreo FEUCN y marcha convocada a las 15:00 en la pérgola de avenida Brasil. La ruta no se difundiría públicamente por seguridad.",
       status: "confirmed",
       updated: "Acta pleno 21 abr",
       source: "Acta Pleno 21 de abril"
@@ -253,8 +253,8 @@
     {
       id: "faq-contacto-1",
       category: "contacto",
-      question: "Â¿Por dÃ³nde se bajan acuerdos y consultas de base?",
-      answer: "El pleno reafirma que los alcances de las bases deben levantarse a travÃ©s de los centros de estudiantes y que los acuerdos deben difundirse a las carreras para evitar desinformaciÃ³n.",
+      question: "¿Por dónde se bajan acuerdos y consultas de base?",
+      answer: "El pleno reafirma que los alcances de las bases deben levantarse a través de los centros de estudiantes y que los acuerdos deben difundirse a las carreras para evitar desinformación.",
       status: "confirmed",
       updated: "Acta pleno 21 abr",
       source: "Acta Pleno 21 de abril"
@@ -262,8 +262,8 @@
     {
       id: "faq-asistencia-2",
       category: "asistencia",
-      question: "Â¿Hay garantÃ­as para los dÃ­as siguientes si sigue la paralizaciÃ³n?",
-      answer: "No. En el pleno se transparentÃ³ que, si continuaba la paralizaciÃ³n de actividades, no existÃ­an garantÃ­as explÃ­citas para los otros dÃ­as respecto de recalendarizaciones y resguardo acadÃ©mico.",
+      question: "¿Hay garantías para los días siguientes si sigue la paralización?",
+      answer: "No. En el pleno se transparentó que, si continuaba la paralización de actividades, no existían garantías explícitas para los otros días respecto de recalendarizaciones y resguardo académico.",
       status: "review",
       updated: "Acta pleno 21 abr",
       source: "Acta Pleno 21 de abril"
@@ -273,8 +273,8 @@
   const AGREEMENTS = [
     {
       id: "agr-1",
-      title: "ActualizaciÃ³n del protocolo de emergencias",
-      summary: "DirecciÃ³n de Servicios se comprometiÃ³ a actualizar el Protocolo de Emergencias con indicaciones para amenazas como tiroteo a mÃ¡s tardar el lunes 27 de abril.",
+      title: "Actualización del protocolo de emergencias",
+      summary: "Dirección de Servicios se comprometió a actualizar el Protocolo de Emergencias con indicaciones para amenazas como tiroteo a más tardar el lunes 27 de abril.",
       status: "confirmed",
       date: "21 abr 2026",
       area: "Seguridad",
@@ -283,7 +283,7 @@
     {
       id: "agr-2",
       title: "Plan de seguridad integral",
-      summary: "Se informÃ³ el compromiso de presentar durante la semana del 25 de mayo una propuesta de plan de seguridad integral con medidas como registro de ingreso al campus.",
+      summary: "Se informó el compromiso de presentar durante la semana del 25 de mayo una propuesta de plan de seguridad integral con medidas como registro de ingreso al campus.",
       status: "review",
       date: "Semana 25 may 2026",
       area: "Seguridad",
@@ -291,8 +291,8 @@
     },
     {
       id: "agr-3",
-      title: "RecalendarizaciÃ³n de evaluaciones",
-      summary: "La recalendarizaciÃ³n fue autorizada para la jornada del martes 21 tras presiÃ³n estudiantil, pero el pleno dejÃ³ explÃ­cito que no habÃ­a garantÃ­as para los dÃ­as siguientes si seguÃ­a la paralizaciÃ³n.",
+      title: "Recalendarización de evaluaciones",
+      summary: "La recalendarización fue autorizada para la jornada del martes 21 tras presión estudiantil, pero el pleno dejó explícito que no había garantías para los días siguientes si seguía la paralización.",
       status: "review",
       date: "21 abr 2026",
       area: "Evaluaciones",
@@ -300,11 +300,11 @@
     },
     {
       id: "agr-4",
-      title: "Paro y movilizaciÃ³n del 22 de abril",
-      summary: "El pleno reafirma que el paro es vÃ¡lido para el miÃ©rcoles 22. AdemÃ¡s, se convoca pintatÃ³n a las 12:00 en el recreo FEUCN y marcha a las 15:00 en la pÃ©rgola de avenida Brasil.",
+      title: "Paro y movilización del 22 de abril",
+      summary: "El pleno reafirma que el paro es válido para el miércoles 22. Además, se convoca pintatón a las 12:00 en el recreo FEUCN y marcha a las 15:00 en la pérgola de avenida Brasil.",
       status: "confirmed",
       date: "22 abr 2026",
-      area: "MovilizaciÃ³n",
+      area: "Movilización",
       source: "Acta Pleno 21 de abril"
     }
   ];
@@ -361,7 +361,7 @@
       localStorage.setItem(key, JSON.stringify(value));
       return true;
     } catch (_) {
-      // El almacenamiento local puede fallar si el navegador estÃ¡ en modo privado o si se supera la cuota.
+      // El almacenamiento local puede fallar si el navegador está en modo privado o si se supera la cuota.
       return false;
     }
   }
@@ -381,8 +381,8 @@
 
   function statusBadge(status) {
     const map = {
-      confirmed: { label: "Confirmado", className: "status-confirmed", icon: "âœ“" },
-      review: { label: "En revisiÃ³n", className: "status-review", icon: "â—·" },
+      confirmed: { label: "Confirmado", className: "status-confirmed", icon: "OK" },
+      review: { label: "En revision", className: "status-review", icon: "REV" },
       none: { label: "Sin respuesta oficial", className: "status-none", icon: "?" }
     };
     const item = map[status] || map.review;
@@ -435,20 +435,20 @@
         meta: "Comunicados",
         href: "https://chat.whatsapp.com/KIxFl5bAHBuHnOnyZb6wUH?mode=gi_t",
         iconType: "whatsapp",
-        iconText: "âœ†"
+        iconText: "WA"
       },
       {
         label: "Instagram",
         meta: "@ceicucn",
         href: "https://instagram.com/ceicucn",
         iconType: "instagram",
-        iconText: "â—Ž"
+        iconText: "IG"
       },
       {
         label: "Asambleas",
         meta: "y plenos",
         iconType: "assemblies",
-        iconText: "ðŸ‘¥"
+        iconText: "AP"
       },
       {
         label: "Comunicados",
@@ -464,13 +464,13 @@
             <div class="hero-copy">
               <p class="eyebrow">Centro oficial CEAL</p>
               <h1 id="faq-title">Estado oficial hoy</h1>
-              <p class="lead">Paro vigente para el miÃ©rcoles 22 de abril. AquÃ­ se concentra el estado actual, los hitos del dÃ­a y el acceso a respuestas y acuerdos.</p>
+              <p class="lead">Paro vigente para el miércoles 22 de abril. Aquí se concentra el estado actual, los hitos del día y el acceso a respuestas y acuerdos.</p>
               <div class="status-inline-row">
-                <span class="status-badge status-review"><span aria-hidden="true">â—</span>Paro vigente hoy</span>
-                <span class="status-badge status-confirmed"><span aria-hidden="true">âœ“</span>Fuente base: Acta pleno 21 abr</span>
+                <span class="status-badge status-review"><span aria-hidden="true">REV</span>Paro vigente hoy</span>
+                <span class="status-badge status-confirmed"><span aria-hidden="true">OK</span>Fuente base: Acta pleno 21 abr</span>
               </div>
-              <div class="meta-row" aria-label="Estado de actualizaciÃ³n">
-                <span aria-hidden="true">â—·</span><span>${escapeHTML(config.updateLabel)}</span><span class="dot"></span><span>${FAQS.length} respuestas cargadas</span>
+              <div class="meta-row" aria-label="Estado de actualización">
+                <span aria-hidden="true">UPD</span><span>${escapeHTML(config.updateLabel)}</span><span class="dot"></span><span>${FAQS.length} respuestas cargadas</span>
               </div>
             </div>
 
@@ -483,8 +483,8 @@
           </div>
 
           <aside class="glass-card status-panel" aria-label="Estado de la contingencia">
-            <div class="big-icon" aria-hidden="true">ðŸ›¡</div>
-            <h2>InformaciÃ³n oficial</h2>
+            <div class="big-icon" aria-hidden="true">CEAL</div>
+            <h2>Información oficial</h2>
             <p>Estado vigente, acuerdos y canales base.</p>
             <div class="kpi-grid" aria-label="Resumen">
               <div class="kpi"><strong>${FAQS.length}</strong><span>FAQ</span></div>
@@ -499,25 +499,25 @@
             <div class="status-highlight-head">
               <div>
                 <p class="section-kicker">Estado actual</p>
-                <h2>Paro vÃ¡lido para el miÃ©rcoles 22 de abril</h2>
+                <h2>Paro válido para el miércoles 22 de abril</h2>
               </div>
               <span class="status-badge status-review">Activo</span>
             </div>
-            <p>El acta del pleno del 21 de abril deja explÃ­cito que el paro es vÃ¡lido para el miÃ©rcoles 22. La forma de revalidaciÃ³n queda sujeta a la definiciÃ³n posterior del proceso.</p>
+            <p>El acta del pleno del 21 de abril deja explícito que el paro es válido para el miércoles 22. La forma de revalidación queda sujeta a la definición posterior del proceso.</p>
           </article>
 
           <div class="status-mini-grid">
             <article class="card status-mini-card">
               <p class="section-kicker">Hitos del 22 de abril</p>
-              <h3>PintatÃ³n y marcha</h3>
+              <h3>Pintatón y marcha</h3>
               <ul class="help-list compact-list">
-                <li><span class="bullet">12:00</span><span>PintatÃ³n de lienzos en recreo FEUCN.</span></li>
-                <li><span class="bullet">15:00</span><span>Marcha convocada en la pÃ©rgola de avenida Brasil.</span></li>
+                <li><span class="bullet">12:00</span><span>Pintatón de lienzos en recreo FEUCN.</span></li>
+                <li><span class="bullet">15:00</span><span>Marcha convocada en la pérgola de avenida Brasil.</span></li>
               </ul>
             </article>
 
             <article class="card status-mini-card">
-              <p class="section-kicker">Ãšltima actualizaciÃ³n</p>
+              <p class="section-kicker">Ultima actualizacion</p>
               <h3>Acta del pleno 21 de abril</h3>
               <p>La portada usa esa acta como fuente base para el estado vigente y para las respuestas publicadas.</p>
             </article>
@@ -566,25 +566,25 @@
 
         <section class="content-grid">
           <div class="faq-list" aria-live="polite">
-            ${filteredFaqs.length ? filteredFaqs.map(renderFaqCard).join("") : renderEmpty("No encontramos preguntas con ese filtro.", "Prueba otra bÃºsqueda o envÃ­a una nueva duda para que el CEAL pueda responderla.")}
+            ${filteredFaqs.length ? filteredFaqs.map(renderFaqCard).join("") : renderEmpty("No encontramos preguntas con ese filtro.", "Prueba otra búsqueda o envía una nueva duda para que el CEAL pueda responderla.")}
           </div>
 
-          <aside class="rail" aria-label="Acciones rÃ¡pidas">
+          <aside class="rail" aria-label="Acciones rápidas">
             <div class="rail-card">
-              <h2>Acciones rÃ¡pidas</h2>
-              <p>Elige una acciÃ³n.</p>
+              <h2>Acciones rápidas</h2>
+              <p>Elige una acción.</p>
               <div class="quick-actions">
-                <a class="btn btn-primary" href="#reportar" data-route="reportar">âœˆ Enviar reporte</a>
-                <button class="btn btn-soft" type="button" data-open-question>ðŸ’¬ Enviar nueva duda</button>
-                <a class="btn btn-soft" href="#acuerdos" data-route="acuerdos">â–¤ Ver acuerdos</a>
+                <a class="btn btn-primary" href="#reportar" data-route="reportar">Enviar reporte</a>
+                <button class="btn btn-soft" type="button" data-open-question>Enviar nueva duda</button>
+                <a class="btn btn-soft" href="#acuerdos" data-route="acuerdos">Ver acuerdos</a>
               </div>
             </div>
             <div class="rail-card">
               <h3>Estado de respuestas</h3>
               <ul class="help-list">
-                <li><span class="bullet">âœ“</span><span><strong>Confirmado:</strong> con respaldo.</span></li>
-                <li><span class="bullet">â—·</span><span><strong>En revisiÃ³n:</strong> pendiente de validaciÃ³n.</span></li>
-                <li><span class="bullet">?</span><span><strong>Sin respuesta:</strong> sin definiciÃ³n oficial.</span></li>
+                <li><span class="bullet">OK</span><span><strong>Confirmado:</strong> con respaldo.</span></li>
+                <li><span class="bullet">REV</span><span><strong>En revision:</strong> pendiente de validacion.</span></li>
+                <li><span class="bullet">?</span><span><strong>Sin respuesta:</strong> sin definición oficial.</span></li>
               </ul>
             </div>
           </aside>
@@ -594,9 +594,9 @@
           <div class="cta-icon" aria-hidden="true">?</div>
           <div>
             <h2>Nueva duda</h2>
-            <p>Si no aparece aquÃ­, envÃ­ala.</p>
+            <p>Si no aparece aquí, envíala.</p>
           </div>
-          <button class="btn btn-primary" type="button" data-open-question>âœˆ Enviar nueva duda</button>
+          <button class="btn btn-primary" type="button" data-open-question>Enviar nueva duda</button>
         </section>
       </div>
     `;
@@ -623,7 +623,7 @@
         </button>
         <div id="answer-${faq.id}" class="faq-answer">
           <p>${escapeHTML(faq.answer)}</p>
-          <div class="meta-row"><span>${escapeHTML(faq.updated)}</span><span class="dot"></span><span>CategorÃ­a: ${escapeHTML(categoryLabel(faq.category))}</span>${faq.source ? `<span class="dot"></span><span>Fuente: ${escapeHTML(faq.source)}</span>` : ""}</div>
+          <div class="meta-row"><span>${escapeHTML(faq.updated)}</span><span class="dot"></span><span>Categoría: ${escapeHTML(categoryLabel(faq.category))}</span>${faq.source ? `<span class="dot"></span><span>Fuente: ${escapeHTML(faq.source)}</span>` : ""}</div>
         </div>
       </article>`;
   }
@@ -775,10 +775,10 @@
         <section class="report-grid">
           <form class="form-card" id="reportForm" novalidate>
             <div class="confidential-card">
-              <div class="shield" aria-hidden="true">ðŸ›¡</div>
+              <div class="shield" aria-hidden="true">OK</div>
               <div>
                 <h3>Confidencial.</h3>
-                <p>Describe el hecho y adjunta respaldo si cuentas con Ã©l.</p>
+                <p>Describe el hecho y adjunta respaldo si cuentas con él.</p>
               </div>
             </div>
 
@@ -806,24 +806,24 @@
                   ${reportSubjects.map((subject) => `<option value="${escapeHTML(subject)}" ${subject === state.report.subject ? "selected" : ""}>${escapeHTML(subjectOptionLabel(subject))}</option>`).join("")}
                 </select>
                 ${showOtherSubject ? `<input class="form-control" id="subjectOtherInput" name="subjectOther" placeholder="Especifica ramo o unidad" value="${escapeHTML(state.report.subjectOther || "")}" autocomplete="off" />` : ""}
-                <span class="input-icon" aria-hidden="true">âŒ„</span>
+                <span class="input-icon" aria-hidden="true">SEL</span>
                 <input type="hidden" id="subjectInput" name="subject" value="${escapeHTML(resolveReportSubject(state.report))}" />
-                <span class="sr-only">SelecciÃ³n de ramo controlada por los selectores superiores.</span>
+                <span class="sr-only">Selección de ramo controlada por los selectores superiores.</span>
               </div>
             </div>
 
             <div class="section-step">
               <label class="step-label" for="dateInput"><span class="step-number">3</span> Fecha</label>
               <div class="input-wrap">
-                <span class="input-icon" aria-hidden="true">â–£</span>
+                <span class="input-icon" aria-hidden="true">CAL</span>
                 <input class="form-control" id="dateInput" name="date" type="date" value="${escapeHTML(state.report.date)}" required />
               </div>
             </div>
 
             <div class="section-step">
-              <label class="step-label" for="descriptionInput"><span class="step-number">4</span> DescripciÃ³n breve</label>
+              <label class="step-label" for="descriptionInput"><span class="step-number">4</span> Descripción breve</label>
               <div class="textarea-wrap">
-                <textarea class="textarea" id="descriptionInput" name="description" maxlength="500" placeholder="CuÃ©ntanos brevemente quÃ© ocurriÃ³." required>${escapeHTML(state.report.description)}</textarea>
+                <textarea class="textarea" id="descriptionInput" name="description" maxlength="500" placeholder="Cuéntanos brevemente qué ocurrió." required>${escapeHTML(state.report.description)}</textarea>
                 <span class="counter" id="descriptionCounter">${descriptionLength}/500</span>
               </div>
             </div>
@@ -832,10 +832,10 @@
               <div class="step-label"><span class="step-number">5</span> Adjuntar evidencia <span style="color: var(--muted); font-weight: 800;">(opcional)</span></div>
               <div class="dropzone" id="dropzone">
                 <div class="dropzone-copy">
-                  <div class="dropzone-icon" aria-hidden="true">â‡§</div>
+                  <div class="dropzone-icon" aria-hidden="true">UP</div>
                   <div>
                     <h3>Sube archivos o capturas de pantalla</h3>
-                    <p>Formatos: imagen, PDF, Word. MÃ¡x. ${Number(config.maxFileMB)} MB por archivo.</p>
+                    <p>Formatos: imagen, PDF, Word. Máx. ${Number(config.maxFileMB)} MB por archivo.</p>
                   </div>
                 </div>
                 <button class="btn btn-soft" type="button" tabindex="-1">Seleccionar</button>
@@ -846,14 +846,14 @@
 
 
             <div class="form-actions">
-              <button class="btn btn-primary btn-full" id="submitReportButton" type="submit">âœˆ Enviar reporte</button>
-              <div class="form-note"><span aria-hidden="true">ðŸ”’</span><span>${escapeHTML(config.privacyCopy)}</span></div>
+              <button class="btn btn-primary btn-full" id="submitReportButton" type="submit">Enviar reporte</button>
+              <div class="form-note"><span aria-hidden="true">INFO</span><span>${escapeHTML(config.privacyCopy)}</span></div>
             </div>
           </form>
 
           <aside class="rail" aria-label="Ayuda del reporte">
             <div class="rail-card">
-              <h2>GuÃ­a</h2>
+              <h2>Guía</h2>
               <ul class="help-list">
                 <li><span class="bullet">1</span><span>Indica malla, ramo, fecha y hecho.</span></li>
                 <li><span class="bullet">2</span><span>Adjunta respaldo si existe.</span></li>
@@ -861,16 +861,16 @@
               </ul>
             </div>
             <div class="rail-card">
-              <h2>Tus envÃ­os</h2>
+              <h2>Tus envíos</h2>
               <p><strong>${reports.length}</strong> reporte${reports.length === 1 ? "" : "s"} guardado${reports.length === 1 ? "" : "s"} en este equipo.</p>
               <div class="quick-actions">
-                <button class="btn btn-soft" type="button" data-open-history>Ver tus envÃ­os</button>
+                <button class="btn btn-soft" type="button" data-open-history>Ver tus envíos</button>
                 <a class="btn btn-soft" href="#inicio" data-route="inicio">Ver preguntas frecuentes</a>
               </div>
             </div>
             <div class="rail-card">
               <h2>Siguiente paso</h2>
-              <p>RevisiÃ³n y publicaciÃ³n cuando corresponda.</p>
+              <p>Revisión y publicación cuando corresponda.</p>
             </div>
           </aside>
         </section>
@@ -883,9 +883,9 @@
       <div class="file-item">
         <div style="min-width:0;">
           <strong>${escapeHTML(file.name)}</strong>
-          <span>${escapeHTML(file.type || "archivo")} Â· ${formatBytes(file.size)}</span>
+          <span>${escapeHTML(file.type || "archivo")} · ${formatBytes(file.size)}</span>
         </div>
-        <button class="file-remove" type="button" data-remove-file="${file.id}" aria-label="Quitar ${escapeHTML(file.name)}">Ã—</button>
+        <button class="file-remove" type="button" data-remove-file="${file.id}" aria-label="Quitar ${escapeHTML(file.name)}">x</button>
       </div>`).join("");
   }
 
@@ -896,7 +896,7 @@
   }
 
   function renderAgreements() {
-    const filters = ["todos", "Seguridad", "Evaluaciones", "MovilizaciÃ³n"];
+    const filters = ["todos", "Seguridad", "Evaluaciones", "Movilización"];
     const agreements = getFilteredAgreements();
 
     return `
@@ -933,14 +933,14 @@
             <div class="timeline-card">
               <h2>Proceso</h2>
               <ul class="timeline-list">
-                <li><span class="bullet">1</span><span>RecepciÃ³n.</span></li>
-                <li><span class="bullet">2</span><span>RevisiÃ³n.</span></li>
-                <li><span class="bullet">3</span><span>PublicaciÃ³n.</span></li>
+                <li><span class="bullet">1</span><span>Recepción.</span></li>
+                <li><span class="bullet">2</span><span>Revisión.</span></li>
+                <li><span class="bullet">3</span><span>Publicación.</span></li>
               </ul>
             </div>
             <div class="rail-card">
-              <h2>Â¿Falta algo?</h2>
-              <p>EnvÃ­a una duda o un reporte.</p>
+              <h2>¿Falta algo?</h2>
+              <p>Envía una duda o un reporte.</p>
               <div class="quick-actions">
                 <button class="btn btn-primary" type="button" data-open-question>Enviar duda</button>
                 <a class="btn btn-soft" href="#reportar" data-route="reportar">Enviar reporte</a>
@@ -972,7 +972,7 @@
               ${agreement.source ? `<span class="dot"></span><span>Fuente: ${escapeHTML(agreement.source)}</span>` : ""}
             </div>
           </div>
-          <button class="icon-button modal-close" type="button" data-close-modal aria-label="Cerrar">Ã—</button>
+          <button class="icon-button modal-close" type="button" data-close-modal aria-label="Cerrar">x</button>
         </div>
         <div class="detail-status-row">
           ${statusBadge(agreement.status)}
@@ -982,8 +982,8 @@
           <p>${escapeHTML(agreement.summary)}</p>
         </div>
         <div class="detail-nav">
-          <button class="btn btn-soft" type="button" data-prev-agreement ${previousDisabled ? "disabled" : ""}>â† Anterior</button>
-          <button class="btn btn-soft" type="button" data-next-agreement ${nextDisabled ? "disabled" : ""}>Siguiente â†’</button>
+          <button class="btn btn-soft" type="button" data-prev-agreement ${previousDisabled ? "disabled" : ""}>&lt; Anterior</button>
+          <button class="btn btn-soft" type="button" data-next-agreement ${nextDisabled ? "disabled" : ""}>Siguiente &gt;</button>
         </div>
       </div>`);
   }
@@ -1201,7 +1201,7 @@
     } catch (error) {
       toast(error.message || "No se pudo enviar el reporte.", "error");
     } finally {
-      setButtonLoading(button, false, "âœˆ Enviar reporte");
+      setButtonLoading(button, false, "Enviar reporte");
     }
   }
 
@@ -1214,8 +1214,8 @@
     if (!report.date) errors.push("Selecciona la fecha del incidente.");
     if (report.date && new Date(`${report.date}T00:00:00`) > new Date()) errors.push("La fecha no puede ser futura.");
     const description = String(report.description || "").trim();
-    if (description.length < 10) errors.push("La descripciÃ³n debe tener al menos 10 caracteres.");
-    if (description.length > 500) errors.push("La descripciÃ³n no puede superar 500 caracteres.");
+    if (description.length < 10) errors.push("La descripción debe tener al menos 10 caracteres.");
+    if (description.length > 500) errors.push("La descripción no puede superar 500 caracteres.");
     return errors;
   }
 
@@ -1249,7 +1249,7 @@
         ...safePayload,
         storedIn: "local"
       });
-      if (!saved) throw new Error("No se pudo guardar el envÃ­o localmente.");
+      if (!saved) throw new Error("No se pudo guardar el envío localmente.");
       return { id: payload.id, storedIn: "local" };
     }
   }
@@ -1289,12 +1289,12 @@
 
   function showSuccessModal(folio, storedIn) {
     const storageLabel = storedIn === "local"
-      ? "No se pudo enviar al servidor. QuedÃ³ guardado solo en este dispositivo."
+      ? "No se pudo enviar al servidor. Quedó guardado solo en este dispositivo."
       : "Tu reporte fue recibido correctamente.";
 
     showModal(`
       <div class="success-panel">
-        <div class="success-icon" aria-hidden="true">âœ“</div>
+        <div class="success-icon" aria-hidden="true">OK</div>
         <h2>Reporte recibido</h2>
         <p>${escapeHTML(storageLabel)}</p>
         <div class="folio" id="successFolio">${escapeHTML(folio)}</div>
@@ -1307,12 +1307,12 @@
 
   function showQuestionSuccessModal(folio, storedIn) {
     const storageLabel = storedIn === "local"
-      ? "No se pudo enviar al servidor. QuedÃ³ guardada solo en este dispositivo."
-      : "Tu duda fue recibida para revisiÃ³n.";
+      ? "No se pudo enviar al servidor. Quedó guardada solo en este dispositivo."
+      : "Tu duda fue recibida para revisión.";
 
     showModal(`
       <div class="success-panel">
-        <div class="success-icon" aria-hidden="true">âœ“</div>
+        <div class="success-icon" aria-hidden="true">OK</div>
         <h2>Duda enviada</h2>
         <p>${escapeHTML(storageLabel)}</p>
         <div class="folio" id="successQuestionFolio">${escapeHTML(folio)}</div>
@@ -1329,16 +1329,16 @@
       <div class="modal-head">
         <div>
           <p class="eyebrow" style="margin-bottom:8px;">Nueva duda</p>
-          <h2>EnvÃ­anos tu pregunta</h2>
-          <p style="color: var(--text-soft); margin-bottom: 0;">La duda se registra para revisiÃ³n y posible publicaciÃ³n en las FAQ.</p>
+          <h2>Envíanos tu pregunta</h2>
+          <p style="color: var(--text-soft); margin-bottom: 0;">La duda se registra para revisión y posible publicación en las FAQ.</p>
         </div>
-        <button class="icon-button modal-close" type="button" data-close-modal aria-label="Cerrar">Ã—</button>
+        <button class="icon-button modal-close" type="button" data-close-modal aria-label="Cerrar">x</button>
       </div>
       <form id="questionForm" class="field-grid" novalidate>
         <label class="field-grid">
-          <strong>CategorÃ­a</strong>
+          <strong>Categoría</strong>
           <select class="select" id="questionCategory" required>
-            <option value="" disabled ${!suggestedCategory ? "selected" : ""}>Selecciona categorÃ­a</option>
+            <option value="" disabled ${!suggestedCategory ? "selected" : ""}>Selecciona categoría</option>
             ${FAQ_CATEGORIES.filter((category) => category.id !== "todas").map((category) => `<option value="${category.id}" ${category.id === suggestedCategory ? "selected" : ""}>${escapeHTML(category.label)}</option>`).join("")}
           </select>
         </label>
@@ -1347,7 +1347,7 @@
           <textarea class="textarea" id="questionText" maxlength="500" placeholder="Escribe tu duda con el mayor contexto posible." required></textarea>
         </label>
         <div class="form-actions">
-          <button class="btn btn-primary" type="submit" id="submitQuestionButton">âœˆ Enviar duda</button>
+          <button class="btn btn-primary" type="submit" id="submitQuestionButton">Enviar duda</button>
           <button class="btn btn-soft" type="button" data-close-modal>Cancelar</button>
         </div>
       </form>`);
@@ -1362,7 +1362,7 @@
     const category = document.getElementById("questionCategory")?.value || "";
     const question = document.getElementById("questionText")?.value.trim() || "";
     if (!category) {
-      toast("Selecciona una categorÃ­a.", "error");
+      toast("Selecciona una categoría.", "error");
       return;
     }
     if (question.length < 8) {
@@ -1397,7 +1397,7 @@
     } catch (error) {
       toast(error.message || "No se pudo enviar la duda.", "error");
     } finally {
-      setButtonLoading(button, false, "âœˆ Enviar duda");
+      setButtonLoading(button, false, "Enviar duda");
     }
   }
 
@@ -1407,21 +1407,21 @@
     const reportItems = reports.length ? reports.slice(0, 12).map((item) => `
       <li>
         <span class="bullet">R</span>
-        <span><strong>${escapeHTML(item.id || "Reporte")}</strong><br>${escapeHTML(item.problemTypeLabel || item.problemType || "Reporte")} Â· ${escapeHTML(item.subject || "Sin asignatura")}</span>
-      </li>`).join("") : `<p style="color: var(--text-soft);">AÃºn no hay envÃ­os recientes.</p>`;
+        <span><strong>${escapeHTML(item.id || "Reporte")}</strong><br>${escapeHTML(item.problemTypeLabel || item.problemType || "Reporte")} · ${escapeHTML(item.subject || "Sin asignatura")}</span>
+      </li>`).join("") : `<p style="color: var(--text-soft);">Aún no hay envíos recientes.</p>`;
     const questionItems = questions.length ? questions.slice(0, 8).map((item) => `
       <li>
         <span class="bullet">D</span>
         <span><strong>${escapeHTML(item.categoryLabel || "Duda")}</strong><br>${escapeHTML(item.question || "")}</span>
-      </li>`).join("") : `<p style="color: var(--text-soft);">AÃºn no hay dudas enviadas desde este dispositivo.</p>`;
+      </li>`).join("") : `<p style="color: var(--text-soft);">Aún no hay dudas enviadas desde este dispositivo.</p>`;
 
     showModal(`
       <div class="modal-head">
         <div>
-          <h2>Tus envÃ­os recientes</h2>
-          <p style="color: var(--text-soft); margin-bottom: 0;">Consulta los folios y resÃºmenes mÃ¡s recientes enviados desde este dispositivo.</p>
+          <h2>Tus envíos recientes</h2>
+          <p style="color: var(--text-soft); margin-bottom: 0;">Consulta los folios y resúmenes más recientes enviados desde este dispositivo.</p>
         </div>
-        <button class="icon-button modal-close" type="button" data-close-modal aria-label="Cerrar">Ã—</button>
+        <button class="icon-button modal-close" type="button" data-close-modal aria-label="Cerrar">x</button>
       </div>
       <h3>Reportes</h3>
       <ul class="help-list">${reportItems}</ul>
@@ -1574,7 +1574,7 @@
         await navigator.clipboard.writeText(copy.dataset.copy);
         toast("Folio copiado.", "success");
       } catch (_) {
-        toast("No se pudo copiar automÃ¡ticamente.", "error");
+        toast("No se pudo copiar automáticamente.", "error");
       }
       return;
     }
@@ -1624,9 +1624,10 @@
 
   if ("serviceWorker" in navigator && window.location.protocol !== "file:") {
     window.addEventListener("load", () => {
-        navigator.serviceWorker.register("sw.js?v=25").catch(() => {});
+        navigator.serviceWorker.register("sw.js?v=26").catch(() => {});
       });
   }
 
   render();
 })();
+

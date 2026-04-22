@@ -20,7 +20,7 @@ window.CEAL_CONFIG = {
   maxFileMB: 10,
   maxFiles: 5,
   contactEmail: "",
-  privacyCopy: "Reporte anonimo para respaldo y seguimiento interno.",
+  privacyCopy: "Reporte anonimo para respaldo.",
   publicApiBase: PUBLIC_API_BASE,
 
   /*
