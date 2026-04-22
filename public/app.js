@@ -11,6 +11,12 @@
     maxFileMB: 10,
     maxFiles: 5,
     contactEmail: "",
+    supabaseUrl: "",
+    supabaseAnonKey: "",
+    supabaseBucket: "ceal-evidence",
+    supabaseQuestionsTable: "questions",
+    supabaseReportsTable: "reports",
+    supabaseEvidenceTable: "report_evidence",
     privacyCopy: "Este reporte es anónimo. No se solicitan datos personales.",
     ...(window.CEAL_CONFIG || {})
   };
@@ -20,6 +26,9 @@
     questions: "ceal.questions.v1",
     reportDraft: "ceal.reportDraft.v1"
   };
+
+  const SUPABASE_ENABLED = Boolean(config.supabaseUrl && config.supabaseAnonKey);
+  let supabaseClient = null;
 
   const ROUTES = new Set(["inicio", "reportar", "acuerdos"]);
 
@@ -526,7 +535,7 @@
             <div class="sources-grid">
               ${officialSources.map((source) => {
                 const iconMarkup = source.iconType === "ucn-logo"
-                  ? `<span class="source-icon source-icon-${source.iconType}" aria-hidden="true"><img src="assets/logo-ingenieria-civil.png?v=23" alt="" /></span>`
+                  ? `<span class="source-icon source-icon-${source.iconType}" aria-hidden="true"><img src="assets/logo-ingenieria-civil.png?v=24" alt="" /></span>`
                   : `<span class="source-icon source-icon-${source.iconType}" aria-hidden="true">${source.iconText || ""}</span>`;
                 const cardBody = `${iconMarkup}<strong>${escapeHTML(source.label)}</strong><span>${escapeHTML(source.meta)}</span>`;
                 return source.href
@@ -640,6 +649,113 @@
   function resolveReportSubject(report) {
     if (report.subject === "__other__") return String(report.subjectOther || "").trim();
     return String(report.subject || "").trim();
+  }
+
+  function getSupabaseClient() {
+    if (!SUPABASE_ENABLED) return null;
+    if (supabaseClient) return supabaseClient;
+    if (!window.supabase?.createClient) {
+      throw new Error("Supabase no esta disponible en esta carga.");
+    }
+    supabaseClient = window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
+    return supabaseClient;
+  }
+
+  function sanitizeStorageName(name) {
+    return String(name || "archivo")
+      .toLowerCase()
+      .replace(/[^a-z0-9._-]+/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "");
+  }
+
+  function dataUrlToBlob(dataUrl, mimeType) {
+    const parts = String(dataUrl || "").split(",");
+    const base64 = parts[1] || "";
+    const binary = atob(base64);
+    const bytes = new Uint8Array(binary.length);
+    for (let index = 0; index < binary.length; index += 1) {
+      bytes[index] = binary.charCodeAt(index);
+    }
+    return new Blob([bytes], { type: mimeType || "application/octet-stream" });
+  }
+
+  async function submitQuestionSupabase(client, payload) {
+    const row = {
+      id: payload.id,
+      created_at: payload.createdAt,
+      category: payload.category,
+      category_label: payload.categoryLabel,
+      question: payload.question,
+      source: payload.source || "web",
+      status: "received",
+      stored_in: "supabase"
+    };
+    const { error } = await client.from(config.supabaseQuestionsTable).insert(row);
+    if (error) throw error;
+    return { id: payload.id, storedIn: "supabase" };
+  }
+
+  async function uploadEvidenceToSupabase(client, reportId, file) {
+    const cleanName = sanitizeStorageName(file.name);
+    const path = `${reportId}/${Date.now()}-${cleanName || "archivo"}`;
+    const blob = dataUrlToBlob(file.dataUrl, file.type || guessMimeByName(file.name));
+    const { error } = await client.storage
+      .from(config.supabaseBucket)
+      .upload(path, blob, {
+        contentType: file.type || guessMimeByName(file.name),
+        upsert: false
+      });
+    if (error) throw error;
+    return path;
+  }
+
+  async function submitReportSupabase(client, payload) {
+    const reportRow = {
+      id: payload.id,
+      created_at: payload.createdAt,
+      problem_type: payload.problemType,
+      problem_type_label: payload.problemTypeLabel,
+      curriculum: payload.curriculum,
+      curriculum_label: payload.curriculumLabel,
+      subject: payload.subject,
+      subject_key: payload.subjectKey,
+      subject_other: payload.subjectOther,
+      incident_date: payload.date,
+      description: payload.description,
+      follow_up: payload.followUp,
+      source: payload.source || "web",
+      status: "received",
+      stored_in: "supabase"
+    };
+    const { error: reportError } = await client.from(config.supabaseReportsTable).insert(reportRow);
+    if (reportError) throw reportError;
+
+    for (const file of payload.evidence || []) {
+      const storedPath = await uploadEvidenceToSupabase(client, payload.id, file);
+      const evidenceRow = {
+        id: cryptoRandomId("EVID"),
+        report_id: payload.id,
+        original_name: file.name,
+        mime_type: file.type || guessMimeByName(file.name),
+        size_bytes: file.size,
+        stored: "supabase_storage",
+        stored_path: storedPath,
+        reason: "user_attachment"
+      };
+      const { error: evidenceError } = await client.from(config.supabaseEvidenceTable).insert(evidenceRow);
+      if (evidenceError) throw evidenceError;
+    }
+
+    return { id: payload.id, storedIn: "supabase" };
+  }
+
+  async function submitRecordSupabase(resource, payload) {
+    const client = getSupabaseClient();
+    if (!client) throw new Error("Supabase no esta configurado.");
+    if (resource === "questions") return submitQuestionSupabase(client, payload);
+    if (resource === "reports") return submitReportSupabase(client, payload);
+    throw new Error("Recurso no soportado.");
   }
 
   function renderReport() {
@@ -1112,6 +1228,14 @@
   }
 
   async function submitRecord(resource, payload) {
+    if (SUPABASE_ENABLED) {
+      try {
+        return await submitRecordSupabase(resource, payload);
+      } catch (error) {
+        if (!config.enableLocalFallback) throw error;
+      }
+    }
+
     const endpoint = `${String(config.apiBase || "").replace(/\/$/, "")}/api/${resource}`;
 
     try {
@@ -1172,9 +1296,9 @@
   }
 
   function showSuccessModal(folio, storedIn) {
-    const storageLabel = storedIn === "api"
-      ? "Tu reporte fue recibido por el servidor."
-      : "No se pudo enviar al servidor. Quedó guardado solo en este dispositivo.";
+    const storageLabel = storedIn === "local"
+      ? "No se pudo enviar al servidor. Quedó guardado solo en este dispositivo."
+      : "Tu reporte fue recibido correctamente.";
 
     showModal(`
       <div class="success-panel">
@@ -1190,9 +1314,9 @@
   }
 
   function showQuestionSuccessModal(folio, storedIn) {
-    const storageLabel = storedIn === "api"
-      ? "Tu duda fue enviada al servidor para revisión."
-      : "No se pudo enviar al servidor. Quedó guardada solo en este dispositivo.";
+    const storageLabel = storedIn === "local"
+      ? "No se pudo enviar al servidor. Quedó guardada solo en este dispositivo."
+      : "Tu duda fue recibida para revisión.";
 
     showModal(`
       <div class="success-panel">
@@ -1516,7 +1640,7 @@
 
   if ("serviceWorker" in navigator && window.location.protocol !== "file:") {
     window.addEventListener("load", () => {
-        navigator.serviceWorker.register("sw.js?v=23").catch(() => {});
+        navigator.serviceWorker.register("sw.js?v=24").catch(() => {});
       });
   }
 

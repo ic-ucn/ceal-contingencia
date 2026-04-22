@@ -2,15 +2,15 @@
 
 App responsive para:
 
-- FAQ
-- Reporte anonimo de incidencias
-- Acuerdos
+- Estado oficial y FAQ
+- Reporte anónimo de incidencias
+- Acuerdos del pleno
 
-La interfaz esta pensada para movil y escritorio.
+La interfaz está pensada primero para smartphone, pero también funciona en escritorio y tablet.
 
 ## Ejecutar en local
 
-Requiere Node.js 18 o superior.
+Requiere Node.js 22 o superior.
 
 ```bash
 npm install
@@ -23,19 +23,35 @@ Abre:
 http://localhost:3000
 ```
 
-No hay dependencias externas, por lo que `npm install` no descarga paquetes; solo deja el proyecto listo para scripts estandar.
+No hay dependencias npm externas obligatorias para el frontend; el backend local usa APIs nativas de Node 22.
 
-## Uso estatico
+## Modos de operación
 
-Tambien puedes abrir directamente:
+### 1. Backend local completo
 
-```text
-public/index.html
-```
+Usa `server.mjs` con SQLite y adjuntos en disco.
 
-En modo estatico, la app funciona con respaldo en `localStorage`. Para persistencia en servidor, usa `npm start` o conecta un endpoint propio.
+- preguntas: `data/ceal.sqlite`
+- reportes: `data/ceal.sqlite`
+- adjuntos: `data/uploads/<folio>/`
 
-## API incluida
+Sirve para uso local, pruebas rápidas o una instalación institucional pequeña.
+
+### 2. GitHub Pages + Supabase
+
+Esta es la opción más simple para producción sin mantener un servidor Node propio.
+
+- `GitHub Pages`: sirve el frontend
+- `Supabase Postgres`: guarda `questions`, `reports` y `report_evidence`
+- `Supabase Storage`: guarda adjuntos
+
+La app ya soporta este modo desde `public/config.js`.
+
+### 3. Hosting estático sin backend
+
+La app puede abrirse solo con `public/`, pero en ese caso únicamente usa respaldo local en el navegador si no existe API ni Supabase.
+
+## API local incluida
 
 El servidor Node incluido expone:
 
@@ -47,19 +63,6 @@ GET  /api/reports    requiere CEAL_ADMIN_TOKEN
 GET  /api/questions  requiere CEAL_ADMIN_TOKEN
 ```
 
-Los reportes se guardan en:
-
-```text
-data/reports.ndjson
-data/uploads/<folio>/
-```
-
-Las dudas se guardan en:
-
-```text
-data/questions.ndjson
-```
-
 Para consultar reportes o dudas desde backend:
 
 ```bash
@@ -67,26 +70,48 @@ CEAL_ADMIN_TOKEN="cambia-este-token" npm start
 curl -H "Authorization: Bearer cambia-este-token" http://localhost:3000/api/reports
 ```
 
-## Configuracion rapida
+## Configuración rápida
 
-Edita `public/config.js`:
+Edita `public/config.js`.
+
+### Backend HTTP
 
 ```js
 window.CEAL_CONFIG = {
-  appName: "CEAL Contingencia",
-  institutionName: "UCN · Ingenieria Civil · CEAL",
-  updateLabel: "Actualizado",
-  apiBase: "",
-  enableLocalFallback: true,
-  maxFileMB: 10,
-  maxFiles: 5,
-  contactEmail: ""
+  apiBase: "https://tu-backend.example.com",
+  enableLocalFallback: false
 };
 ```
 
+### Pages + Supabase
+
+```js
+window.CEAL_CONFIG = {
+  apiBase: "",
+  enableLocalFallback: false,
+  supabaseUrl: "https://TU-PROYECTO.supabase.co",
+  supabaseAnonKey: "TU_ANON_KEY",
+  supabaseBucket: "ceal-evidence",
+  supabaseQuestionsTable: "questions",
+  supabaseReportsTable: "reports",
+  supabaseEvidenceTable: "report_evidence"
+};
+```
+
+## Supabase: paso mínimo
+
+1. Crea un proyecto en Supabase.
+2. Abre el SQL editor.
+3. Ejecuta `supabase/ceal_pages_schema.sql`.
+4. Copia `Project URL` y `anon key`.
+5. Pega esos valores en `public/config.js`.
+6. Publica el frontend en GitHub Pages.
+
+Con eso la app ya puede recibir preguntas, reportes y adjuntos sin backend Node propio.
+
 ## Despliegue
 
-### Opcion A: Node completo
+### Opción A: Node completo
 
 1. Sube la carpeta completa al servidor.
 2. Define variables:
@@ -102,20 +127,20 @@ CEAL_ADMIN_TOKEN="token-seguro"
 npm start
 ```
 
-### Opcion B: Hosting estatico
+### Opción B: GitHub Pages + Supabase
 
-Sube solo la carpeta `public/` a Netlify, Vercel, GitHub Pages o un hosting institucional. En este modo no existe persistencia real en servidor; la app conserva un resumen en el navegador.
+1. Configura `public/config.js` con tu proyecto Supabase.
+2. Ejecuta el schema de `supabase/ceal_pages_schema.sql`.
+3. Empuja el repo a GitHub.
+4. Activa `Pages > Source = GitHub Actions`.
 
-## Produccion recomendada
-
-Para operacion institucional a largo plazo, conviene reemplazar el guardado `ndjson` por base de datos y almacenamiento de archivos.
+Esta es la ruta recomendada si quieres algo simple y funcional sin depender de un PC con túnel.
 
 ## Accesibilidad y compatibilidad
 
 - Responsive desde 320px hasta escritorio.
-- Navegacion inferior movil y top navigation en desktop.
-- Targets tactiles de 44px o mas.
+- Navegación inferior móvil y navegación superior en desktop.
+- Targets táctiles de 44px o más.
 - Estados de foco visibles.
 - Respeta `prefers-reduced-motion`.
 - PWA con manifest y service worker.
-- Sin librerias externas.

@@ -1,8 +1,10 @@
 /*
   Configuracion editable sin recompilar.
-  - En localhost usa el backend local del mismo servidor.
-  - En GitHub Pages usa el backend publico activo.
-  - El fallback local solo se permite en desarrollo.
+
+  Modos soportados:
+  - Pages + Supabase: la opcion mas simple para produccion sin backend propio.
+  - Backend HTTP externo: usa apiBase.
+  - Localhost: usa el backend local del mismo servidor y permite fallback local.
 */
 const PUBLIC_API_BASE = "https://7b17963e46dab3.lhr.life";
 const LOCAL_HOSTS = new Set(["localhost", "127.0.0.1", "::1"]);
@@ -19,5 +21,16 @@ window.CEAL_CONFIG = {
   maxFiles: 5,
   contactEmail: "",
   privacyCopy: "Reporte anonimo para respaldo y seguimiento interno.",
-  publicApiBase: PUBLIC_API_BASE
+  publicApiBase: PUBLIC_API_BASE,
+
+  /*
+    Completa estos campos para usar Pages + Supabase y eliminar el backend local.
+    Con supabaseUrl + supabaseAnonKey, la app escribe directo en Postgres/Storage.
+  */
+  supabaseUrl: "",
+  supabaseAnonKey: "",
+  supabaseBucket: "ceal-evidence",
+  supabaseQuestionsTable: "questions",
+  supabaseReportsTable: "reports",
+  supabaseEvidenceTable: "report_evidence"
 };
