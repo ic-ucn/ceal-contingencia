@@ -9,7 +9,10 @@
     "check": "node --check server.mjs",
     "check:web": "node --check public/app.js && node --check public/admin.js && node --check public/sw.js",
     "smoke:local": "powershell -ExecutionPolicy Bypass -File .\\scripts\\smoke-test-ceal.ps1",
-    "smoke:public": "powershell -ExecutionPolicy Bypass -File .\\scripts\\smoke-test-ceal.ps1 -CheckPublic"
+    "smoke:public": "powershell -ExecutionPolicy Bypass -File .\\scripts\\smoke-test-ceal.ps1 -CheckPublic",
+    "test:integration": "node scripts/integration-test-ceal.mjs",
+    "test:e2e": "npx playwright test",
+    "test:release": "npm run check && npm run check:web && npm run smoke:local && npm run smoke:public && npm run test:integration && npm run test:e2e"
   },
   "engines": {
     "node": ">=22"
@@ -21,5 +24,8 @@
     "reportes",
     "responsive"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.59.1"
+  }
 }

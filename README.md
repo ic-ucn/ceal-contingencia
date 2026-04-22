@@ -186,6 +186,26 @@ npm run smoke:public
 
 El smoke test valida homepage local, `api/health` local y, opcionalmente, la homepage pública.
 
+### Validación de integración y e2e
+
+```bash
+npm run test:integration
+npm run test:e2e
+npm run test:release
+```
+
+Que cubren:
+
+- sintaxis de backend, frontend y service worker
+- smoke local y público
+- escritura real en SQLite local y adjuntos físicos
+- restricciones de lectura admin del backend local
+- shell pública servida desde GitHub Pages
+- navegador real sobre FAQ, reporte, duda, menú móvil y panel admin local
+
+`test:integration` usa el backend local para no contaminar producción.
+`test:e2e` fuerza un `config.js` local sin Supabase para que los envíos del navegador no escriban en la base pública.
+
 ## Despliegue
 
 ### Opción A: Node completo

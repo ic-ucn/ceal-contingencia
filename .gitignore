@@ -12,3 +12,5 @@ tunnel.stdout.log
 tunnel.stderr.log
 ops/*.log
 ops/*.state.json
+test-results/
+playwright-report/
