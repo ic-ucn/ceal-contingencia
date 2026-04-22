@@ -421,10 +421,31 @@
     const questions = loadJSON(STORAGE.questions, []);
     const filteredFaqs = getFilteredFaqs();
     const officialSources = [
-      { label: "WhatsApp", meta: "Comunidad", href: "https://chat.whatsapp.com/KIxFl5bAHBuHnOnyZb6wUH?mode=gi_t" },
-      { label: "Instagram", meta: "@ceicucn", href: "https://instagram.com/ceicucn" },
-      { label: "Pleno base", meta: "Acta 21 abr" },
-      { label: "UCN", meta: "Comunicados" }
+      {
+        label: "WhatsApp",
+        meta: "Comunicados",
+        href: "https://chat.whatsapp.com/KIxFl5bAHBuHnOnyZb6wUH?mode=gi_t",
+        iconType: "whatsapp",
+        iconText: "✆"
+      },
+      {
+        label: "Instagram",
+        meta: "@ceicucn",
+        href: "https://instagram.com/ceicucn",
+        iconType: "instagram",
+        iconText: "◎"
+      },
+      {
+        label: "Asambleas",
+        meta: "y plenos",
+        iconType: "assemblies",
+        iconText: "👥"
+      },
+      {
+        label: "Comunicados",
+        meta: "UCN",
+        iconType: "ucn-logo"
+      }
     ];
 
     return `
@@ -502,11 +523,17 @@
             </div>
             <a class="btn btn-navy" href="#acuerdos" data-route="acuerdos">Ver acuerdos del pleno</a>
           </div>
-          <div class="sources-grid">
-            ${officialSources.map((source) => source.href
-              ? `<a class="source-link" href="${escapeHTML(source.href)}" target="_blank" rel="noreferrer"><strong>${escapeHTML(source.label)}</strong><span>${escapeHTML(source.meta)}</span></a>`
-              : `<div class="source-link is-static"><strong>${escapeHTML(source.label)}</strong><span>${escapeHTML(source.meta)}</span></div>`).join("")}
-          </div>
+            <div class="sources-grid">
+              ${officialSources.map((source) => {
+                const iconMarkup = source.iconType === "ucn-logo"
+                  ? `<span class="source-icon source-icon-${source.iconType}" aria-hidden="true"><img src="assets/logo-ingenieria-civil.png?v=23" alt="" /></span>`
+                  : `<span class="source-icon source-icon-${source.iconType}" aria-hidden="true">${source.iconText || ""}</span>`;
+                const cardBody = `${iconMarkup}<strong>${escapeHTML(source.label)}</strong><span>${escapeHTML(source.meta)}</span>`;
+                return source.href
+                  ? `<a class="source-link" href="${escapeHTML(source.href)}" target="_blank" rel="noreferrer">${cardBody}</a>`
+                  : `<div class="source-link is-static">${cardBody}</div>`;
+              }).join("")}
+            </div>
         </section>
 
         <section class="category-row" aria-label="Filtros de preguntas frecuentes">
@@ -1489,7 +1516,7 @@
 
   if ("serviceWorker" in navigator && window.location.protocol !== "file:") {
     window.addEventListener("load", () => {
-        navigator.serviceWorker.register("sw.js?v=22").catch(() => {});
+        navigator.serviceWorker.register("sw.js?v=23").catch(() => {});
       });
   }
 

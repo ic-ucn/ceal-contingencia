@@ -573,6 +573,8 @@ h3 {
   padding: 16px;
   display: grid;
   gap: 8px;
+  justify-items: center;
+  text-align: center;
   transition: transform .2s var(--ease), box-shadow .2s var(--ease), border .2s var(--ease);
 }
 
@@ -585,6 +587,7 @@ h3 {
   color: var(--navy-900);
   font-size: 1rem;
   font-weight: 900;
+  line-height: 1.15;
 }
 
 .source-link span {
@@ -595,6 +598,44 @@ h3 {
 
 .source-link.is-static {
   cursor: default;
+}
+
+.source-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  font-size: 1.55rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.source-icon-whatsapp {
+  background: rgba(37, 211, 102, 0.12);
+  color: #169b4a;
+}
+
+.source-icon-instagram {
+  background: linear-gradient(135deg, rgba(131, 58, 180, 0.13), rgba(253, 29, 29, 0.13), rgba(252, 176, 69, 0.16));
+  color: #ba397f;
+}
+
+.source-icon-assemblies {
+  background: rgba(6, 41, 94, 0.1);
+  color: var(--navy-900);
+  font-size: 1.28rem;
+}
+
+.source-icon-ucn-logo {
+  background: rgba(6, 41, 94, 0.08);
+  padding: 6px;
+}
+
+.source-icon-ucn-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .compact-list {
