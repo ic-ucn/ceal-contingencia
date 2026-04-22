@@ -433,27 +433,20 @@
       {
         label: "WhatsApp",
         meta: "Comunicados",
-        href: "https://chat.whatsapp.com/KIxFl5bAHBuHnOnyZb6wUH?mode=gi_t",
-        iconType: "whatsapp",
-        iconText: "WA"
+        href: "https://chat.whatsapp.com/KIxFl5bAHBuHnOnyZb6wUH?mode=gi_t"
       },
       {
         label: "Instagram",
         meta: "@ceicucn",
-        href: "https://instagram.com/ceicucn",
-        iconType: "instagram",
-        iconText: "IG"
+        href: "https://instagram.com/ceicucn"
       },
       {
         label: "Asambleas",
-        meta: "y plenos",
-        iconType: "assemblies",
-        iconText: "AP"
+        meta: "y plenos"
       },
       {
         label: "Comunicados",
-        meta: "UCN",
-        iconType: "ucn-logo"
+        meta: "UCN"
       }
     ];
 
@@ -524,27 +517,6 @@
           </div>
         </section>
 
-        <section class="card sources-card" aria-label="Fuentes principales">
-          <div class="sources-head">
-            <div>
-              <p class="section-kicker">Fuentes</p>
-              <h2>Canales base</h2>
-            </div>
-            <a class="btn btn-navy" href="#acuerdos" data-route="acuerdos">Ver acuerdos del pleno</a>
-          </div>
-            <div class="sources-grid">
-              ${officialSources.map((source) => {
-                const iconMarkup = source.iconType === "ucn-logo"
-                  ? `<span class="source-icon source-icon-${source.iconType}" aria-hidden="true"><img src="assets/logo-ingenieria-civil.png?v=25" alt="" /></span>`
-                  : `<span class="source-icon source-icon-${source.iconType}" aria-hidden="true">${source.iconText || ""}</span>`;
-                const cardBody = `${iconMarkup}<strong>${escapeHTML(source.label)}</strong><span>${escapeHTML(source.meta)}</span>`;
-                return source.href
-                  ? `<a class="source-link" href="${escapeHTML(source.href)}" target="_blank" rel="noreferrer">${cardBody}</a>`
-                  : `<div class="source-link is-static">${cardBody}</div>`;
-              }).join("")}
-            </div>
-        </section>
-
         <section class="category-row" aria-label="Filtros de preguntas frecuentes">
           ${FAQ_CATEGORIES.map((category) => `
             <button class="category-chip" type="button" data-faq-filter="${category.id}" aria-pressed="${state.faqFilter === category.id}">
@@ -597,6 +569,24 @@
             <p>Si no aparece aquí, envíala.</p>
           </div>
           <button class="btn btn-primary" type="button" data-open-question>Enviar nueva duda</button>
+        </section>
+
+        <section class="card sources-card sources-card-secondary" aria-label="Fuentes principales">
+          <div class="sources-head">
+            <div>
+              <p class="section-kicker">Fuentes</p>
+              <h2>Canales base</h2>
+              <p>Referencias oficiales y de coordinación.</p>
+            </div>
+          </div>
+          <div class="sources-grid">
+            ${officialSources.map((source) => {
+              const cardBody = `<strong>${escapeHTML(source.label)}</strong><span>${escapeHTML(source.meta)}</span>`;
+              return source.href
+                ? `<a class="source-link source-link-plain" href="${escapeHTML(source.href)}" target="_blank" rel="noreferrer">${cardBody}</a>`
+                : `<div class="source-link source-link-plain is-static">${cardBody}</div>`;
+            }).join("")}
+          </div>
         </section>
       </div>
     `;
@@ -1624,7 +1614,7 @@
 
   if ("serviceWorker" in navigator && window.location.protocol !== "file:") {
     window.addEventListener("load", () => {
-        navigator.serviceWorker.register("sw.js?v=26").catch(() => {});
+        navigator.serviceWorker.register("sw.js?v=27").catch(() => {});
       });
   }
 

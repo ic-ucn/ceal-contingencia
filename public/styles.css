@@ -566,15 +566,15 @@ h3 {
 }
 
 .source-link {
-  min-height: 94px;
+  min-height: 80px;
   border: 1px solid var(--line);
   border-radius: 18px;
   background: #fff;
-  padding: 16px;
+  padding: 14px 16px;
   display: grid;
-  gap: 8px;
-  justify-items: center;
-  text-align: center;
+  gap: 6px;
+  align-content: center;
+  text-align: left;
   transition: transform .2s var(--ease), box-shadow .2s var(--ease), border .2s var(--ease);
 }
 
@@ -598,6 +598,14 @@ h3 {
 
 .source-link.is-static {
   cursor: default;
+}
+
+.sources-card-secondary {
+  margin-top: 8px;
+}
+
+.source-link-plain {
+  justify-items: start;
 }
 
 .source-icon {
