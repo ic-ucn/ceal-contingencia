@@ -1611,7 +1611,7 @@ h3 {
 
 @media (min-width: 900px) {
   .hero-grid {
-    grid-template-columns: minmax(0, 1.45fr) minmax(320px, .75fr);
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .status-mini-grid {

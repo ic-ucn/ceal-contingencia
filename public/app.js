@@ -482,17 +482,6 @@
               </label>
             </div>
           </div>
-
-          <aside class="glass-card status-panel" aria-label="Estado de la contingencia">
-            <div class="big-icon" aria-hidden="true">CEAL</div>
-            <h2>Información base</h2>
-            <p>Estado vigente, acuerdos y canales base.</p>
-            <div class="kpi-grid" aria-label="Resumen">
-              <div class="kpi"><strong>${FAQS.length}</strong><span>FAQ</span></div>
-              <div class="kpi"><strong>${AGREEMENTS.length}</strong><span>Acuerdos</span></div>
-              <div class="kpi"><strong>${officialSources.length}</strong><span>Fuentes</span></div>
-            </div>
-          </aside>
         </section>
 
         <section class="status-dashboard" aria-label="Resumen de contingencia">
@@ -1622,7 +1611,7 @@
 
   if ("serviceWorker" in navigator && window.location.protocol !== "file:") {
     window.addEventListener("load", () => {
-        navigator.serviceWorker.register("sw.js?v=30").catch(() => {});
+        navigator.serviceWorker.register("sw.js?v=31").catch(() => {});
       });
   }
 
