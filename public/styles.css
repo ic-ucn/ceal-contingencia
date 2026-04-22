@@ -250,12 +250,13 @@ svg {
 
 .drawer-panel {
   position: absolute;
-  right: 12px;
-  top: calc(12px + env(safe-area-inset-top));
-  width: min(340px, calc(100vw - 24px));
-  border-radius: 28px;
+  right: 14px;
+  top: calc(14px + env(safe-area-inset-top));
+  width: min(316px, calc(100vw - 28px));
+  border: 1px solid rgba(6, 41, 94, .08);
+  border-radius: 24px;
   background: #fff;
-  padding: 14px;
+  padding: 10px;
   box-shadow: var(--shadow-lg);
   transform: translateY(-10px) scale(.98);
   transition: transform .24s var(--ease);
@@ -269,31 +270,35 @@ svg {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  padding: 8px 8px 12px;
+  padding: 4px 4px 8px;
   color: var(--navy-900);
 }
 
 .drawer-close {
   color: var(--navy-900);
   background: var(--surface-soft);
-  font-size: 1.8rem;
+  width: 46px;
+  height: 46px;
+  border-radius: 16px;
+  font-size: 1.45rem;
   line-height: 1;
 }
 
 .drawer a {
   display: flex;
   align-items: center;
-  min-height: 54px;
-  border-radius: 16px;
-  padding: 12px 14px;
-  font-weight: 850;
+  min-height: 48px;
+  border-radius: 14px;
+  padding: 10px 14px;
+  font-size: 1.05rem;
+  font-weight: 800;
   color: var(--text);
 }
 
 .drawer a[aria-current="page"],
 .drawer a:hover {
-  background: var(--navy-900);
-  color: #fff;
+  background: rgba(6, 41, 94, .08);
+  color: var(--navy-900);
 }
 
 .page {

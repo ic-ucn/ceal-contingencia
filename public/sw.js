@@ -1,12 +1,12 @@
-const CACHE_NAME = "ceal-contingencia-v31";
+const CACHE_NAME = "ceal-contingencia-v32";
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./styles.css?v=31",
-  "./app.js?v=31",
-  "./manifest.webmanifest?v=31",
+  "./styles.css?v=32",
+  "./app.js?v=32",
+  "./manifest.webmanifest?v=32",
   "./assets/app-icon.svg",
-  "./assets/logo-ingenieria-civil.png?v=31"
+  "./assets/logo-ingenieria-civil.png?v=32"
 ];
 
 self.addEventListener("install", (event) => {
