@@ -17,6 +17,10 @@
     supabaseQuestionsTable: "questions",
     supabaseReportsTable: "reports",
     supabaseEvidenceTable: "report_evidence",
+    adminStatusTable: "site_status",
+    adminFaqTable: "faq_entries",
+    adminAgreementTable: "agreement_entries",
+    adminChannelTable: "channel_links",
     privacyCopy: "Este reporte es anónimo. No se solicitan datos personales.",
     ...(window.CEAL_CONFIG || {})
   };
@@ -309,6 +313,63 @@
     }
   ];
 
+  const CHANNEL_LINKS = [
+    {
+      id: "channel-whatsapp",
+      label: "WhatsApp",
+      meta: "Comunicados",
+      href: "https://chat.whatsapp.com/KIxFl5bAHBuHnOnyZb6wUH?mode=gi_t"
+    },
+    {
+      id: "channel-instagram",
+      label: "Instagram",
+      meta: "@ceicucn",
+      href: "https://instagram.com/ceicucn"
+    },
+    {
+      id: "channel-assemblies",
+      label: "Asambleas",
+      meta: "y plenos",
+      href: ""
+    },
+    {
+      id: "channel-ucn",
+      label: "Comunicados",
+      meta: "UCN",
+      href: ""
+    }
+  ];
+
+  const SITE_STATUS = {
+    heroEyebrow: "Centro CEAL",
+    heroTitle: "Estado hoy",
+    heroLead: "Paro vigente para el miércoles 22 de abril. Aquí se concentra el estado actual, los hitos del día y el acceso a respuestas y acuerdos.",
+    activeBadgeLabel: "Paro vigente hoy",
+    activeBadgeTone: "review",
+    sourceBadgeLabel: "Fuente base: Acta pleno 21 abr",
+    sourceBadgeTone: "confirmed",
+    updateLabel: config.updateLabel,
+    currentKicker: "Estado actual",
+    currentTitle: "Paro válido para el miércoles 22 de abril",
+    currentSummary: "El acta del pleno del 21 de abril deja explícito que el paro es válido para el miércoles 22. La forma de revalidación queda sujeta a la definición posterior del proceso.",
+    currentStatusLabel: "Activo",
+    currentStatusTone: "review",
+    eventsKicker: "Hitos del 22 de abril",
+    eventsTitle: "Pintatón y marcha",
+    events: [
+      { bullet: "12:00", text: "Pintatón de lienzos en recreo FEUCN." },
+      { bullet: "15:00", text: "Marcha convocada en la pérgola de avenida Brasil." }
+    ],
+    lastUpdateKicker: "Ultima actualizacion",
+    lastUpdateTitle: "Acta del pleno 21 de abril",
+    lastUpdateBody: "La portada usa esa acta como fuente base para el estado vigente y para las respuestas publicadas.",
+    faqTitle: "FAQ",
+    faqIntro: "Respuestas publicadas.",
+    channelsKicker: "Fuentes",
+    channelsTitle: "Canales base",
+    channelsIntro: "Referencias y canales de coordinación."
+  };
+
   function emptyReportDraft() {
     return {
       type: "asistencia",
@@ -437,41 +498,22 @@
     const reports = loadJSON(STORAGE.reports, []);
     const questions = loadJSON(STORAGE.questions, []);
     const filteredFaqs = getFilteredFaqs();
-    const officialSources = [
-      {
-        label: "WhatsApp",
-        meta: "Comunicados",
-        href: "https://chat.whatsapp.com/KIxFl5bAHBuHnOnyZb6wUH?mode=gi_t"
-      },
-      {
-        label: "Instagram",
-        meta: "@ceicucn",
-        href: "https://instagram.com/ceicucn"
-      },
-      {
-        label: "Asambleas",
-        meta: "y plenos"
-      },
-      {
-        label: "Comunicados",
-        meta: "UCN"
-      }
-    ];
+    const officialSources = CHANNEL_LINKS;
 
     return `
       <div class="page-stack">
         <section class="hero-grid" aria-labelledby="faq-title">
           <div class="hero-main">
             <div class="hero-copy">
-              <p class="eyebrow">Centro CEAL</p>
-              <h1 id="faq-title">Estado hoy</h1>
-              <p class="lead">Paro vigente para el miércoles 22 de abril. Aquí se concentra el estado actual, los hitos del día y el acceso a respuestas y acuerdos.</p>
+              <p class="eyebrow">${escapeHTML(SITE_STATUS.heroEyebrow)}</p>
+              <h1 id="faq-title">${escapeHTML(SITE_STATUS.heroTitle)}</h1>
+              <p class="lead">${escapeHTML(SITE_STATUS.heroLead)}</p>
               <div class="status-inline-row">
-                <span class="status-badge status-review"><span aria-hidden="true">REV</span>Paro vigente hoy</span>
-                <span class="status-badge status-confirmed"><span aria-hidden="true">OK</span>Fuente base: Acta pleno 21 abr</span>
+                <span class="status-badge status-${escapeHTML(SITE_STATUS.activeBadgeTone)}"><span aria-hidden="true">${SITE_STATUS.activeBadgeTone === "confirmed" ? "OK" : "REV"}</span>${escapeHTML(SITE_STATUS.activeBadgeLabel)}</span>
+                <span class="status-badge status-${escapeHTML(SITE_STATUS.sourceBadgeTone)}"><span aria-hidden="true">${SITE_STATUS.sourceBadgeTone === "confirmed" ? "OK" : "REV"}</span>${escapeHTML(SITE_STATUS.sourceBadgeLabel)}</span>
               </div>
               <div class="meta-row" aria-label="Estado de actualización">
-                <span aria-hidden="true">UPD</span><span>${escapeHTML(config.updateLabel)}</span><span class="dot"></span><span>${FAQS.length} respuestas cargadas</span>
+                <span aria-hidden="true">UPD</span><span>${escapeHTML(SITE_STATUS.updateLabel)}</span><span class="dot"></span><span>${FAQS.length} respuestas cargadas</span>
               </div>
             </div>
 
@@ -488,28 +530,27 @@
           <article class="card status-highlight">
             <div class="status-highlight-head">
               <div>
-                <p class="section-kicker">Estado actual</p>
-                <h2>Paro válido para el miércoles 22 de abril</h2>
+                <p class="section-kicker">${escapeHTML(SITE_STATUS.currentKicker)}</p>
+                <h2>${escapeHTML(SITE_STATUS.currentTitle)}</h2>
               </div>
-              <span class="status-badge status-review">Activo</span>
+              <span class="status-badge status-${escapeHTML(SITE_STATUS.currentStatusTone)}">${escapeHTML(SITE_STATUS.currentStatusLabel)}</span>
             </div>
-            <p>El acta del pleno del 21 de abril deja explícito que el paro es válido para el miércoles 22. La forma de revalidación queda sujeta a la definición posterior del proceso.</p>
+            <p>${escapeHTML(SITE_STATUS.currentSummary)}</p>
           </article>
 
           <div class="status-mini-grid">
             <article class="card status-mini-card">
-              <p class="section-kicker">Hitos del 22 de abril</p>
-              <h3>Pintatón y marcha</h3>
+              <p class="section-kicker">${escapeHTML(SITE_STATUS.eventsKicker)}</p>
+              <h3>${escapeHTML(SITE_STATUS.eventsTitle)}</h3>
               <ul class="help-list compact-list">
-                <li><span class="bullet">12:00</span><span>Pintatón de lienzos en recreo FEUCN.</span></li>
-                <li><span class="bullet">15:00</span><span>Marcha convocada en la pérgola de avenida Brasil.</span></li>
+                ${SITE_STATUS.events.map((item) => `<li><span class="bullet">${escapeHTML(item.bullet)}</span><span>${escapeHTML(item.text)}</span></li>`).join("")}
               </ul>
             </article>
 
             <article class="card status-mini-card">
-              <p class="section-kicker">Ultima actualizacion</p>
-              <h3>Acta del pleno 21 de abril</h3>
-              <p>La portada usa esa acta como fuente base para el estado vigente y para las respuestas publicadas.</p>
+              <p class="section-kicker">${escapeHTML(SITE_STATUS.lastUpdateKicker)}</p>
+              <h3>${escapeHTML(SITE_STATUS.lastUpdateTitle)}</h3>
+              <p>${escapeHTML(SITE_STATUS.lastUpdateBody)}</p>
             </article>
           </div>
         </section>
@@ -523,8 +564,8 @@
 
         <section class="card faq-section-intro" aria-labelledby="faq-section-title">
           <div>
-            <h2 id="faq-section-title">FAQ</h2>
-            <p>Respuestas publicadas.</p>
+            <h2 id="faq-section-title">${escapeHTML(SITE_STATUS.faqTitle)}</h2>
+            <p>${escapeHTML(SITE_STATUS.faqIntro)}</p>
           </div>
           <div class="meta-row">
             <span>${filteredFaqs.length} resultado${filteredFaqs.length === 1 ? "" : "s"}</span>
@@ -571,9 +612,9 @@
         <section class="card sources-card sources-card-secondary" aria-label="Fuentes principales">
           <div class="sources-head">
             <div>
-              <p class="section-kicker">Fuentes</p>
-              <h2>Canales base</h2>
-              <p>Referencias y canales de coordinación.</p>
+              <p class="section-kicker">${escapeHTML(SITE_STATUS.channelsKicker)}</p>
+              <h2>${escapeHTML(SITE_STATUS.channelsTitle)}</h2>
+              <p>${escapeHTML(SITE_STATUS.channelsIntro)}</p>
             </div>
           </div>
           <div class="sources-grid">
@@ -646,6 +687,154 @@
     }
     supabaseClient = window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
     return supabaseClient;
+  }
+
+  function replaceArray(target, items) {
+    target.splice(0, target.length, ...items);
+  }
+
+  function normalizeStatusTone(value, fallback = "review") {
+    const tone = String(value || "").trim().toLowerCase();
+    if (tone === "confirmed" || tone === "review" || tone === "none") return tone;
+    return fallback;
+  }
+
+  function mapFaqRow(row) {
+    return {
+      id: row.id,
+      category: row.category || "otro",
+      question: row.question || "",
+      answer: row.answer || "",
+      status: normalizeStatusTone(row.status, "review"),
+      updated: row.updated_label || row.updated || config.updateLabel,
+      source: row.source_label || row.source || ""
+    };
+  }
+
+  function mapAgreementRow(row) {
+    return {
+      id: row.id,
+      title: row.title || "",
+      summary: row.summary || "",
+      status: normalizeStatusTone(row.status, "review"),
+      date: row.date_label || row.date || "",
+      area: row.area || "General",
+      source: row.source_label || row.source || ""
+    };
+  }
+
+  function mapChannelRow(row) {
+    return {
+      id: row.id,
+      label: row.label || "",
+      meta: row.meta || "",
+      href: row.href || ""
+    };
+  }
+
+  function applySiteStatusRow(row) {
+    if (!row) return;
+    SITE_STATUS.heroEyebrow = row.hero_eyebrow || SITE_STATUS.heroEyebrow;
+    SITE_STATUS.heroTitle = row.hero_title || SITE_STATUS.heroTitle;
+    SITE_STATUS.heroLead = row.hero_lead || SITE_STATUS.heroLead;
+    SITE_STATUS.activeBadgeLabel = row.active_badge_label || SITE_STATUS.activeBadgeLabel;
+    SITE_STATUS.activeBadgeTone = normalizeStatusTone(row.active_badge_tone, SITE_STATUS.activeBadgeTone);
+    SITE_STATUS.sourceBadgeLabel = row.source_badge_label || SITE_STATUS.sourceBadgeLabel;
+    SITE_STATUS.sourceBadgeTone = normalizeStatusTone(row.source_badge_tone, SITE_STATUS.sourceBadgeTone);
+    SITE_STATUS.updateLabel = row.update_label || SITE_STATUS.updateLabel;
+    SITE_STATUS.currentKicker = row.current_kicker || SITE_STATUS.currentKicker;
+    SITE_STATUS.currentTitle = row.current_title || SITE_STATUS.currentTitle;
+    SITE_STATUS.currentSummary = row.current_summary || SITE_STATUS.currentSummary;
+    SITE_STATUS.currentStatusLabel = row.current_status_label || SITE_STATUS.currentStatusLabel;
+    SITE_STATUS.currentStatusTone = normalizeStatusTone(row.current_status_tone, SITE_STATUS.currentStatusTone);
+    SITE_STATUS.eventsKicker = row.events_kicker || SITE_STATUS.eventsKicker;
+    SITE_STATUS.eventsTitle = row.events_title || SITE_STATUS.eventsTitle;
+    if (Array.isArray(row.events_json) && row.events_json.length) {
+      SITE_STATUS.events = row.events_json.map((item) => ({
+        bullet: String(item.bullet || ""),
+        text: String(item.text || "")
+      }));
+    }
+    SITE_STATUS.lastUpdateKicker = row.last_update_kicker || SITE_STATUS.lastUpdateKicker;
+    SITE_STATUS.lastUpdateTitle = row.last_update_title || SITE_STATUS.lastUpdateTitle;
+    SITE_STATUS.lastUpdateBody = row.last_update_body || SITE_STATUS.lastUpdateBody;
+    SITE_STATUS.faqTitle = row.faq_title || SITE_STATUS.faqTitle;
+    SITE_STATUS.faqIntro = row.faq_intro || SITE_STATUS.faqIntro;
+    SITE_STATUS.channelsKicker = row.channels_kicker || SITE_STATUS.channelsKicker;
+    SITE_STATUS.channelsTitle = row.channels_title || SITE_STATUS.channelsTitle;
+    SITE_STATUS.channelsIntro = row.channels_intro || SITE_STATUS.channelsIntro;
+  }
+
+  async function loadPublishedContent() {
+    if (!SUPABASE_ENABLED) return;
+    const client = getSupabaseClient();
+    if (!client) return;
+
+    try {
+      const { data: statusRow } = await client
+        .from(config.adminStatusTable)
+        .select("hero_eyebrow, hero_title, hero_lead, active_badge_label, active_badge_tone, source_badge_label, source_badge_tone, update_label, current_kicker, current_title, current_summary, current_status_label, current_status_tone, events_kicker, events_title, events_json, last_update_kicker, last_update_title, last_update_body, faq_title, faq_intro, channels_kicker, channels_title, channels_intro")
+        .eq("is_published", true)
+        .order("updated_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (statusRow) applySiteStatusRow(statusRow);
+    } catch (_) {
+      // fallback a contenido embebido
+    }
+
+    try {
+      const { data } = await client
+        .from(config.adminFaqTable)
+        .select("id, category, question, answer, status, updated_label, source_label")
+        .eq("is_published", true)
+        .order("display_order", { ascending: true })
+        .order("updated_at", { ascending: false });
+
+      if (Array.isArray(data) && data.length) replaceArray(FAQS, data.map(mapFaqRow));
+    } catch (_) {
+      // fallback a contenido embebido
+    }
+
+    try {
+      const { data } = await client
+        .from(config.adminAgreementTable)
+        .select("id, title, summary, status, date_label, area, source_label")
+        .eq("is_published", true)
+        .order("display_order", { ascending: true })
+        .order("updated_at", { ascending: false });
+
+      if (Array.isArray(data) && data.length) replaceArray(AGREEMENTS, data.map(mapAgreementRow));
+    } catch (_) {
+      // fallback a contenido embebido
+    }
+
+    try {
+      const { data } = await client
+        .from(config.adminChannelTable)
+        .select("id, label, meta, href")
+        .eq("is_published", true)
+        .order("display_order", { ascending: true })
+        .order("updated_at", { ascending: false });
+
+      if (Array.isArray(data) && data.length) replaceArray(CHANNEL_LINKS, data.map(mapChannelRow));
+    } catch (_) {
+      // fallback a contenido embebido
+    }
+
+    if (!FAQS.some((faq) => faq.id === state.openFaqId)) {
+      state.openFaqId = FAQS[0]?.id || "";
+    }
+  }
+
+  async function refreshPublishedContentAndRender() {
+    try {
+      await loadPublishedContent();
+      if (state.route !== "reportar" && !modalRoot.innerHTML) render();
+    } catch (_) {
+      // Sin bloquear la UI si falla la sincronizacion.
+    }
   }
 
   function sanitizeStorageName(name) {
@@ -1611,10 +1800,25 @@
 
   if ("serviceWorker" in navigator && window.location.protocol !== "file:") {
     window.addEventListener("load", () => {
-        navigator.serviceWorker.register("sw.js?v=32").catch(() => {});
+        navigator.serviceWorker.register("sw.js?v=33").catch(() => {});
       });
   }
 
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) refreshPublishedContentAndRender();
+  });
+
+  window.addEventListener("focus", () => {
+    refreshPublishedContentAndRender();
+  });
+
+  window.setInterval(() => {
+    refreshPublishedContentAndRender();
+  }, 60000);
+
   render();
+  loadPublishedContent().then(() => {
+    render();
+  }).catch(() => {});
 })();
 

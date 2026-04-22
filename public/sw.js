@@ -1,12 +1,15 @@
-const CACHE_NAME = "ceal-contingencia-v32";
+const CACHE_NAME = "ceal-contingencia-v33";
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./styles.css?v=32",
-  "./app.js?v=32",
-  "./manifest.webmanifest?v=32",
+  "./admin.html",
+  "./styles.css?v=33",
+  "./admin.css?v=33",
+  "./app.js?v=33",
+  "./admin.js?v=33",
+  "./manifest.webmanifest?v=33",
   "./assets/app-icon.svg",
-  "./assets/logo-ingenieria-civil.png?v=32"
+  "./assets/logo-ingenieria-civil.png?v=33"
 ];
 
 self.addEventListener("install", (event) => {
@@ -51,7 +54,12 @@ self.addEventListener("fetch", (event) => {
           caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
           return response;
         })
-        .catch(() => caches.match("./index.html"));
+        .catch(() => {
+          if (event.request.mode === "navigate") {
+            return caches.match("./index.html");
+          }
+          return Promise.reject(new Error("asset-unavailable"));
+        });
     })
   );
 });

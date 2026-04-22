@@ -103,11 +103,41 @@ window.CEAL_CONFIG = {
 1. Crea un proyecto en Supabase.
 2. Abre el SQL editor.
 3. Ejecuta `supabase/ceal_pages_schema.sql`.
-4. Copia `Project URL` y `anon key`.
-5. Pega esos valores en `public/config.js`.
-6. Publica el frontend en GitHub Pages.
+4. Ejecuta `supabase/ceal_admin_schema.sql`.
+5. Copia `Project URL` y `anon key`.
+6. Pega esos valores en `public/config.js`.
+7. Publica el frontend en GitHub Pages.
 
-Con eso la app ya puede recibir preguntas, reportes y adjuntos sin backend Node propio.
+Con eso la app ya puede recibir preguntas, reportes, adjuntos y administrar contenido vivo sin backend Node propio.
+
+## Panel interno CEAL
+
+Ruta del panel:
+
+```text
+https://ic-ucn.github.io/ceal-contingencia/admin.html
+```
+
+Que hace:
+
+- editar `estado`, `FAQ`, `acuerdos` y `canales`
+- subir documentos internos a `ceal-admin-sources`
+- dejar solicitudes IA en `update_jobs`
+- publicar cambios sin redeploy del frontend
+
+Puntos importantes:
+
+- el sitio publico solo lee contenido `is_published = true`
+- el panel interno usa magic link con Supabase Auth
+- los metadatos internos viven en tablas privadas (`source_documents`, `update_jobs`, `admin_members`)
+- el contenido publico no guarda emails internos ni notas privadas
+
+Para que el login del panel funcione, en Supabase debes habilitar Email OTP y agregar como redirect URL:
+
+```text
+http://localhost:3000/admin.html
+https://ic-ucn.github.io/ceal-contingencia/admin.html
+```
 
 ## Scripts de activación rápida
 

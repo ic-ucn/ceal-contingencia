@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#06295e" />
+  <meta name="robots" content="noindex,nofollow" />
+  <meta name="description" content="Panel interno CEAL para administrar contenido vivo de la contingencia." />
+  <title>CEAL Admin</title>
+  <link rel="icon" href="assets/logo-ingenieria-civil.png?v=33" type="image/png" />
+  <link rel="apple-touch-icon" href="assets/logo-ingenieria-civil.png?v=33" />
+  <link rel="stylesheet" href="styles.css?v=33" />
+  <link rel="stylesheet" href="admin.css?v=33" />
+</head>
+<body class="admin-body">
+  <a class="skip-link" href="#adminMain">Saltar al contenido</a>
+
+  <header class="admin-topbar">
+    <div class="admin-brand">
+      <img src="assets/logo-ingenieria-civil.png?v=33" alt="" />
+      <div>
+        <strong>CEAL Admin</strong>
+        <span>Gestion de contenido y actualizacion</span>
+      </div>
+    </div>
+    <div class="admin-topbar-actions">
+      <button class="btn btn-soft" type="button" id="refreshAdminButton">Recargar</button>
+      <a class="btn btn-soft" href="./">Ver sitio publico</a>
+      <button class="btn btn-soft" type="button" id="signOutButton" hidden>Cerrar sesion</button>
+    </div>
+  </header>
+
+  <main id="adminMain" class="admin-shell">
+    <section class="admin-intro">
+      <div class="card">
+        <p class="eyebrow">Panel interno</p>
+        <h1>Actualizar sin redeploy</h1>
+        <p class="lead">El contenido publicado vive en Supabase. Cambios en FAQ, acuerdos, canales y estado se reflejan en la app publica sin tocar codigo ni redeploy.</p>
+      </div>
+      <div class="card admin-rules">
+        <h2>Reglas operativas</h2>
+        <ul class="help-list">
+          <li><span class="bullet">1</span><span><strong>Sumar:</strong> agrega un item nuevo y mantiene lo anterior.</span></li>
+          <li><span class="bullet">2</span><span><strong>Reemplazar:</strong> actualiza un item existente o el estado vigente.</span></li>
+          <li><span class="bullet">3</span><span><strong>Solicitar IA:</strong> deja una cola interna para procesar documentos y luego publicar.</span></li>
+        </ul>
+        <div class="form-actions">
+          <button class="btn btn-soft" type="button" id="seedDefaultsButton">Cargar base inicial</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="admin-auth-grid">
+      <article class="card" id="authCard">
+        <p class="section-kicker">Acceso</p>
+        <h2>Ingresar al panel</h2>
+        <p>Usa tu correo habilitado para recibir un enlace magico.</p>
+        <form id="authForm" class="field-grid" novalidate>
+          <label class="field-grid">
+            <strong>Correo</strong>
+            <input class="form-control" id="authEmail" type="email" autocomplete="email" placeholder="nombre@ucn.cl" required />
+          </label>
+          <div class="form-actions">
+            <button class="btn btn-primary" type="submit" id="authSubmitButton">Enviar acceso</button>
+          </div>
+        </form>
+      </article>
+
+      <article class="card" id="sessionCard">
+        <p class="section-kicker">Sesion</p>
+        <h2>Estado del panel</h2>
+        <div class="admin-session-grid">
+          <div>
+            <span class="admin-session-label">Sesion</span>
+            <strong id="sessionStatus">Sin iniciar</strong>
+          </div>
+          <div>
+            <span class="admin-session-label">Correo</span>
+            <strong id="sessionEmail">-</strong>
+          </div>
+          <div>
+            <span class="admin-session-label">Permiso</span>
+            <strong id="sessionRole">Pendiente</strong>
+          </div>
+        </div>
+        <p class="admin-helper" id="authHint">El panel queda operativo cuando Supabase confirme una sesion valida y el correo tenga permisos de edicion.</p>
+      </article>
+    </section>
+
+    <section class="admin-grid" id="adminWorkspace" hidden>
+      <article class="card admin-card-wide">
+        <div class="admin-card-head">
+          <div>
+            <p class="section-kicker">Estado vigente</p>
+            <h2>Bloque principal del sitio</h2>
+          </div>
+          <span class="status-badge status-review">Reemplaza el vigente</span>
+        </div>
+        <form id="statusForm" class="field-grid admin-form-grid" novalidate>
+          <label class="field-grid">
+            <strong>Eyebrow</strong>
+            <input class="form-control" id="statusHeroEyebrow" placeholder="Centro CEAL" />
+          </label>
+          <label class="field-grid">
+            <strong>Titulo principal</strong>
+            <input class="form-control" id="statusHeroTitle" placeholder="Estado hoy" />
+          </label>
+          <label class="field-grid admin-span-2">
+            <strong>Bajada principal</strong>
+            <textarea class="textarea" id="statusHeroLead" rows="3"></textarea>
+          </label>
+          <label class="field-grid">
+            <strong>Badge principal</strong>
+            <input class="form-control" id="statusActiveBadgeLabel" placeholder="Paro vigente hoy" />
+          </label>
+          <label class="field-grid">
+            <strong>Tono badge principal</strong>
+            <select class="select" id="statusActiveBadgeTone">
+              <option value="review">En revision</option>
+              <option value="confirmed">Confirmado</option>
+              <option value="none">Sin respuesta</option>
+            </select>
+          </label>
+          <label class="field-grid">
+            <strong>Badge fuente</strong>
+            <input class="form-control" id="statusSourceBadgeLabel" placeholder="Fuente base: Acta pleno 21 abr" />
+          </label>
+          <label class="field-grid">
+            <strong>Tono badge fuente</strong>
+            <select class="select" id="statusSourceBadgeTone">
+              <option value="confirmed">Confirmado</option>
+              <option value="review">En revision</option>
+              <option value="none">Sin respuesta</option>
+            </select>
+          </label>
+          <label class="field-grid">
+            <strong>Etiqueta de actualizacion</strong>
+            <input class="form-control" id="statusUpdateLabel" placeholder="Actualizado · Acta pleno 21 abr" />
+          </label>
+          <label class="field-grid">
+            <strong>Kicker estado</strong>
+            <input class="form-control" id="statusCurrentKicker" placeholder="Estado actual" />
+          </label>
+          <label class="field-grid admin-span-2">
+            <strong>Titulo estado</strong>
+            <input class="form-control" id="statusCurrentTitle" placeholder="Paro valido para..." />
+          </label>
+          <label class="field-grid admin-span-2">
+            <strong>Resumen estado</strong>
+            <textarea class="textarea" id="statusCurrentSummary" rows="4"></textarea>
+          </label>
+          <label class="field-grid">
+            <strong>Label estado</strong>
+            <input class="form-control" id="statusCurrentStatusLabel" placeholder="Activo" />
+          </label>
+          <label class="field-grid">
+            <strong>Tono estado</strong>
+            <select class="select" id="statusCurrentStatusTone">
+              <option value="review">En revision</option>
+              <option value="confirmed">Confirmado</option>
+              <option value="none">Sin respuesta</option>
+            </select>
+          </label>
+          <label class="field-grid">
+            <strong>Kicker hitos</strong>
+            <input class="form-control" id="statusEventsKicker" placeholder="Hitos del dia" />
+          </label>
+          <label class="field-grid">
+            <strong>Titulo hitos</strong>
+            <input class="form-control" id="statusEventsTitle" placeholder="Pintaton y marcha" />
+          </label>
+          <label class="field-grid admin-span-2">
+            <strong>Eventos (JSON)</strong>
+            <textarea class="textarea admin-code" id="statusEventsJson" rows="5" placeholder='[{"bullet":"12:00","text":"..."},{"bullet":"15:00","text":"..."}]'></textarea>
+          </label>
+          <label class="field-grid">
+            <strong>Kicker ultima actualizacion</strong>
+            <input class="form-control" id="statusLastUpdateKicker" placeholder="Ultima actualizacion" />
+          </label>
+          <label class="field-grid">
+            <strong>Titulo ultima actualizacion</strong>
+            <input class="form-control" id="statusLastUpdateTitle" placeholder="Acta del pleno..." />
+          </label>
+          <label class="field-grid admin-span-2">
+            <strong>Texto ultima actualizacion</strong>
+            <textarea class="textarea" id="statusLastUpdateBody" rows="3"></textarea>
+          </label>
+          <label class="field-grid">
+            <strong>Titulo FAQ</strong>
+            <input class="form-control" id="statusFaqTitle" placeholder="FAQ" />
+          </label>
+          <label class="field-grid">
+            <strong>Bajada FAQ</strong>
+            <input class="form-control" id="statusFaqIntro" placeholder="Respuestas publicadas." />
+          </label>
+          <label class="field-grid">
+            <strong>Kicker canales</strong>
+            <input class="form-control" id="statusChannelsKicker" placeholder="Fuentes" />
+          </label>
+          <label class="field-grid">
+            <strong>Titulo canales</strong>
+            <input class="form-control" id="statusChannelsTitle" placeholder="Canales base" />
+          </label>
+          <label class="field-grid admin-span-2">
+            <strong>Bajada canales</strong>
+            <input class="form-control" id="statusChannelsIntro" placeholder="Referencias y canales de coordinacion." />
+          </label>
+          <div class="form-actions admin-span-2">
+            <button class="btn btn-primary" type="submit" id="saveStatusButton">Guardar estado vigente</button>
+          </div>
+        </form>
+      </article>
+
+      <article class="card">
+        <div class="admin-card-head">
+          <div>
+            <p class="section-kicker">FAQ</p>
+            <h2>Publicar respuestas</h2>
+          </div>
+        </div>
+        <form id="faqForm" class="field-grid" novalidate>
+          <label class="field-grid">
+            <strong>Operacion</strong>
+            <select class="select" id="faqMode">
+              <option value="sumar">Sumar</option>
+              <option value="reemplazar">Reemplazar</option>
+            </select>
+          </label>
+          <label class="field-grid" id="faqTargetWrap" hidden>
+            <strong>FAQ existente</strong>
+            <select class="select" id="faqTargetId"></select>
+          </label>
+          <label class="field-grid">
+            <strong>Categoria</strong>
+            <select class="select" id="faqCategory">
+              <option value="asistencia">Asistencia</option>
+              <option value="evaluaciones">Evaluaciones</option>
+              <option value="pleno">Pleno</option>
+              <option value="contacto">Contacto</option>
+              <option value="otro">Otro</option>
+            </select>
+          </label>
+          <label class="field-grid">
+            <strong>Estado</strong>
+            <select class="select" id="faqStatus">
+              <option value="confirmed">Confirmado</option>
+              <option value="review">En revision</option>
+              <option value="none">Sin respuesta</option>
+            </select>
+          </label>
+          <label class="field-grid admin-span-2">
+            <strong>Pregunta</strong>
+            <input class="form-control" id="faqQuestion" />
+          </label>
+          <label class="field-grid admin-span-2">
+            <strong>Respuesta</strong>
+            <textarea class="textarea" id="faqAnswer" rows="4"></textarea>
+          </label>
+          <label class="field-grid">
+            <strong>Etiqueta de actualizacion</strong>
+            <input class="form-control" id="faqUpdatedLabel" placeholder="Acta pleno 21 abr" />
+          </label>
+          <label class="field-grid">
+            <strong>Fuente visible</strong>
+            <input class="form-control" id="faqSourceLabel" placeholder="Acta Pleno 21 de abril" />
+          </label>
+          <label class="field-grid">
+            <strong>Orden</strong>
+            <input class="form-control" id="faqOrder" type="number" value="100" />
+          </label>
+          <label class="field-grid admin-toggle">
+            <input id="faqPublished" type="checkbox" checked />
+            <span>Publicar de inmediato</span>
+          </label>
+          <div class="form-actions admin-span-2">
+            <button class="btn btn-primary" type="submit" id="saveFaqButton">Guardar FAQ</button>
+          </div>
+        </form>
+        <div class="admin-list" id="faqList"></div>
+      </article>
+
+      <article class="card">
+        <div class="admin-card-head">
+          <div>
+            <p class="section-kicker">Acuerdos</p>
+            <h2>Publicar acuerdos</h2>
+          </div>
+        </div>
+        <form id="agreementForm" class="field-grid" novalidate>
+          <label class="field-grid">
+            <strong>Operacion</strong>
+            <select class="select" id="agreementMode">
+              <option value="sumar">Sumar</option>
+              <option value="reemplazar">Reemplazar</option>
+            </select>
+          </label>
+          <label class="field-grid" id="agreementTargetWrap" hidden>
+            <strong>Acuerdo existente</strong>
+            <select class="select" id="agreementTargetId"></select>
+          </label>
+          <label class="field-grid">
+            <strong>Area</strong>
+            <input class="form-control" id="agreementArea" placeholder="Seguridad" />
+          </label>
+          <label class="field-grid">
+            <strong>Estado</strong>
+            <select class="select" id="agreementStatus">
+              <option value="confirmed">Confirmado</option>
+              <option value="review">En revision</option>
+              <option value="none">Sin respuesta</option>
+            </select>
+          </label>
+          <label class="field-grid admin-span-2">
+            <strong>Titulo</strong>
+            <input class="form-control" id="agreementTitle" />
+          </label>
+          <label class="field-grid admin-span-2">
+            <strong>Resumen</strong>
+            <textarea class="textarea" id="agreementSummary" rows="4"></textarea>
+          </label>
+          <label class="field-grid">
+            <strong>Fecha visible</strong>
+            <input class="form-control" id="agreementDateLabel" placeholder="22 abr 2026" />
+          </label>
+          <label class="field-grid">
+            <strong>Fuente visible</strong>
+            <input class="form-control" id="agreementSourceLabel" placeholder="Acta Pleno 21 de abril" />
+          </label>
+          <label class="field-grid">
+            <strong>Orden</strong>
+            <input class="form-control" id="agreementOrder" type="number" value="100" />
+          </label>
+          <label class="field-grid admin-toggle">
+            <input id="agreementPublished" type="checkbox" checked />
+            <span>Publicar de inmediato</span>
+          </label>
+          <div class="form-actions admin-span-2">
+            <button class="btn btn-primary" type="submit" id="saveAgreementButton">Guardar acuerdo</button>
+          </div>
+        </form>
+        <div class="admin-list" id="agreementList"></div>
+      </article>
+
+      <article class="card">
+        <div class="admin-card-head">
+          <div>
+            <p class="section-kicker">Canales</p>
+            <h2>Fuentes y enlaces</h2>
+          </div>
+        </div>
+        <form id="channelForm" class="field-grid" novalidate>
+          <label class="field-grid">
+            <strong>Operacion</strong>
+            <select class="select" id="channelMode">
+              <option value="sumar">Sumar</option>
+              <option value="reemplazar">Reemplazar</option>
+            </select>
+          </label>
+          <label class="field-grid" id="channelTargetWrap" hidden>
+            <strong>Canal existente</strong>
+            <select class="select" id="channelTargetId"></select>
+          </label>
+          <label class="field-grid">
+            <strong>Nombre</strong>
+            <input class="form-control" id="channelLabel" placeholder="WhatsApp" />
+          </label>
+          <label class="field-grid">
+            <strong>Subtitulo</strong>
+            <input class="form-control" id="channelMeta" placeholder="Comunicados" />
+          </label>
+          <label class="field-grid admin-span-2">
+            <strong>URL</strong>
+            <input class="form-control" id="channelHref" placeholder="https://..." />
+          </label>
+          <label class="field-grid">
+            <strong>Orden</strong>
+            <input class="form-control" id="channelOrder" type="number" value="100" />
+          </label>
+          <label class="field-grid admin-toggle">
+            <input id="channelPublished" type="checkbox" checked />
+            <span>Publicar de inmediato</span>
+          </label>
+          <div class="form-actions admin-span-2">
+            <button class="btn btn-primary" type="submit" id="saveChannelButton">Guardar canal</button>
+          </div>
+        </form>
+        <div class="admin-list" id="channelList"></div>
+      </article>
+
+      <article class="card">
+        <div class="admin-card-head">
+          <div>
+            <p class="section-kicker">Documentos base</p>
+            <h2>Subir archivos</h2>
+          </div>
+          <span class="status-badge status-review">Se suman</span>
+        </div>
+        <form id="documentForm" class="field-grid" novalidate>
+          <label class="field-grid">
+            <strong>Titulo corto</strong>
+            <input class="form-control" id="documentTitle" placeholder="Acta pleno 22 abr" />
+          </label>
+          <label class="field-grid">
+            <strong>Tipo</strong>
+            <select class="select" id="documentKind">
+              <option value="acta">Acta</option>
+              <option value="comunicado">Comunicado</option>
+              <option value="votacion">Votacion</option>
+              <option value="reglamento">Reglamento</option>
+              <option value="otro">Otro</option>
+            </select>
+          </label>
+          <label class="field-grid admin-span-2">
+            <strong>Notas</strong>
+            <textarea class="textarea" id="documentNotes" rows="3" placeholder="Que contiene y para que se usara."></textarea>
+          </label>
+          <label class="field-grid admin-span-2">
+            <strong>Archivo</strong>
+            <input class="form-control" id="documentFile" type="file" accept=".pdf,.doc,.docx,.xlsx,.xls,.csv,.png,.jpg,.jpeg,.webp" />
+          </label>
+          <div class="form-actions admin-span-2">
+            <button class="btn btn-primary" type="submit" id="uploadDocumentButton">Subir documento</button>
+          </div>
+        </form>
+        <div class="admin-list" id="documentList"></div>
+      </article>
+
+      <article class="card">
+        <div class="admin-card-head">
+          <div>
+            <p class="section-kicker">Flujo IA</p>
+            <h2>Solicitar actualización</h2>
+          </div>
+        </div>
+        <form id="jobForm" class="field-grid" novalidate>
+          <label class="field-grid">
+            <strong>Objetivo</strong>
+            <select class="select" id="jobTargetType">
+              <option value="faq">FAQ</option>
+              <option value="agreement">Acuerdos</option>
+              <option value="status">Estado principal</option>
+              <option value="channels">Canales</option>
+              <option value="mixed">Mixto</option>
+            </select>
+          </label>
+          <label class="field-grid">
+            <strong>Operacion</strong>
+            <select class="select" id="jobActionMode">
+              <option value="sumar">Sumar</option>
+              <option value="reemplazar">Reemplazar</option>
+            </select>
+          </label>
+          <label class="field-grid admin-span-2">
+            <strong>Titulo del pedido</strong>
+            <input class="form-control" id="jobTitle" placeholder="Actualizar FAQ con acta del 22 de abril" />
+          </label>
+          <label class="field-grid admin-span-2">
+            <strong>Instrucciones para IA</strong>
+            <textarea class="textarea" id="jobInstructions" rows="5" placeholder="Que debe sumar, que debe reemplazar y que no debe tocar."></textarea>
+          </label>
+          <div class="field-grid admin-span-2">
+            <strong>Documentos asociados</strong>
+            <div id="jobDocumentPicker" class="admin-picker empty">Sube documentos o recarga la lista.</div>
+          </div>
+          <div class="form-actions admin-span-2">
+            <button class="btn btn-primary" type="submit" id="queueJobButton">Solicitar actualización IA</button>
+          </div>
+        </form>
+        <div class="admin-list" id="jobList"></div>
+      </article>
+    </section>
+
+    <div class="toast-region" id="adminToastRegion" aria-live="polite" aria-atomic="true"></div>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="admin.js?v=33" defer></script>
+</body>
+</html>

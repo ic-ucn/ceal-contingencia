@@ -7,7 +7,7 @@
     "start": "node server.mjs",
     "dev": "node server.mjs",
     "check": "node --check server.mjs",
-    "check:web": "node --check public/app.js && node --check public/sw.js",
+    "check:web": "node --check public/app.js && node --check public/admin.js && node --check public/sw.js",
     "smoke:local": "powershell -ExecutionPolicy Bypass -File .\\scripts\\smoke-test-ceal.ps1",
     "smoke:public": "powershell -ExecutionPolicy Bypass -File .\\scripts\\smoke-test-ceal.ps1 -CheckPublic"
   },

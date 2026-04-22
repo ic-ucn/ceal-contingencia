@@ -32,6 +32,17 @@ window.CEAL_CONFIG = {
   supabaseBucket: "ceal-evidence",
   supabaseQuestionsTable: "questions",
   supabaseReportsTable: "reports",
-  supabaseEvidenceTable: "report_evidence"
+  supabaseEvidenceTable: "report_evidence",
+
+  adminMembersTable: "admin_members",
+  adminStatusTable: "site_status",
+  adminFaqTable: "faq_entries",
+  adminAgreementTable: "agreement_entries",
+  adminChannelTable: "channel_links",
+  adminDocumentTable: "source_documents",
+  adminUpdateJobTable: "update_jobs",
+  adminSourceBucket: "ceal-admin-sources",
+  adminAllowedDomains: ["ucn.cl"],
+  adminAllowedEmails: []
 };
 

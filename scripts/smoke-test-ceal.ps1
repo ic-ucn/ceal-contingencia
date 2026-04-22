@@ -1,5 +1,5 @@
 param(
-  [string]$LocalUrl = "http://localhost:3000/?v=24#inicio",
+  [string]$LocalUrl = "http://localhost:3000/?v=33#inicio",
   [string]$PublicUrl = "https://ic-ucn.github.io/ceal-contingencia/",
   [switch]$CheckPublic
 )
