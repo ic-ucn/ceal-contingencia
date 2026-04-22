@@ -1,0 +1,6 @@
+node_modules/
+server.stdout.log
+server.stderr.log
+data/*.ndjson
+data/uploads/*
+!data/uploads/.gitkeep

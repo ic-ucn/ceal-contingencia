@@ -1,0 +1,1117 @@
+(() => {
+  "use strict";
+
+  const config = {
+    appName: "CEAL Contingencia",
+    institutionName: "UCN · Ingeniería Civil · CEAL",
+    subtitle: "Contingencia estudiantil",
+    updateLabel: "Actualizado hoy · 10:15",
+    apiBase: "",
+    enableLocalFallback: true,
+    maxFileMB: 10,
+    maxFiles: 5,
+    contactEmail: "",
+    privacyCopy: "Este reporte es anónimo. No se solicitan datos personales.",
+    ...(window.CEAL_CONFIG || {})
+  };
+
+  const STORAGE = {
+    reports: "ceal.reports.v1",
+    questions: "ceal.questions.v1",
+    reportDraft: "ceal.reportDraft.v1"
+  };
+
+  const ROUTES = new Set(["inicio", "reportar", "acuerdos"]);
+
+  const FAQ_CATEGORIES = [
+    { id: "asistencia", label: "Asistencia", icon: "▣" },
+    { id: "evaluaciones", label: "Evaluaciones", icon: "▤" },
+    { id: "pleno", label: "Pleno", icon: "◌" },
+    { id: "contacto", label: "Contacto", icon: "✉" }
+  ];
+
+  const ISSUE_TYPES = [
+    { id: "asistencia", label: "Asistencia", icon: "👥" },
+    { id: "evaluacion", label: "Evaluación", icon: "📋" },
+    { id: "informacion", label: "Información contradictoria", icon: "ⓘ" },
+    { id: "presion", label: "Presión docente", icon: "◔" },
+    { id: "tramite", label: "Trámite", icon: "▯" },
+    { id: "otro", label: "Otro", icon: "⋯" }
+  ];
+
+  const SUBJECTS = [
+    "Cálculo I",
+    "Cálculo II",
+    "Álgebra",
+    "Física",
+    "Química",
+    "Mecánica de sólidos",
+    "Topografía",
+    "Hidráulica",
+    "Materiales de construcción",
+    "Programación",
+    "Práctica / trámite académico",
+    "Unidad administrativa",
+    "Otro"
+  ];
+
+  const FAQS = [
+    {
+      id: "faq-asistencia-1",
+      category: "asistencia",
+      question: "¿Se tomará asistencia durante la contingencia?",
+      answer: "No. Mientras dure la contingencia, las actividades académicas no tendrán registro de asistencia. Si detectas un registro o presión asociada, repórtalo para respaldo colectivo.",
+      status: "confirmed",
+      updated: "Actualizado hoy · 10:15"
+    },
+    {
+      id: "faq-evaluaciones-1",
+      category: "evaluaciones",
+      question: "¿Habrá evaluaciones esta semana?",
+      answer: "Está en revisión. El CEAL consolidará la información oficial y la publicará en esta sección apenas exista confirmación.",
+      status: "review",
+      updated: "Actualizado hoy · 10:15"
+    },
+    {
+      id: "faq-evaluaciones-2",
+      category: "evaluaciones",
+      question: "¿Qué pasa si ya tengo una evaluación programada?",
+      answer: "Guarda el respaldo de la programación y revisa las actualizaciones oficiales. Si recibes instrucciones contradictorias, envía un reporte con captura o documento adjunto.",
+      status: "confirmed",
+      updated: "Actualizado hoy · 10:15"
+    },
+    {
+      id: "faq-pleno-1",
+      category: "pleno",
+      question: "¿Dónde puedo ver los acuerdos del pleno?",
+      answer: "Los acuerdos se centralizan en la pestaña Acuerdos. Cada publicación incluye estado, fecha y próximos pasos para evitar información dispersa.",
+      status: "confirmed",
+      updated: "Actualizado hoy · 10:15"
+    },
+    {
+      id: "faq-pleno-2",
+      category: "pleno",
+      question: "¿Habrá cambio de fechas en el calendario académico?",
+      answer: "La información se marcará como confirmada solo cuando exista respaldo oficial. Mientras tanto, se mantiene en revisión.",
+      status: "confirmed",
+      updated: "Actualizado hoy · 10:15"
+    },
+    {
+      id: "faq-contacto-1",
+      category: "contacto",
+      question: "¿A quién contacto si tengo un caso urgente?",
+      answer: "Envía un reporte con la opción de seguimiento activada o una nueva duda desde esta plataforma. Si tu caso requiere respuesta inmediata, usa además los canales oficiales del CEAL.",
+      status: "none",
+      updated: "Pendiente de respuesta oficial"
+    },
+    {
+      id: "faq-asistencia-2",
+      category: "asistencia",
+      question: "¿Las clases se recuperarán?",
+      answer: "Está en revisión. Cuando se confirme un plan de recuperación, se informará junto con los acuerdos correspondientes.",
+      status: "review",
+      updated: "Actualizado hoy · 10:15"
+    }
+  ];
+
+  const AGREEMENTS = [
+    {
+      id: "agr-1",
+      title: "Asistencia durante la contingencia",
+      summary: "Centralizar los casos de asistencia y respaldos para evitar registros inconsistentes durante el periodo informado.",
+      status: "confirmed",
+      date: "Hoy · 10:15",
+      area: "Académico"
+    },
+    {
+      id: "agr-2",
+      title: "Evaluaciones y recalendarización",
+      summary: "Levantamiento de evaluaciones programadas, evidencia de instrucciones contradictorias y seguimiento de respuestas oficiales.",
+      status: "review",
+      date: "Hoy · 09:40",
+      area: "Evaluaciones"
+    },
+    {
+      id: "agr-3",
+      title: "Canal único de reportes anónimos",
+      summary: "Uso de un formulario unificado para sistematizar incidencias y dudas sin solicitar datos personales.",
+      status: "confirmed",
+      date: "Ayer · 18:30",
+      area: "Gestión CEAL"
+    }
+  ];
+
+  const state = {
+    route: getRouteFromHash(),
+    faqFilter: "asistencia",
+    faqQuery: "",
+    openFaqId: "faq-asistencia-1",
+    agreementFilter: "todos",
+    report: loadJSON(STORAGE.reportDraft, {
+      type: "asistencia",
+      subject: "",
+      date: "",
+      description: "",
+      followUp: true
+    }),
+    files: [],
+    isSubmitting: false
+  };
+
+  const main = document.getElementById("main");
+  const modalRoot = document.getElementById("modalRoot");
+  const toastRegion = document.getElementById("toastRegion");
+  const drawer = document.getElementById("drawer");
+  const menuToggle = document.getElementById("menuToggle");
+
+  function escapeHTML(value) {
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  function loadJSON(key, fallback) {
+    try {
+      const raw = localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : fallback;
+    } catch (_) {
+      return fallback;
+    }
+  }
+
+  function saveJSON(key, value) {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+    } catch (_) {
+      // El almacenamiento local puede fallar si el navegador está en modo privado o si se supera la cuota.
+    }
+  }
+
+  function normalizeText(value) {
+    return String(value || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .trim();
+  }
+
+  function getRouteFromHash() {
+    const route = window.location.hash.replace("#", "").trim() || "inicio";
+    return ROUTES.has(route) ? route : "inicio";
+  }
+
+  function statusBadge(status) {
+    const map = {
+      confirmed: { label: "Confirmado", className: "status-confirmed", icon: "✓" },
+      review: { label: "En revisión", className: "status-review", icon: "◷" },
+      none: { label: "Sin respuesta oficial", className: "status-none", icon: "?" }
+    };
+    const item = map[status] || map.review;
+    return `<span class="status-badge ${item.className}"><span aria-hidden="true">${item.icon}</span>${item.label}</span>`;
+  }
+
+  function iconSearch() {
+    return `
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+        <circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.6-3.6"></path>
+      </svg>`;
+  }
+
+  function iconChevron() {
+    return `
+      <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="m6 9 6 6 6-6"></path>
+      </svg>`;
+  }
+
+  function render() {
+    state.route = getRouteFromHash();
+
+    const renderers = {
+      inicio: renderHome,
+      reportar: renderReport,
+      acuerdos: renderAgreements
+    };
+
+    main.innerHTML = renderers[state.route]();
+    updateActiveNavigation();
+    wireCurrentPage();
+  }
+
+  function updateActiveNavigation() {
+    document.querySelectorAll("[data-route]").forEach((link) => {
+      const isActive = link.dataset.route === state.route;
+      if (isActive) link.setAttribute("aria-current", "page");
+      else link.removeAttribute("aria-current");
+    });
+  }
+
+  function renderHome() {
+    const reports = loadJSON(STORAGE.reports, []);
+    const questions = loadJSON(STORAGE.questions, []);
+    const filteredFaqs = getFilteredFaqs();
+
+    return `
+      <div class="page-stack">
+        <section class="hero-grid" aria-labelledby="faq-title">
+          <div>
+            <p class="eyebrow">Centro oficial CEAL</p>
+            <h1 id="faq-title">Preguntas frecuentes</h1>
+            <p class="lead">Consulta respuestas y filtra por tema.</p>
+            <div class="meta-row" aria-label="Estado de actualización">
+              <span aria-hidden="true">◷</span><span>${escapeHTML(config.updateLabel)}</span><span class="dot"></span><span>${FAQS.length} respuestas cargadas</span>
+            </div>
+          </div>
+
+          <aside class="glass-card status-panel" aria-label="Estado de la contingencia">
+            <div class="big-icon" aria-hidden="true">🛡</div>
+            <h2>Contingencia estudiantil</h2>
+            <p>FAQ, reportes y dudas.</p>
+            <div class="kpi-grid" aria-label="Resumen">
+              <div class="kpi"><strong>${FAQS.length}</strong><span>FAQ</span></div>
+              <div class="kpi"><strong>${reports.length}</strong><span>Reportes</span></div>
+              <div class="kpi"><strong>${questions.length}</strong><span>Dudas</span></div>
+            </div>
+          </aside>
+        </section>
+
+        <section class="search-card" aria-label="Buscar preguntas frecuentes">
+          <label class="search-input">
+            ${iconSearch()}
+            <input id="faqSearch" type="search" inputmode="search" autocomplete="off" placeholder="Buscar una pregunta..." value="${escapeHTML(state.faqQuery)}" />
+          </label>
+        </section>
+
+        <section class="category-row" aria-label="Filtros de preguntas frecuentes">
+          ${FAQ_CATEGORIES.map((category) => `
+            <button class="category-chip" type="button" data-faq-filter="${category.id}" aria-pressed="${state.faqFilter === category.id}">
+              <span class="chip-icon" aria-hidden="true">${category.icon}</span>${escapeHTML(category.label)}
+            </button>`).join("")}
+        </section>
+
+        <section class="card faq-section-intro" aria-labelledby="faq-section-title">
+          <div>
+            <h2 id="faq-section-title">Sección de preguntas frecuentes</h2>
+            <p>Respuestas publicadas.</p>
+          </div>
+          <div class="meta-row">
+            <span>${filteredFaqs.length} resultado${filteredFaqs.length === 1 ? "" : "s"}</span>
+            <span class="dot"></span>
+            <span>Filtro: ${escapeHTML(categoryLabel(state.faqFilter))}</span>
+          </div>
+        </section>
+
+        <section class="content-grid">
+          <div class="faq-list" aria-live="polite">
+            ${filteredFaqs.length ? filteredFaqs.map(renderFaqCard).join("") : renderEmpty("No encontramos preguntas con ese filtro.", "Prueba otra búsqueda o envía una nueva duda para que el CEAL pueda responderla.")}
+          </div>
+
+          <aside class="rail" aria-label="Acciones rápidas">
+            <div class="rail-card">
+              <h2>Acciones rápidas</h2>
+              <p>Elige una acción.</p>
+              <div class="quick-actions">
+                <a class="btn btn-primary" href="#reportar" data-route="reportar">✈ Enviar reporte</a>
+                <button class="btn btn-soft" type="button" data-open-question>💬 Enviar nueva duda</button>
+                <a class="btn btn-soft" href="#acuerdos" data-route="acuerdos">▤ Ver acuerdos</a>
+              </div>
+            </div>
+            <div class="rail-card">
+              <h3>Estado de respuestas</h3>
+              <ul class="help-list">
+                <li><span class="bullet">✓</span><span><strong>Confirmado:</strong> con respaldo.</span></li>
+                <li><span class="bullet">◷</span><span><strong>En revisión:</strong> pendiente de validación.</span></li>
+                <li><span class="bullet">?</span><span><strong>Sin respuesta:</strong> sin definición oficial.</span></li>
+              </ul>
+            </div>
+          </aside>
+        </section>
+
+        <section class="cta-card" aria-label="Enviar otra duda">
+          <div class="cta-icon" aria-hidden="true">?</div>
+          <div>
+            <h2>Nueva duda</h2>
+            <p>Si no aparece aquí, envíala.</p>
+          </div>
+          <button class="btn btn-primary" type="button" data-open-question>✈ Enviar nueva duda</button>
+        </section>
+      </div>
+    `;
+  }
+
+  function getFilteredFaqs() {
+    const query = normalizeText(state.faqQuery);
+    return FAQS.filter((faq) => {
+      const matchesCategory = faq.category === state.faqFilter;
+      const haystack = normalizeText(`${faq.question} ${faq.answer} ${faq.updated}`);
+      const matchesQuery = !query || haystack.includes(query);
+      return matchesCategory && matchesQuery;
+    });
+  }
+
+  function renderFaqCard(faq) {
+    const isOpen = state.openFaqId === faq.id;
+    return `
+      <article class="faq-card ${isOpen ? "is-open" : ""}">
+        <button class="faq-question" type="button" data-toggle-faq="${faq.id}" aria-expanded="${isOpen}" aria-controls="answer-${faq.id}">
+          <strong>${escapeHTML(faq.question)}</strong>
+          ${statusBadge(faq.status)}
+          ${iconChevron()}
+        </button>
+        <div id="answer-${faq.id}" class="faq-answer">
+          <p>${escapeHTML(faq.answer)}</p>
+          <div class="meta-row"><span>${escapeHTML(faq.updated)}</span><span class="dot"></span><span>Categoría: ${escapeHTML(categoryLabel(faq.category))}</span></div>
+        </div>
+      </article>`;
+  }
+
+  function categoryLabel(id) {
+    return FAQ_CATEGORIES.find((item) => item.id === id)?.label || id;
+  }
+
+  function renderReport() {
+    const descriptionLength = state.report.description?.length || 0;
+    const reports = loadJSON(STORAGE.reports, []);
+
+    return `
+      <div class="page-stack">
+        <section aria-labelledby="report-title">
+          <p class="eyebrow">Reporte de incidencias</p>
+          <h1 id="report-title">Contingencia estudiantil</h1>
+            <p class="lead">Formulario para reportar incidencias.</p>
+        </section>
+
+        <section class="report-grid">
+          <form class="form-card" id="reportForm" novalidate>
+            <div class="confidential-card">
+              <div class="shield" aria-hidden="true">🛡</div>
+              <div>
+                <h3>Confidencial.</h3>
+                <p>Describe el hecho y adjunta respaldo si cuentas con él.</p>
+              </div>
+            </div>
+
+            <div class="section-step">
+              <div class="step-label"><span class="step-number">1</span> Tipo de problema</div>
+              <div class="option-grid" role="group" aria-label="Tipo de problema">
+                ${ISSUE_TYPES.map((type) => `
+                  <button class="option-button" type="button" data-report-type="${type.id}" aria-pressed="${state.report.type === type.id}">
+                    <span class="chip-icon" aria-hidden="true">${type.icon}</span>${escapeHTML(type.label)}
+                  </button>`).join("")}
+              </div>
+            </div>
+
+            <div class="section-step">
+              <label class="step-label" for="subjectInput"><span class="step-number">2</span> Asignatura o unidad</label>
+              <div class="input-wrap">
+                <span class="input-icon" aria-hidden="true">⌄</span>
+                <input class="form-control" id="subjectInput" name="subject" list="subjectList" placeholder="Selecciona o escribe" value="${escapeHTML(state.report.subject)}" autocomplete="off" required />
+                <datalist id="subjectList">
+                  ${SUBJECTS.map((subject) => `<option value="${escapeHTML(subject)}"></option>`).join("")}
+                </datalist>
+              </div>
+            </div>
+
+            <div class="section-step">
+              <label class="step-label" for="dateInput"><span class="step-number">3</span> Fecha</label>
+              <div class="input-wrap">
+                <span class="input-icon" aria-hidden="true">▣</span>
+                <input class="form-control" id="dateInput" name="date" type="date" value="${escapeHTML(state.report.date)}" required />
+              </div>
+            </div>
+
+            <div class="section-step">
+              <label class="step-label" for="descriptionInput"><span class="step-number">4</span> Descripción breve</label>
+              <div class="textarea-wrap">
+                <textarea class="textarea" id="descriptionInput" name="description" maxlength="500" placeholder="Cuéntanos brevemente qué ocurrió." required>${escapeHTML(state.report.description)}</textarea>
+                <span class="counter" id="descriptionCounter">${descriptionLength}/500</span>
+              </div>
+            </div>
+
+            <div class="section-step">
+              <div class="step-label"><span class="step-number">5</span> Adjuntar evidencia <span style="color: var(--muted); font-weight: 800;">(opcional)</span></div>
+              <div class="dropzone" id="dropzone">
+                <div class="dropzone-copy">
+                  <div class="dropzone-icon" aria-hidden="true">⇧</div>
+                  <div>
+                    <h3>Sube archivos o capturas de pantalla</h3>
+                    <p>Formatos: imagen, PDF, Word. Máx. ${Number(config.maxFileMB)} MB por archivo.</p>
+                  </div>
+                </div>
+                <button class="btn btn-soft" type="button" tabindex="-1">Seleccionar</button>
+                <input class="file-input" id="evidenceInput" type="file" multiple accept="image/*,.pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" aria-label="Seleccionar evidencia" />
+              </div>
+              <div class="file-list" id="fileList">${renderFiles()}</div>
+            </div>
+
+            <div class="section-step">
+              <div class="step-label"><span class="step-number">6</span> ¿Quieres seguimiento?</div>
+              <p style="margin: -6px 0 0; color: var(--text-soft);">Activa seguimiento si quieres avances.</p>
+              <div class="follow-grid" role="group" aria-label="Preferencia de seguimiento">
+                <button class="toggle-button" type="button" data-follow="true" aria-pressed="${Boolean(state.report.followUp)}"><span class="chip-icon" aria-hidden="true">✓</span>Sí, quiero seguimiento</button>
+                <button class="toggle-button" type="button" data-follow="false" aria-pressed="${!state.report.followUp}"><span class="chip-icon" aria-hidden="true">×</span>No, prefiero mantenerlo cerrado</button>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button class="btn btn-primary btn-full" id="submitReportButton" type="submit">✈ Enviar reporte</button>
+              <div class="form-note"><span aria-hidden="true">🔒</span><span>${escapeHTML(config.privacyCopy)}</span></div>
+            </div>
+          </form>
+
+          <aside class="rail" aria-label="Ayuda del reporte">
+            <div class="rail-card">
+              <h2>Guía</h2>
+              <ul class="help-list">
+                <li><span class="bullet">1</span><span>Indica fecha, asignatura y hecho.</span></li>
+                <li><span class="bullet">2</span><span>Adjunta respaldo si existe.</span></li>
+                <li><span class="bullet">3</span><span>No agregues datos sensibles.</span></li>
+              </ul>
+            </div>
+            <div class="rail-card">
+              <h2>Tus envíos</h2>
+              <p><strong>${reports.length}</strong> reporte${reports.length === 1 ? "" : "s"} guardado${reports.length === 1 ? "" : "s"} en este equipo.</p>
+              <div class="quick-actions">
+                <button class="btn btn-soft" type="button" data-open-history>Ver tus envíos</button>
+                <a class="btn btn-soft" href="#inicio" data-route="inicio">Ver preguntas frecuentes</a>
+              </div>
+            </div>
+            <div class="rail-card">
+              <h2>Siguiente paso</h2>
+              <p>Revisión y publicación cuando corresponda.</p>
+            </div>
+          </aside>
+        </section>
+      </div>`;
+  }
+
+  function renderFiles() {
+    if (!state.files.length) return "";
+    return state.files.map((file) => `
+      <div class="file-item">
+        <div style="min-width:0;">
+          <strong>${escapeHTML(file.name)}</strong>
+          <span>${escapeHTML(file.type || "archivo")} · ${formatBytes(file.size)}</span>
+        </div>
+        <button class="file-remove" type="button" data-remove-file="${file.id}" aria-label="Quitar ${escapeHTML(file.name)}">×</button>
+      </div>`).join("");
+  }
+
+  function renderAgreements() {
+    const filters = ["todos", "Académico", "Evaluaciones", "Gestión CEAL"];
+    const agreements = state.agreementFilter === "todos"
+      ? AGREEMENTS
+      : AGREEMENTS.filter((item) => item.area === state.agreementFilter);
+
+    return `
+      <div class="page-stack">
+        <section>
+          <p class="eyebrow">Acuerdos</p>
+          <h1>Acuerdos del pleno</h1>
+          <p class="lead">Acuerdos publicados y su estado.</p>
+        </section>
+
+        <div class="segmented" role="group" aria-label="Filtrar acuerdos">
+          ${filters.map((filter) => `<button type="button" data-agreement-filter="${escapeHTML(filter)}" aria-pressed="${state.agreementFilter === filter}">${escapeHTML(filter === "todos" ? "Todos" : filter)}</button>`).join("")}
+        </div>
+
+        <section class="content-grid">
+          <div class="agreement-grid">
+            ${agreements.map((agreement) => `
+              <article class="agreement-card">
+                <header>
+                  <div>
+                    <h2>${escapeHTML(agreement.title)}</h2>
+                    <div class="meta-row"><span>${escapeHTML(agreement.area)}</span><span class="dot"></span><span>${escapeHTML(agreement.date)}</span></div>
+                  </div>
+                  ${statusBadge(agreement.status)}
+                </header>
+                <p>${escapeHTML(agreement.summary)}</p>
+              </article>`).join("")}
+          </div>
+
+          <aside class="rail">
+            <div class="timeline-card">
+              <h2>Proceso</h2>
+              <ul class="timeline-list">
+                <li><span class="bullet">1</span><span>Recepción.</span></li>
+                <li><span class="bullet">2</span><span>Revisión.</span></li>
+                <li><span class="bullet">3</span><span>Publicación.</span></li>
+              </ul>
+            </div>
+            <div class="rail-card">
+              <h2>¿Falta algo?</h2>
+              <p>Envía una duda o un reporte.</p>
+              <div class="quick-actions">
+                <button class="btn btn-primary" type="button" data-open-question>Enviar duda</button>
+                <a class="btn btn-soft" href="#reportar" data-route="reportar">Enviar reporte</a>
+              </div>
+            </div>
+          </aside>
+        </section>
+      </div>`;
+  }
+
+  function renderEmpty(title, body) {
+    return `
+      <div class="empty-state">
+        <h2>${escapeHTML(title)}</h2>
+        <p>${escapeHTML(body)}</p>
+        <button class="btn btn-primary" type="button" data-open-question>Enviar nueva duda</button>
+      </div>`;
+  }
+
+  function wireCurrentPage() {
+    const faqSearch = document.getElementById("faqSearch");
+    if (faqSearch) {
+      faqSearch.addEventListener("input", (event) => {
+        state.faqQuery = event.target.value;
+        render();
+        const input = document.getElementById("faqSearch");
+        if (input) {
+          input.focus();
+          const end = input.value.length;
+          input.setSelectionRange(end, end);
+        }
+      });
+    }
+
+    const reportForm = document.getElementById("reportForm");
+    if (reportForm) {
+      reportForm.addEventListener("input", updateReportDraftFromDOM);
+      reportForm.addEventListener("change", updateReportDraftFromDOM);
+      reportForm.addEventListener("submit", submitReport);
+
+      const dropzone = document.getElementById("dropzone");
+      const evidenceInput = document.getElementById("evidenceInput");
+      if (evidenceInput) evidenceInput.addEventListener("change", (event) => addFiles(event.target.files));
+      if (dropzone) {
+        ["dragenter", "dragover"].forEach((eventName) => dropzone.addEventListener(eventName, (event) => {
+          event.preventDefault();
+          dropzone.classList.add("is-dragover");
+        }));
+        ["dragleave", "drop"].forEach((eventName) => dropzone.addEventListener(eventName, (event) => {
+          event.preventDefault();
+          dropzone.classList.remove("is-dragover");
+        }));
+        dropzone.addEventListener("drop", (event) => addFiles(event.dataTransfer.files));
+      }
+    }
+  }
+
+  function updateReportDraftFromDOM() {
+    const subject = document.getElementById("subjectInput");
+    const date = document.getElementById("dateInput");
+    const description = document.getElementById("descriptionInput");
+    const counter = document.getElementById("descriptionCounter");
+
+    if (subject) state.report.subject = subject.value;
+    if (date) state.report.date = date.value;
+    if (description) {
+      state.report.description = description.value;
+      if (counter) counter.textContent = `${description.value.length}/500`;
+    }
+    saveJSON(STORAGE.reportDraft, state.report);
+  }
+
+  async function addFiles(fileList) {
+    const files = Array.from(fileList || []);
+    if (!files.length) return;
+
+    for (const file of files) {
+      if (state.files.length >= Number(config.maxFiles)) {
+        toast(`Puedes adjuntar hasta ${config.maxFiles} archivos.`, "error");
+        break;
+      }
+      if (!isAllowedFile(file)) {
+        toast(`Formato no permitido: ${file.name}`, "error");
+        continue;
+      }
+      if (file.size > Number(config.maxFileMB) * 1024 * 1024) {
+        toast(`${file.name} supera ${config.maxFileMB} MB.`, "error");
+        continue;
+      }
+      try {
+        const dataUrl = await readFileAsDataURL(file);
+        state.files.push({
+          id: cryptoRandomId("file"),
+          name: file.name,
+          type: file.type || guessMimeByName(file.name),
+          size: file.size,
+          dataUrl
+        });
+      } catch (_) {
+        toast(`No se pudo leer ${file.name}.`, "error");
+      }
+    }
+    render();
+  }
+
+  function isAllowedFile(file) {
+    const type = file.type || guessMimeByName(file.name);
+    const byMime = type.startsWith("image/")
+      || type === "application/pdf"
+      || type === "application/msword"
+      || type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+    const byExt = /\.(png|jpe?g|webp|gif|pdf|doc|docx)$/i.test(file.name);
+    return byMime || byExt;
+  }
+
+  function guessMimeByName(name) {
+    const lower = String(name || "").toLowerCase();
+    if (lower.endsWith(".pdf")) return "application/pdf";
+    if (lower.endsWith(".doc")) return "application/msword";
+    if (lower.endsWith(".docx")) return "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+    if (lower.endsWith(".png")) return "image/png";
+    if (lower.endsWith(".jpg") || lower.endsWith(".jpeg")) return "image/jpeg";
+    if (lower.endsWith(".webp")) return "image/webp";
+    if (lower.endsWith(".gif")) return "image/gif";
+    return "application/octet-stream";
+  }
+
+  function readFileAsDataURL(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result));
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function submitReport(event) {
+    event.preventDefault();
+    updateReportDraftFromDOM();
+
+    const errors = validateReport(state.report);
+    if (errors.length) {
+      toast(errors[0], "error");
+      return;
+    }
+
+    const button = document.getElementById("submitReportButton");
+    setButtonLoading(button, true, "Enviando...");
+
+    const payload = {
+      id: cryptoRandomId("CEAL"),
+      createdAt: new Date().toISOString(),
+      problemType: state.report.type,
+      problemTypeLabel: ISSUE_TYPES.find((item) => item.id === state.report.type)?.label || state.report.type,
+      subject: state.report.subject.trim(),
+      date: state.report.date,
+      description: state.report.description.trim(),
+      followUp: Boolean(state.report.followUp),
+      evidence: state.files.map((file) => ({
+        name: file.name,
+        type: file.type,
+        size: file.size,
+        dataUrl: file.dataUrl
+      })),
+      source: "web"
+    };
+
+    try {
+      const result = await submitRecord("reports", payload);
+      storeLocalSummary(STORAGE.reports, {
+        id: result.id || payload.id,
+        createdAt: payload.createdAt,
+        problemTypeLabel: payload.problemTypeLabel,
+        subject: payload.subject,
+        date: payload.date,
+        followUp: payload.followUp,
+        evidenceCount: payload.evidence.length,
+        storedIn: result.storedIn || "api"
+      });
+      state.report = { type: "asistencia", subject: "", date: "", description: "", followUp: true };
+      state.files = [];
+      saveJSON(STORAGE.reportDraft, state.report);
+      render();
+      showSuccessModal(result.id || payload.id, result.storedIn || "api");
+    } catch (error) {
+      toast(error.message || "No se pudo enviar el reporte.", "error");
+    } finally {
+      setButtonLoading(button, false, "✈ Enviar reporte");
+    }
+  }
+
+  function validateReport(report) {
+    const errors = [];
+    if (!report.type) errors.push("Selecciona el tipo de problema.");
+    if (!report.subject || !report.subject.trim()) errors.push("Indica la asignatura o unidad.");
+    if (!report.date) errors.push("Selecciona la fecha del incidente.");
+    if (report.date && new Date(`${report.date}T00:00:00`) > new Date()) errors.push("La fecha no puede ser futura.");
+    const description = String(report.description || "").trim();
+    if (description.length < 10) errors.push("La descripción debe tener al menos 10 caracteres.");
+    if (description.length > 500) errors.push("La descripción no puede superar 500 caracteres.");
+    return errors;
+  }
+
+  async function submitRecord(resource, payload) {
+    const endpoint = `${String(config.apiBase || "").replace(/\/$/, "")}/api/${resource}`;
+
+    try {
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      if (!response.ok) {
+        const message = await response.text();
+        throw new Error(message || `Error ${response.status}`);
+      }
+      const json = await response.json().catch(() => ({}));
+      return { ...json, storedIn: "api" };
+    } catch (error) {
+      if (!config.enableLocalFallback) throw error;
+      const safePayload = stripLargeEvidence(payload);
+      storeLocalSummary(resource === "reports" ? STORAGE.reports : STORAGE.questions, {
+        ...safePayload,
+        storedIn: "local"
+      });
+      return { id: payload.id, storedIn: "local" };
+    }
+  }
+
+  function stripLargeEvidence(payload) {
+    const clone = structuredCloneSafe(payload);
+    if (Array.isArray(clone.evidence)) {
+      clone.evidence = clone.evidence.map((file) => ({
+        name: file.name,
+        type: file.type,
+        size: file.size
+      }));
+    }
+    return clone;
+  }
+
+  function structuredCloneSafe(value) {
+    if (typeof structuredClone === "function") return structuredClone(value);
+    return JSON.parse(JSON.stringify(value));
+  }
+
+  function storeLocalSummary(key, record) {
+    const list = loadJSON(key, []);
+    const exists = list.some((item) => item.id === record.id);
+    if (!exists) {
+      list.unshift(record);
+      saveJSON(key, list.slice(0, 100));
+    }
+  }
+
+  function setButtonLoading(button, isLoading, label) {
+    if (!button) return;
+    button.disabled = isLoading;
+    button.innerHTML = isLoading ? `<span class="loader" aria-hidden="true"></span>${escapeHTML(label)}` : label;
+  }
+
+  function showSuccessModal(folio, storedIn) {
+    const storageLabel = storedIn === "api"
+      ? "Tu reporte fue recibido correctamente."
+      : "Tu reporte quedó registrado correctamente.";
+
+    showModal(`
+      <div class="success-panel">
+        <div class="success-icon" aria-hidden="true">✓</div>
+        <h2>Reporte recibido</h2>
+        <p>${escapeHTML(storageLabel)}</p>
+        <div class="folio" id="successFolio">${escapeHTML(folio)}</div>
+        <div class="form-actions">
+          <button class="btn btn-primary" type="button" data-copy="${escapeHTML(folio)}">Copiar folio</button>
+          <button class="btn btn-soft" type="button" data-close-modal>Volver</button>
+        </div>
+      </div>`);
+  }
+
+  function showQuestionSuccessModal(folio, storedIn) {
+    const storageLabel = storedIn === "api"
+      ? "Tu duda fue enviada correctamente para revisión."
+      : "Tu duda quedó registrada correctamente para revisión.";
+
+    showModal(`
+      <div class="success-panel">
+        <div class="success-icon" aria-hidden="true">✓</div>
+        <h2>Duda enviada</h2>
+        <p>${escapeHTML(storageLabel)}</p>
+        <div class="folio" id="successQuestionFolio">${escapeHTML(folio)}</div>
+        <div class="form-actions">
+          <button class="btn btn-primary" type="button" data-copy="${escapeHTML(folio)}">Copiar folio</button>
+          <button class="btn btn-soft" type="button" data-close-modal>Volver</button>
+        </div>
+      </div>`);
+  }
+
+  function openQuestionModal() {
+    showModal(`
+      <div class="modal-head">
+        <div>
+          <p class="eyebrow" style="margin-bottom:8px;">Nueva duda</p>
+          <h2>Envíanos tu pregunta</h2>
+          <p style="color: var(--text-soft); margin-bottom: 0;">La duda se registra para revisión y posible publicación en las FAQ.</p>
+        </div>
+        <button class="icon-button modal-close" type="button" data-close-modal aria-label="Cerrar">×</button>
+      </div>
+      <form id="questionForm" class="field-grid" novalidate>
+        <label class="field-grid">
+          <strong>Categoría</strong>
+          <select class="select" id="questionCategory" required>
+            ${FAQ_CATEGORIES.map((category) => `<option value="${category.id}" ${category.id === state.faqFilter ? "selected" : ""}>${escapeHTML(category.label)}</option>`).join("")}
+          </select>
+        </label>
+        <label class="field-grid">
+          <strong>Pregunta</strong>
+          <textarea class="textarea" id="questionText" maxlength="500" placeholder="Escribe tu duda con el mayor contexto posible." required></textarea>
+        </label>
+        <div class="form-actions">
+          <button class="btn btn-primary" type="submit" id="submitQuestionButton">✈ Enviar duda</button>
+          <button class="btn btn-soft" type="button" data-close-modal>Cancelar</button>
+        </div>
+      </form>`);
+
+    const form = document.getElementById("questionForm");
+    form?.addEventListener("submit", submitQuestion);
+    document.getElementById("questionText")?.focus();
+  }
+
+  async function submitQuestion(event) {
+    event.preventDefault();
+    const category = document.getElementById("questionCategory")?.value || "contacto";
+    const question = document.getElementById("questionText")?.value.trim() || "";
+    if (question.length < 8) {
+      toast("La pregunta debe tener al menos 8 caracteres.", "error");
+      return;
+    }
+
+    const button = document.getElementById("submitQuestionButton");
+    setButtonLoading(button, true, "Enviando...");
+    const payload = {
+      id: cryptoRandomId("DUDA"),
+      createdAt: new Date().toISOString(),
+      category,
+      categoryLabel: categoryLabel(category),
+      question,
+      source: "web"
+    };
+
+    try {
+      const result = await submitRecord("questions", payload);
+      storeLocalSummary(STORAGE.questions, {
+        id: result.id || payload.id,
+        createdAt: payload.createdAt,
+        categoryLabel: payload.categoryLabel,
+        question: payload.question,
+        storedIn: result.storedIn || "api"
+      });
+      closeModal();
+      render();
+      showQuestionSuccessModal(result.id || payload.id, result.storedIn || "api");
+    } catch (error) {
+      toast(error.message || "No se pudo enviar la duda.", "error");
+    } finally {
+      setButtonLoading(button, false, "✈ Enviar duda");
+    }
+  }
+
+  function openHistoryModal() {
+    const reports = loadJSON(STORAGE.reports, []);
+    const questions = loadJSON(STORAGE.questions, []);
+    const reportItems = reports.length ? reports.slice(0, 12).map((item) => `
+      <li>
+        <span class="bullet">R</span>
+        <span><strong>${escapeHTML(item.id || "Reporte")}</strong><br>${escapeHTML(item.problemTypeLabel || item.problemType || "Reporte")} · ${escapeHTML(item.subject || "Sin asignatura")}</span>
+      </li>`).join("") : `<p style="color: var(--text-soft);">Aún no hay envíos recientes.</p>`;
+    const questionItems = questions.length ? questions.slice(0, 8).map((item) => `
+      <li>
+        <span class="bullet">D</span>
+        <span><strong>${escapeHTML(item.categoryLabel || "Duda")}</strong><br>${escapeHTML(item.question || "")}</span>
+      </li>`).join("") : `<p style="color: var(--text-soft);">Aún no hay dudas enviadas desde este dispositivo.</p>`;
+
+    showModal(`
+      <div class="modal-head">
+        <div>
+          <h2>Tus envíos recientes</h2>
+          <p style="color: var(--text-soft); margin-bottom: 0;">Consulta los folios y resúmenes más recientes enviados desde este dispositivo.</p>
+        </div>
+        <button class="icon-button modal-close" type="button" data-close-modal aria-label="Cerrar">×</button>
+      </div>
+      <h3>Reportes</h3>
+      <ul class="help-list">${reportItems}</ul>
+      <h3 style="margin-top: 22px;">Dudas</h3>
+      <ul class="help-list">${questionItems}</ul>
+      <div class="form-actions">
+        <button class="btn btn-soft" type="button" data-close-modal>Cerrar</button>
+      </div>`);
+  }
+
+  function showModal(innerHTML) {
+    modalRoot.innerHTML = `
+      <div class="modal-backdrop">
+        <section class="modal" role="dialog" aria-modal="true" aria-label="Ventana" data-modal-panel>
+          ${innerHTML}
+        </section>
+      </div>`;
+    document.body.classList.add("no-scroll");
+  }
+
+  function closeModal() {
+    modalRoot.innerHTML = "";
+    document.body.classList.remove("no-scroll");
+  }
+
+  function toast(message, type = "info") {
+    const node = document.createElement("div");
+    node.className = `toast ${type}`;
+    node.textContent = message;
+    toastRegion.appendChild(node);
+    window.setTimeout(() => {
+      node.style.opacity = "0";
+      node.style.transform = "translateY(8px)";
+      window.setTimeout(() => node.remove(), 220);
+    }, 3600);
+  }
+
+  function formatBytes(bytes) {
+    const value = Number(bytes || 0);
+    if (value < 1024) return `${value} B`;
+    if (value < 1024 * 1024) return `${(value / 1024).toFixed(1)} KB`;
+    return `${(value / (1024 * 1024)).toFixed(1)} MB`;
+  }
+
+  function cryptoRandomId(prefix) {
+    const date = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+    let random = "";
+    if (window.crypto?.getRandomValues) {
+      const bytes = new Uint8Array(4);
+      window.crypto.getRandomValues(bytes);
+      random = Array.from(bytes).map((byte) => byte.toString(16).padStart(2, "0")).join("").toUpperCase();
+    } else {
+      random = Math.random().toString(16).slice(2, 10).toUpperCase();
+    }
+    return `${prefix}-${date}-${random}`;
+  }
+
+  function openDrawer() {
+    drawer.classList.add("is-open");
+    drawer.setAttribute("aria-hidden", "false");
+    menuToggle.setAttribute("aria-expanded", "true");
+    document.body.classList.add("no-scroll");
+  }
+
+  function closeDrawer() {
+    drawer.classList.remove("is-open");
+    drawer.setAttribute("aria-hidden", "true");
+    menuToggle.setAttribute("aria-expanded", "false");
+    document.body.classList.remove("no-scroll");
+  }
+
+  document.addEventListener("click", async (event) => {
+    const target = event.target;
+    const routeLink = target.closest?.("[data-route]");
+    if (routeLink) closeDrawer();
+
+    const filter = target.closest?.("[data-faq-filter]");
+    if (filter) {
+      state.faqFilter = filter.dataset.faqFilter;
+      state.openFaqId = FAQS.find((faq) => faq.category === state.faqFilter)?.id || "";
+      render();
+      return;
+    }
+
+    const faqToggle = target.closest?.("[data-toggle-faq]");
+    if (faqToggle) {
+      const id = faqToggle.dataset.toggleFaq;
+      state.openFaqId = state.openFaqId === id ? "" : id;
+      render();
+      return;
+    }
+
+    const reportType = target.closest?.("[data-report-type]");
+    if (reportType) {
+      state.report.type = reportType.dataset.reportType;
+      saveJSON(STORAGE.reportDraft, state.report);
+      render();
+      return;
+    }
+
+    const follow = target.closest?.("[data-follow]");
+    if (follow) {
+      state.report.followUp = follow.dataset.follow === "true";
+      saveJSON(STORAGE.reportDraft, state.report);
+      render();
+      return;
+    }
+
+    const removeFile = target.closest?.("[data-remove-file]");
+    if (removeFile) {
+      state.files = state.files.filter((file) => file.id !== removeFile.dataset.removeFile);
+      render();
+      return;
+    }
+
+    const agreementFilter = target.closest?.("[data-agreement-filter]");
+    if (agreementFilter) {
+      state.agreementFilter = agreementFilter.dataset.agreementFilter;
+      render();
+      return;
+    }
+
+    if (target.closest?.("[data-open-question]")) {
+      openQuestionModal();
+      return;
+    }
+
+    if (target.closest?.("[data-open-history]")) {
+      openHistoryModal();
+      return;
+    }
+
+    const copy = target.closest?.("[data-copy]");
+    if (copy) {
+      try {
+        await navigator.clipboard.writeText(copy.dataset.copy);
+        toast("Folio copiado.", "success");
+      } catch (_) {
+        toast("No se pudo copiar automáticamente.", "error");
+      }
+      return;
+    }
+
+    const closeModalButton = target.closest?.("[data-close-modal]");
+    const clickedBackdrop = target.matches?.(".modal-backdrop");
+    if (closeModalButton || clickedBackdrop) {
+      if (!target.closest?.("[data-modal-panel]") || closeModalButton) closeModal();
+      return;
+    }
+
+    if (target.closest?.("[data-close-drawer]")) {
+      closeDrawer();
+    }
+  });
+
+  menuToggle.addEventListener("click", openDrawer);
+  drawer.addEventListener("click", (event) => {
+    if (event.target === drawer) closeDrawer();
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeModal();
+      closeDrawer();
+    }
+  });
+
+  window.addEventListener("hashchange", () => {
+    render();
+    main.focus({ preventScroll: true });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  if ("serviceWorker" in navigator && window.location.protocol !== "file:") {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("sw.js?v=12").catch(() => {});
+    });
+  }
+
+  render();
+})();

@@ -1,0 +1,22 @@
+{
+  "name": "ceal-contingencia-app",
+  "version": "1.0.0",
+  "description": "Aplicacion responsive CEAL para FAQ, acuerdos y reportes anonimos de contingencia estudiantil.",
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs",
+    "dev": "node server.mjs",
+    "check": "node --check server.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "ceal",
+    "ucn",
+    "pwa",
+    "reportes",
+    "responsive"
+  ],
+  "license": "MIT"
+}
