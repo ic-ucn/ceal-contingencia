@@ -12,7 +12,7 @@ const isLocalRuntime = LOCAL_HOSTS.has(window.location.hostname);
 
 window.CEAL_CONFIG = {
   appName: "CEAL Contingencia",
-  institutionName: "UCN · Ingenieria Civil · CEAL",
+  institutionName: "UCN - Ingenieria Civil - CEAL",
   subtitle: "Contingencia estudiantil",
   updateLabel: "Actualizado · Acta pleno 21 abr",
   apiBase: isLocalRuntime ? "" : PUBLIC_API_BASE,

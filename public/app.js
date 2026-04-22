@@ -3,7 +3,7 @@
 
   const config = {
     appName: "CEAL Contingencia",
-    institutionName: "UCN · Ingeniería Civil · CEAL",
+    institutionName: "UCN - Ingenieria Civil - CEAL",
     subtitle: "Contingencia estudiantil",
     updateLabel: "Actualizado hoy · 10:15",
     apiBase: "",
