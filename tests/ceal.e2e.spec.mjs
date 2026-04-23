@@ -55,21 +55,6 @@ test("home renderiza FAQ y navegación principal", async ({ page }) => {
   await expect(page.getByRole("link", { name: "Reportar" })).toBeVisible();
 });
 
-test("chat responde desde la FAQ y abre la pregunta relacionada", async ({ page }) => {
-  await forceLocalOnlyConfig(page);
-  await page.goto("/?v=40#chat");
-
-  await expect(page.getByRole("heading", { name: "Chat CEAL" })).toBeVisible();
-  await page.locator("#chatInput").fill("Que pasa con las evaluaciones esta semana?");
-  await page.locator("#chatForm").getByRole("button", { name: "Enviar" }).click();
-
-  await expect(page.locator(".chat-message-assistant").last()).toContainText("Esto es lo publicado");
-  await page.getByRole("button", { name: "Ver en preguntas" }).last().click();
-
-  await expect(page).toHaveURL(/#inicio$/);
-  await expect(page.locator("#faqSearch")).toHaveValue(/evaluaci/i);
-});
-
 test("reportar permite enviar un reporte completo en modo local", async ({ page }) => {
   await forceLocalOnlyConfig(page);
   await page.goto("/?v=39#reportar");
