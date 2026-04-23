@@ -73,7 +73,7 @@
       category: "asistencia",
       question: "Que pasa con los dias previos a la nueva revalidacion del sabado?",
       answer: "Todavia no hay una definicion cerrada publicada. En la reunion con Jefatura se dejo planteada la necesidad de aclarar que ocurrira con estudiantes durante estos dias previos a la nueva revalidacion del paro.",
-      status: "none",
+      status: "review",
       updated_label: "Reunion JC 22 abr",
       source_label: "Reunion con Jefe de Carrera",
       display_order: 10,
