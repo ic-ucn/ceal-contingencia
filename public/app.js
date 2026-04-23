@@ -681,11 +681,12 @@
 
   function renderFaqCard(faq) {
     const isOpen = state.openFaqId === faq.id;
+    const effectiveStatus = faq.id === "faq-asistencia-1" && faq.status === "none" ? "review" : faq.status;
     return `
       <article class="faq-card ${isOpen ? "is-open" : ""}">
         <button class="faq-question" type="button" data-toggle-faq="${faq.id}" aria-expanded="${isOpen}" aria-controls="answer-${faq.id}">
           <strong>${escapeHTML(faq.question)}</strong>
-          ${statusBadge(faq.status)}
+          ${statusBadge(effectiveStatus)}
           ${iconChevron()}
         </button>
         <div id="answer-${faq.id}" class="faq-answer">
@@ -739,12 +740,13 @@
   }
 
   function mapFaqRow(row) {
+    const status = normalizeStatusTone(row.status, "review");
     return {
       id: row.id,
       category: row.category || "otro",
       question: row.question || "",
       answer: row.answer || "",
-      status: normalizeStatusTone(row.status, "review"),
+      status: row.id === "faq-asistencia-1" && status === "none" ? "review" : status,
       updated: row.updated_label || row.updated || config.updateLabel,
       source: row.source_label || row.source || ""
     };
@@ -1839,7 +1841,7 @@
 
   if ("serviceWorker" in navigator && window.location.protocol !== "file:") {
     window.addEventListener("load", () => {
-        navigator.serviceWorker.register("sw.js?v=37").catch(() => {});
+        navigator.serviceWorker.register("sw.js?v=38").catch(() => {});
       });
   }
 
