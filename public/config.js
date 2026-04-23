@@ -14,7 +14,7 @@ window.CEAL_CONFIG = {
   appName: "CEAL Contingencia",
   institutionName: "UCN - Ingenieria Civil - CEAL",
   subtitle: "Contingencia estudiantil",
-  updateLabel: "Actualizado · Reunión JC 22 abr",
+  updateLabel: "Actualizado · Aviso asamblea 22 abr",
   apiBase: isLocalRuntime ? "" : PUBLIC_API_BASE,
   enableLocalFallback: isLocalRuntime,
   maxFileMB: 10,

@@ -212,11 +212,11 @@
     {
       id: "faq-asistencia-1",
       category: "asistencia",
-      question: "¿El paro sigue vigente para el miércoles 22 de abril?",
-      answer: "Sí. El acta del pleno deja explícito que el paro es válido para el miércoles 22 y que luego debe definirse la forma de revalidación.",
-      status: "confirmed",
-      updated: "Acta pleno 21 abr",
-      source: "Acta Pleno 21 de abril"
+      question: "¿Qué pasa con los días previos a la nueva revalidación del sábado?",
+      answer: "Todavía no hay una definición cerrada publicada. En la reunión con Jefatura se dejó planteada la necesidad de aclarar qué ocurrirá con estudiantes durante estos días previos a la nueva revalidación del paro.",
+      status: "none",
+      updated: "Reunión JC 22 abr",
+      source: "Reunión con Jefe de Carrera"
     },
     {
       id: "faq-evaluaciones-1",
@@ -248,11 +248,11 @@
     {
       id: "faq-pleno-2",
       category: "pleno",
-      question: "¿Cuándo son la pintatón y la marcha del miércoles 22?",
-      answer: "El acta indica pintatón de lienzos el miércoles 22 a las 12:00 en el recreo FEUCN y marcha convocada a las 15:00 en la pérgola de avenida Brasil. La ruta no se difundiría públicamente por seguridad.",
+      question: "¿Qué se sabe de la asamblea online de Ingeniería Civil del jueves 23/04?",
+      answer: "Se informó que el jueves 23/04 se realizará una asamblea online de Ingeniería Civil. El horario de convocatoria se confirmará durante la jornada, por lo que se pidió estar atentos para participar y resolver dudas.",
       status: "confirmed",
-      updated: "Acta pleno 21 abr",
-      source: "Acta Pleno 21 de abril"
+      updated: "Aviso asamblea 22 abr",
+      source: "Comunicado Ingeniería Civil"
     },
     {
       id: "faq-pleno-3",
@@ -340,12 +340,12 @@
     },
     {
       id: "agr-4",
-      title: "Paro y movilización del 22 de abril",
-      summary: "El pleno reafirma que el paro es válido para el miércoles 22. Además, se convoca pintatón a las 12:00 en el recreo FEUCN y marcha a las 15:00 en la pérgola de avenida Brasil.",
+      title: "Asamblea online de Ingeniería Civil el 23 de abril",
+      summary: "Se informó convocatoria a asamblea online de Ingeniería Civil para el jueves 23/04. El horario se confirmará durante la jornada y se pidió estar atentos para participar y resolver dudas.",
       status: "confirmed",
-      date: "22 abr 2026",
-      area: "Movilización",
-      source: "Acta Pleno 21 de abril"
+      date: "23 abr 2026",
+      area: "Coordinación",
+      source: "Comunicado Ingeniería Civil"
     }
   ];
 
@@ -379,26 +379,27 @@
   const SITE_STATUS = {
     heroEyebrow: "Centro CEAL",
     heroTitle: "Estado hoy",
-    heroLead: "Paro vigente con presión académica todavía abierta. Aquí se concentra el estado actual, los hitos del día y el acceso a respuestas y acuerdos.",
+    heroLead: "Paro vigente con presión académica todavía abierta. La novedad inmediata es la asamblea online de Ingeniería Civil del jueves 23/04, con horario por confirmar.",
     activeBadgeLabel: "Paro vigente hoy",
     activeBadgeTone: "review",
-    sourceBadgeLabel: "Fuentes: plenos + reunión JC",
+    sourceBadgeLabel: "Fuentes: reunión JC + aviso asamblea",
     sourceBadgeTone: "review",
     updateLabel: config.updateLabel,
     currentKicker: "Estado actual",
-    currentTitle: "Paro vigente y evaluaciones aún sin criterio uniforme",
-    currentSummary: "Se mantiene la paralización, pero sigue habiendo respuestas desiguales entre ramos: algunas flexibilidades para recalendarizar, otras presentaciones o evaluaciones que se mantienen por falta de comunicado nuevo. También sigue pendiente el petitorio FEUCN y el levantamiento completo de fechas de pruebas.",
+    currentTitle: "Paro vigente y asamblea online el 23/04",
+    currentSummary: "Sigue la paralización, con respuestas desiguales entre ramos y sin una definición cerrada para los días previos a la nueva revalidación del sábado. Como siguiente hito, Ingeniería Civil convocó asamblea online para el jueves 23/04 y anunciará el horario durante la jornada.",
     currentStatusLabel: "Activo",
     currentStatusTone: "review",
-    eventsKicker: "Hitos del 22 de abril",
-    eventsTitle: "Pintatón y marcha",
+    eventsKicker: "Próximo hito",
+    eventsTitle: "Asamblea online Ingeniería Civil",
     events: [
-      { bullet: "12:00", text: "Pintatón de lienzos en recreo FEUCN." },
-      { bullet: "15:00", text: "Marcha convocada en la pérgola de avenida Brasil." }
+      { bullet: "23/04", text: "Asamblea online de Ingeniería Civil." },
+      { bullet: "Horario", text: "Se confirmará durante la jornada." },
+      { bullet: "Objetivo", text: "Resolver dudas y coordinar participación." }
     ],
     lastUpdateKicker: "Ultima actualizacion",
-    lastUpdateTitle: "Reunión con Jefatura de Carrera",
-    lastUpdateBody: "Se levantaron presiones por evaluaciones y presentaciones, ausencia de petitorio FEUCN, necesidad de recopilar fechas de pruebas y seguimiento sobre protocolos y coordinación con otros CEALES.",
+    lastUpdateTitle: "Aviso de asamblea del 23/04",
+    lastUpdateBody: "Se informó convocatoria a asamblea online de Ingeniería Civil para el jueves 23/04; el horario se confirmará durante la jornada. También sigue abierta la necesidad de aclarar qué ocurrirá antes de la nueva revalidación del sábado.",
     faqTitle: "FAQ",
     faqIntro: "Respuestas publicadas.",
     channelsKicker: "Fuentes",
@@ -1836,7 +1837,7 @@
 
   if ("serviceWorker" in navigator && window.location.protocol !== "file:") {
     window.addEventListener("load", () => {
-        navigator.serviceWorker.register("sw.js?v=34").catch(() => {});
+        navigator.serviceWorker.register("sw.js?v=35").catch(() => {});
       });
   }
 
