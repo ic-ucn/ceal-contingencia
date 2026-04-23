@@ -1,15 +1,15 @@
-const CACHE_NAME = "ceal-contingencia-v38";
+const CACHE_NAME = "ceal-contingencia-v39";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./admin.html",
-  "./styles.css?v=38",
-  "./admin.css?v=38",
-  "./app.js?v=38",
-  "./admin.js?v=38",
-  "./manifest.webmanifest?v=38",
+  "./styles.css?v=39",
+  "./admin.css?v=39",
+  "./app.js?v=39",
+  "./admin.js?v=39",
+  "./manifest.webmanifest?v=39",
   "./assets/app-icon.svg",
-  "./assets/logo-ingenieria-civil.png?v=38"
+  "./assets/logo-ingenieria-civil.png?v=39"
 ];
 
 self.addEventListener("install", (event) => {
@@ -24,6 +24,10 @@ self.addEventListener("activate", (event) => {
   );
 });
 
+self.addEventListener("message", (event) => {
+  if (event.data?.type === "SKIP_WAITING") self.skipWaiting();
+});
+
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
 
@@ -32,7 +36,7 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  if (url.pathname.endsWith("/config.js")) {
+  if (event.request.mode === "navigate" || event.request.destination === "document") {
     event.respondWith(
       fetch(event.request)
         .then((response) => {
@@ -40,7 +44,14 @@ self.addEventListener("fetch", (event) => {
           caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
           return response;
         })
-        .catch(() => caches.match(event.request))
+        .catch(async () => {
+          const directMatch = await caches.match(event.request);
+          if (directMatch) return directMatch;
+          if (url.pathname.endsWith("/admin.html")) {
+            return caches.match("./admin.html");
+          }
+          return caches.match("./index.html");
+        })
     );
     return;
   }

@@ -1841,8 +1841,30 @@
 
   if ("serviceWorker" in navigator && window.location.protocol !== "file:") {
     window.addEventListener("load", () => {
-        navigator.serviceWorker.register("sw.js?v=38").catch(() => {});
+      navigator.serviceWorker.register("sw.js?v=39").then((registration) => {
+        registration.update().catch(() => {});
+
+        if (registration.waiting) {
+          registration.waiting.postMessage({ type: "SKIP_WAITING" });
+        }
+
+        registration.addEventListener("updatefound", () => {
+          const installing = registration.installing;
+          if (!installing) return;
+          installing.addEventListener("statechange", () => {
+            if (installing.state === "installed" && navigator.serviceWorker.controller) {
+              installing.postMessage({ type: "SKIP_WAITING" });
+            }
+          });
+        });
+      }).catch(() => {});
+
+      navigator.serviceWorker.addEventListener("controllerchange", () => {
+        if (sessionStorage.getItem("ceal-sw-reloaded") === "1") return;
+        sessionStorage.setItem("ceal-sw-reloaded", "1");
+        window.location.reload();
       });
+    });
   }
 
   if (PUBLISHED_CONTENT_SYNC_ENABLED) {
