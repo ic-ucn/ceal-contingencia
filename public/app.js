@@ -21,6 +21,7 @@
     adminFaqTable: "faq_entries",
     adminAgreementTable: "agreement_entries",
     adminChannelTable: "channel_links",
+    enablePublishedContentSync: false,
     privacyCopy: "Este reporte es anónimo. No se solicitan datos personales.",
     ...(window.CEAL_CONFIG || {})
   };
@@ -32,6 +33,7 @@
   };
 
   const SUPABASE_ENABLED = Boolean(config.supabaseUrl && config.supabaseAnonKey);
+  const PUBLISHED_CONTENT_SYNC_ENABLED = SUPABASE_ENABLED && Boolean(config.enablePublishedContentSync);
   let supabaseClient = null;
 
   const ROUTES = new Set(["inicio", "reportar", "acuerdos"]);
@@ -379,7 +381,7 @@
   const SITE_STATUS = {
     heroEyebrow: "Centro CEAL",
     heroTitle: "Estado hoy",
-    heroLead: "Paro vigente con presión académica todavía abierta. La novedad inmediata es la asamblea online de Ingeniería Civil del jueves 23/04, con horario por confirmar.",
+    heroLead: "El paro sigue vigente. Durante el jueves 23/04 habrá asamblea online de Ingeniería Civil y el horario se confirmará durante la jornada.",
     activeBadgeLabel: "Paro vigente hoy",
     activeBadgeTone: "review",
     sourceBadgeLabel: "Fuentes: reunión JC + aviso asamblea",
@@ -387,7 +389,7 @@
     updateLabel: config.updateLabel,
     currentKicker: "Estado actual",
     currentTitle: "Paro vigente y asamblea online el 23/04",
-    currentSummary: "Sigue la paralización, con respuestas desiguales entre ramos y sin una definición cerrada para los días previos a la nueva revalidación del sábado. Como siguiente hito, Ingeniería Civil convocó asamblea online para el jueves 23/04 y anunciará el horario durante la jornada.",
+    currentSummary: "Sigue la paralización. Aún hay criterios dispares entre ramos y todavía no hay una definición cerrada sobre cómo se manejarán los días previos a la nueva revalidación del sábado.",
     currentStatusLabel: "Activo",
     currentStatusTone: "review",
     eventsKicker: "Próximo hito",
@@ -399,7 +401,7 @@
     ],
     lastUpdateKicker: "Ultima actualizacion",
     lastUpdateTitle: "Aviso de asamblea del 23/04",
-    lastUpdateBody: "Se informó convocatoria a asamblea online de Ingeniería Civil para el jueves 23/04; el horario se confirmará durante la jornada. También sigue abierta la necesidad de aclarar qué ocurrirá antes de la nueva revalidación del sábado.",
+    lastUpdateBody: "Se confirmó convocatoria a asamblea online de Ingeniería Civil para el jueves 23/04. El horario se informará durante la jornada y sigue pendiente aclarar qué ocurrirá antes de la nueva revalidación del sábado.",
     faqTitle: "FAQ",
     faqIntro: "Respuestas publicadas.",
     channelsKicker: "Fuentes",
@@ -803,7 +805,7 @@
   }
 
   async function loadPublishedContent() {
-    if (!SUPABASE_ENABLED) return;
+    if (!PUBLISHED_CONTENT_SYNC_ENABLED) return;
     const client = getSupabaseClient();
     if (!client) return;
 
@@ -1109,7 +1111,7 @@
   }
 
   function renderAgreements() {
-    const filters = ["todos", "Seguridad", "Evaluaciones", "Movilización"];
+    const filters = ["todos", ...new Set(AGREEMENTS.map((item) => item.area))];
     const agreements = getFilteredAgreements();
 
     return `
@@ -1837,21 +1839,23 @@
 
   if ("serviceWorker" in navigator && window.location.protocol !== "file:") {
     window.addEventListener("load", () => {
-        navigator.serviceWorker.register("sw.js?v=35").catch(() => {});
+        navigator.serviceWorker.register("sw.js?v=36").catch(() => {});
       });
   }
 
-  document.addEventListener("visibilitychange", () => {
-    if (!document.hidden) refreshPublishedContentAndRender();
-  });
+  if (PUBLISHED_CONTENT_SYNC_ENABLED) {
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) refreshPublishedContentAndRender();
+    });
 
-  window.addEventListener("focus", () => {
-    refreshPublishedContentAndRender();
-  });
+    window.addEventListener("focus", () => {
+      refreshPublishedContentAndRender();
+    });
 
-  window.setInterval(() => {
-    refreshPublishedContentAndRender();
-  }, 60000);
+    window.setInterval(() => {
+      refreshPublishedContentAndRender();
+    }, 60000);
+  }
 
   render();
   loadPublishedContent().then(() => {

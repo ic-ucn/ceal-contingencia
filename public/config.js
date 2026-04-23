@@ -19,6 +19,7 @@ window.CEAL_CONFIG = {
   enableLocalFallback: isLocalRuntime,
   maxFileMB: 10,
   maxFiles: 5,
+  enablePublishedContentSync: false,
   contactEmail: "",
   privacyCopy: "Reporte anonimo para respaldo.",
   publicApiBase: PUBLIC_API_BASE,

@@ -50,12 +50,12 @@
   };
 
   Object.assign(DEFAULT_STATUS_SEED, {
-    hero_lead: "Paro vigente con presion academica todavia abierta. La novedad inmediata es la asamblea online de Ingenieria Civil del jueves 23/04, con horario por confirmar.",
+    hero_lead: "El paro sigue vigente. Durante el jueves 23/04 habra asamblea online de Ingenieria Civil y el horario se confirmara durante la jornada.",
     source_badge_label: "Fuentes: reunion JC + aviso asamblea",
     source_badge_tone: "review",
     update_label: "Actualizado · Aviso asamblea 22 abr",
     current_title: "Paro vigente y asamblea online el 23/04",
-    current_summary: "Sigue la paralizacion, con respuestas desiguales entre ramos y sin una definicion cerrada para los dias previos a la nueva revalidacion del sabado. Como siguiente hito, Ingenieria Civil convoco asamblea online para el jueves 23/04 y anunciara el horario durante la jornada.",
+    current_summary: "Sigue la paralizacion. Aun hay criterios dispares entre ramos y todavia no hay una definicion cerrada sobre como se manejaran los dias previos a la nueva revalidacion del sabado.",
     events_kicker: "Proximo hito",
     events_title: "Asamblea online Ingenieria Civil",
     events_json: [
@@ -64,7 +64,7 @@
       { bullet: "Objetivo", text: "Resolver dudas y coordinar participacion." }
     ],
     last_update_title: "Aviso de asamblea del 23/04",
-    last_update_body: "Se informo convocatoria a asamblea online de Ingenieria Civil para el jueves 23/04; el horario se confirmara durante la jornada. Tambien sigue abierta la necesidad de aclarar que ocurrira antes de la nueva revalidacion del sabado."
+    last_update_body: "Se confirmo convocatoria a asamblea online de Ingenieria Civil para el jueves 23/04. El horario se informara durante la jornada y sigue pendiente aclarar que ocurrira antes de la nueva revalidacion del sabado."
   });
 
   const DEFAULT_FAQ_SEED = [
