@@ -36,7 +36,7 @@
   const PUBLISHED_CONTENT_SYNC_ENABLED = SUPABASE_ENABLED && Boolean(config.enablePublishedContentSync);
   let supabaseClient = null;
 
-  const ROUTES = new Set(["inicio", "reportar", "acuerdos"]);
+  const ROUTES = new Set(["inicio", "chat", "reportar", "acuerdos"]);
 
   const FAQ_CATEGORIES = [
     { id: "todas", label: "Todas", icon: "=" },
@@ -45,6 +45,14 @@
     { id: "pleno", label: "Pleno", icon: "P" },
     { id: "contacto", label: "Contacto", icon: "C" },
     { id: "otro", label: "Otro", icon: "..." }
+  ];
+
+  const CHAT_PROMPTS = [
+    { label: "Estado de hoy", prompt: "Que se sabe del estado de hoy?" },
+    { label: "Evaluaciones", prompt: "Que pasa con las evaluaciones esta semana?" },
+    { label: "Asistencia", prompt: "Hay garantias sobre asistencia?" },
+    { label: "Acuerdos", prompt: "Cuales son los acuerdos recientes?" },
+    { label: "Reportar", prompt: "Quiero reportar un problema con un ramo" }
   ];
 
   const ISSUE_TYPES = [
@@ -429,7 +437,8 @@
     agreementFilter: "todos",
     report: { ...emptyReportDraft(), ...loadJSON(STORAGE.reportDraft, emptyReportDraft()) },
     files: [],
-    isSubmitting: false
+    isSubmitting: false,
+    chatMessages: []
   };
 
   const main = document.getElementById("main");
@@ -516,6 +525,7 @@
 
     const renderers = {
       inicio: renderHome,
+      chat: renderChat,
       reportar: renderReport,
       acuerdos: renderAgreements
     };
@@ -694,6 +704,229 @@
           <div class="meta-row"><span>${escapeHTML(faq.updated)}</span><span class="dot"></span><span>Categoría: ${escapeHTML(categoryLabel(faq.category))}</span>${faq.source ? `<span class="dot"></span><span>Fuente: ${escapeHTML(faq.source)}</span>` : ""}</div>
         </div>
       </article>`;
+  }
+
+  function renderChat() {
+    ensureChatStarted();
+
+    return `
+      <div class="page-stack chat-page">
+        <section class="hero-grid chat-hero" aria-labelledby="chat-title">
+          <div class="hero-main">
+            <div class="hero-copy">
+              <p class="eyebrow">Consulta rapida</p>
+              <h1 id="chat-title">Chat CEAL</h1>
+              <p class="lead">Pregunta por respuestas publicadas, acuerdos, fechas o reportes.</p>
+              <div class="status-inline-row">
+                <span class="status-badge status-review"><span aria-hidden="true">FAQ</span>Usa informacion del portal</span>
+                <span class="status-badge status-confirmed"><span aria-hidden="true">UPD</span>${escapeHTML(SITE_STATUS.updateLabel)}</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="chat-grid" aria-label="Chat CEAL">
+          <div class="card chat-panel">
+            <div class="chat-stream" id="chatStream" aria-live="polite">
+              ${state.chatMessages.map(renderChatMessage).join("")}
+            </div>
+
+            <form class="chat-composer" id="chatForm" autocomplete="off">
+              <label class="chat-input-wrap" for="chatInput">
+                <span aria-hidden="true">C</span>
+                <input id="chatInput" name="message" type="text" maxlength="180" placeholder="Escribe tu duda..." autocomplete="off" />
+              </label>
+              <button class="btn btn-primary chat-submit" type="submit">Enviar</button>
+            </form>
+
+            <div class="chat-prompts" aria-label="Preguntas rapidas">
+              ${CHAT_PROMPTS.map((item) => `
+                <button class="chat-prompt" type="button" data-chat-prompt="${escapeHTML(item.prompt)}">${escapeHTML(item.label)}</button>
+              `).join("")}
+            </div>
+          </div>
+
+          <aside class="rail chat-rail">
+            <div class="rail-card">
+              <h2>Puede ayudarte con</h2>
+              <ul class="help-list">
+                <li><span class="bullet">1</span><span>Asistencia, evaluaciones y acuerdos recientes.</span></li>
+                <li><span class="bullet">2</span><span>Fechas, pleno y estado de la informacion publicada.</span></li>
+                <li><span class="bullet">3</span><span>Casos que conviene dejar como reporte.</span></li>
+              </ul>
+            </div>
+            <div class="rail-card">
+              <h2>Si falta informacion</h2>
+              <p>Si tu caso no aparece en las respuestas, dejalo registrado para que pueda revisarse con mas contexto.</p>
+              <div class="quick-actions">
+                <a class="btn btn-primary" href="#reportar" data-route="reportar">Enviar reporte</a>
+                <a class="btn btn-soft" href="#inicio" data-route="inicio">Ver preguntas</a>
+              </div>
+            </div>
+          </aside>
+        </section>
+      </div>`;
+  }
+
+  function renderChatMessage(message) {
+    const actions = (message.actions || []).map((action) => `
+      <button
+        class="chat-action"
+        type="button"
+        data-chat-action="${escapeHTML(action.action)}"
+        ${action.query ? `data-chat-query="${escapeHTML(action.query)}"` : ""}
+      >${escapeHTML(action.label)}</button>
+    `).join("");
+
+    return `
+      <article class="chat-message chat-message-${escapeHTML(message.role)}">
+        <div class="chat-bubble">
+          <p>${formatChatText(message.text)}</p>
+          ${actions ? `<div class="chat-actions">${actions}</div>` : ""}
+        </div>
+      </article>`;
+  }
+
+  function ensureChatStarted() {
+    if (state.chatMessages.length) return;
+    state.chatMessages = [
+      {
+        role: "assistant",
+        text: "Hola. Pregunta por asistencia, evaluaciones, acuerdos, fechas o reportes.",
+        actions: [
+          { label: "Ver preguntas", action: "open-faq" },
+          { label: "Enviar reporte", action: "open-report" }
+        ]
+      }
+    ];
+  }
+
+  function formatChatText(value) {
+    return escapeHTML(value).replace(/\n/g, "<br>");
+  }
+
+  function getFaqStatusLabel(status) {
+    if (status === "confirmed") return "Confirmado";
+    if (status === "none") return "Sin respuesta publicada";
+    return "En revision";
+  }
+
+  function includesAny(value, words) {
+    return words.some((word) => value.includes(word));
+  }
+
+  function getBestFaqMatch(message) {
+    const query = normalizeText(message);
+    const tokens = query
+      .split(/[^a-z0-9]+/)
+      .filter((token) => token.length >= 4 && !["esta", "este", "para", "como", "quiero"].includes(token));
+
+    const categoryKeywords = {
+      asistencia: ["asistencia", "clase", "clases", "garantia", "garantias"],
+      evaluaciones: ["evaluacion", "evaluaciones", "prueba", "pruebas", "control", "controles", "examen", "nota", "presentacion"],
+      pleno: ["pleno", "acuerdo", "acuerdos", "votacion", "fecha", "calendario", "asamblea", "petitorio"],
+      contacto: ["contacto", "consulta", "duda", "base", "gestionar"],
+      otro: ["protocolo", "seguridad", "paro", "movilizacion"]
+    };
+
+    return FAQS.reduce((best, faq) => {
+      const haystack = normalizeText(`${faq.question} ${faq.answer} ${faq.updated} ${faq.source} ${faq.category}`);
+      let score = 0;
+
+      if (haystack.includes(query) || query.includes(normalizeText(faq.question))) score += 6;
+      tokens.forEach((token) => {
+        if (haystack.includes(token)) score += 1;
+      });
+      if (includesAny(query, categoryKeywords[faq.category] || [])) score += 3;
+
+      return !best || score > best.score ? { faq, score } : best;
+    }, null);
+  }
+
+  function buildStatusChatReply() {
+    return {
+      role: "assistant",
+      text:
+        `Situacion actual:\n` +
+        `${SITE_STATUS.currentTitle}.\n` +
+        `${SITE_STATUS.currentSummary}\n\n` +
+        `Proximo hito: ${SITE_STATUS.eventsTitle}.`,
+      actions: [
+        { label: "Ver acuerdos", action: "open-agreements" },
+        { label: "Enviar reporte", action: "open-report" }
+      ]
+    };
+  }
+
+  function buildReportChatReply() {
+    return {
+      role: "assistant",
+      text: "Si el caso afecta asistencia, evaluaciones, informacion contradictoria, presion docente o un tramite pendiente, conviene dejarlo como reporte. Agrega ramo, fecha y evidencia si tienes.",
+      actions: [{ label: "Abrir reporte", action: "open-report" }]
+    };
+  }
+
+  function buildChatReply(message) {
+    const query = normalizeText(message);
+    const wantsReport = includesAny(query, ["reportar", "reporte", "incidencia", "problema", "presion", "evidencia", "tramite"]);
+
+    if (!wantsReport && includesAny(query, ["estado", "hoy", "situacion", "actual", "que sigue", "sigue", "pleno", "acuerdo", "acuerdos", "votacion", "asamblea"])) {
+      return buildStatusChatReply();
+    }
+
+    const match = getBestFaqMatch(message);
+    if (!wantsReport && match?.score >= 3) {
+      return {
+        role: "assistant",
+        text: `Esto es lo publicado:\n${match.faq.answer}\n\nEstado: ${getFaqStatusLabel(match.faq.status)}. Fuente: ${match.faq.source || match.faq.updated}.`,
+        actions: [
+          { label: "Ver en preguntas", action: "open-faq", query: match.faq.question },
+          { label: "Enviar reporte", action: "open-report" }
+        ]
+      };
+    }
+
+    if (wantsReport) return buildReportChatReply();
+
+    return {
+      role: "assistant",
+      text: "No encontre una respuesta directa en las preguntas publicadas. Puedes revisar la FAQ o dejar el caso como reporte si necesitas que quede registrado.",
+      actions: [
+        { label: "Ver preguntas", action: "open-faq" },
+        { label: "Enviar reporte", action: "open-report" }
+      ]
+    };
+  }
+
+  function submitChatMessage(rawMessage) {
+    const message = String(rawMessage || "").trim();
+    if (!message) return;
+    state.chatMessages.push({ role: "user", text: message });
+    state.chatMessages.push(buildChatReply(message));
+    render();
+  }
+
+  function handleChatAction(button) {
+    const action = button.dataset.chatAction;
+
+    if (action === "open-report") {
+      window.location.hash = "reportar";
+      return;
+    }
+
+    if (action === "open-agreements") {
+      window.location.hash = "acuerdos";
+      return;
+    }
+
+    if (action === "open-faq") {
+      state.faqFilter = "todas";
+      state.faqQuery = button.dataset.chatQuery || "";
+      const normalizedQuery = normalizeText(state.faqQuery);
+      const matched = FAQS.find((faq) => normalizeText(faq.question) === normalizedQuery);
+      state.openFaqId = matched?.id || FAQS[0]?.id || "";
+      window.location.hash = "inicio";
+    }
   }
 
   function categoryLabel(id) {
@@ -1215,6 +1448,24 @@
   }
 
   function wireCurrentPage() {
+    const chatStream = document.getElementById("chatStream");
+    if (chatStream) {
+      requestAnimationFrame(() => {
+        chatStream.scrollTop = chatStream.scrollHeight;
+      });
+    }
+
+    const chatForm = document.getElementById("chatForm");
+    if (chatForm) {
+      chatForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const input = document.getElementById("chatInput");
+        const message = input?.value || "";
+        if (input) input.value = "";
+        submitChatMessage(message);
+      });
+    }
+
     const faqSearch = document.getElementById("faqSearch");
     if (faqSearch) {
       faqSearch.addEventListener("input", (event) => {
@@ -1725,6 +1976,18 @@
       return;
     }
 
+    const chatPrompt = target.closest?.("[data-chat-prompt]");
+    if (chatPrompt) {
+      submitChatMessage(chatPrompt.dataset.chatPrompt);
+      return;
+    }
+
+    const chatAction = target.closest?.("[data-chat-action]");
+    if (chatAction) {
+      handleChatAction(chatAction);
+      return;
+    }
+
     const faqToggle = target.closest?.("[data-toggle-faq]");
     if (faqToggle) {
       const id = faqToggle.dataset.toggleFaq;
@@ -1841,7 +2104,7 @@
 
   if ("serviceWorker" in navigator && window.location.protocol !== "file:") {
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("sw.js?v=39").then((registration) => {
+      navigator.serviceWorker.register("sw.js?v=40").then((registration) => {
         registration.update().catch(() => {});
 
         if (registration.waiting) {
