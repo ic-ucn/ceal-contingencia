@@ -264,6 +264,33 @@
       source: "Acta Pleno 21 de abril + Pleno extraordinario 20 abril"
     },
     {
+      id: "faq-evaluaciones-3",
+      category: "evaluaciones",
+      question: "¿Cómo están operando evaluaciones y presentaciones en estos días?",
+      answer: "No hay un criterio único. En la reunión con Jefatura se levantó que PPOOHH mantendría presentación el viernes, Investigación Aplicada dio facilidad a quienes no alcanzaron a exponer hoy, Wagner no hizo clase de Estructura porque no asistió nadie, y en Programación la inasistencia a evaluación debe justificarse por instructivo si asiste solo una persona. También se señaló buena recepción de algunos docentes para flexibilizar recalendarizaciones.",
+      status: "review",
+      updated: "Reunión JC 22 abr",
+      source: "Reunión con Jefe de Carrera"
+    },
+    {
+      id: "faq-pleno-4",
+      category: "pleno",
+      question: "¿FEUCN ya envió el petitorio?",
+      answer: "Según lo informado en la reunión con Jefatura, FEUCN aún no envía el petitorio. Se indicó que siguen en Coquimbo y que VRA no ha querido reunirse en modalidad online. Si esa posición se mantiene, se levantó incluso la posibilidad de llamar a una toma.",
+      status: "review",
+      updated: "Reunión JC 22 abr",
+      source: "Reunión con Jefe de Carrera"
+    },
+    {
+      id: "faq-contacto-2",
+      category: "contacto",
+      question: "¿Qué se pidió levantar desde Ingeniería Civil para seguir gestionando?",
+      answer: "Jefatura necesita actas de plenos y petitorios para coordinar con otras jefaturas y direcciones. Además, se pidió recopilar todas las fechas de pruebas, revisar qué hizo COPRE con la actualización de protocolos tras el paro anterior y mantener comunicación con los otros CEALES de la facultad.",
+      status: "review",
+      updated: "Reunión JC 22 abr",
+      source: "Reunión con Jefe de Carrera"
+    },
+    {
       id: "faq-contacto-1",
       category: "contacto",
       question: "¿Por dónde se bajan acuerdos y consultas de base?",
@@ -352,15 +379,15 @@
   const SITE_STATUS = {
     heroEyebrow: "Centro CEAL",
     heroTitle: "Estado hoy",
-    heroLead: "Paro vigente para el miércoles 22 de abril. Aquí se concentra el estado actual, los hitos del día y el acceso a respuestas y acuerdos.",
+    heroLead: "Paro vigente con presión académica todavía abierta. Aquí se concentra el estado actual, los hitos del día y el acceso a respuestas y acuerdos.",
     activeBadgeLabel: "Paro vigente hoy",
     activeBadgeTone: "review",
-    sourceBadgeLabel: "Fuente base: Acta pleno 21 abr",
-    sourceBadgeTone: "confirmed",
+    sourceBadgeLabel: "Fuentes: plenos + reunión JC",
+    sourceBadgeTone: "review",
     updateLabel: config.updateLabel,
     currentKicker: "Estado actual",
-    currentTitle: "Paro válido para el miércoles 22 de abril",
-    currentSummary: "El acta del pleno del 21 de abril deja explícito que el paro es válido para el miércoles 22. La forma de revalidación queda sujeta a la definición posterior del proceso.",
+    currentTitle: "Paro vigente y evaluaciones aún sin criterio uniforme",
+    currentSummary: "Se mantiene la paralización, pero sigue habiendo respuestas desiguales entre ramos: algunas flexibilidades para recalendarizar, otras presentaciones o evaluaciones que se mantienen por falta de comunicado nuevo. También sigue pendiente el petitorio FEUCN y el levantamiento completo de fechas de pruebas.",
     currentStatusLabel: "Activo",
     currentStatusTone: "review",
     eventsKicker: "Hitos del 22 de abril",
@@ -370,8 +397,8 @@
       { bullet: "15:00", text: "Marcha convocada en la pérgola de avenida Brasil." }
     ],
     lastUpdateKicker: "Ultima actualizacion",
-    lastUpdateTitle: "Acta del pleno 21 de abril",
-    lastUpdateBody: "La portada usa esa acta como fuente base para el estado vigente y para las respuestas publicadas.",
+    lastUpdateTitle: "Reunión con Jefatura de Carrera",
+    lastUpdateBody: "Se levantaron presiones por evaluaciones y presentaciones, ausencia de petitorio FEUCN, necesidad de recopilar fechas de pruebas y seguimiento sobre protocolos y coordinación con otros CEALES.",
     faqTitle: "FAQ",
     faqIntro: "Respuestas publicadas.",
     channelsKicker: "Fuentes",
@@ -1809,7 +1836,7 @@
 
   if ("serviceWorker" in navigator && window.location.protocol !== "file:") {
     window.addEventListener("load", () => {
-        navigator.serviceWorker.register("sw.js?v=33").catch(() => {});
+        navigator.serviceWorker.register("sw.js?v=34").catch(() => {});
       });
   }
 

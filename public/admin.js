@@ -49,6 +49,17 @@
     is_published: true
   };
 
+  Object.assign(DEFAULT_STATUS_SEED, {
+    hero_lead: "Paro vigente con presion academica todavia abierta. Aqui se concentra el estado actual, los hitos del dia y el acceso a respuestas y acuerdos.",
+    source_badge_label: "Fuentes: plenos + reunion JC",
+    source_badge_tone: "review",
+    update_label: "Actualizado · Reunion JC 22 abr",
+    current_title: "Paro vigente y evaluaciones aun sin criterio uniforme",
+    current_summary: "Se mantiene la paralizacion, pero sigue habiendo respuestas desiguales entre ramos: algunas flexibilidades para recalendarizar, otras presentaciones o evaluaciones que se mantienen por falta de comunicado nuevo. Tambien sigue pendiente el petitorio FEUCN y el levantamiento completo de fechas de pruebas.",
+    last_update_title: "Reunion con Jefatura de Carrera",
+    last_update_body: "Se levantaron presiones por evaluaciones y presentaciones, ausencia de petitorio FEUCN, necesidad de recopilar fechas de pruebas y seguimiento sobre protocolos y coordinacion con otros CEALES."
+  });
+
   const DEFAULT_FAQ_SEED = [
     {
       id: "faq-asistencia-1",
@@ -139,6 +150,42 @@
       is_published: true
     }
   ];
+
+  DEFAULT_FAQ_SEED.push(
+    {
+      id: "faq-evaluaciones-3",
+      category: "evaluaciones",
+      question: "Como estan operando evaluaciones y presentaciones en estos dias?",
+      answer: "No hay un criterio unico. En la reunion con Jefatura se levanto que PPOOHH mantendria presentacion el viernes, Investigacion Aplicada dio facilidad a quienes no alcanzaron a exponer hoy, Wagner no hizo clase de Estructura porque no asistio nadie, y en Programacion la inasistencia a evaluacion debe justificarse por instructivo si asiste solo una persona. Tambien se senalo buena recepcion de algunos docentes para flexibilizar recalendarizaciones.",
+      status: "review",
+      updated_label: "Reunion JC 22 abr",
+      source_label: "Reunion con Jefe de Carrera",
+      display_order: 58,
+      is_published: true
+    },
+    {
+      id: "faq-pleno-4",
+      category: "pleno",
+      question: "FEUCN ya envio el petitorio?",
+      answer: "Segun lo informado en la reunion con Jefatura, FEUCN aun no envia el petitorio. Se indico que siguen en Coquimbo y que VRA no ha querido reunirse en modalidad online. Si esa posicion se mantiene, se levanto incluso la posibilidad de llamar a una toma.",
+      status: "review",
+      updated_label: "Reunion JC 22 abr",
+      source_label: "Reunion con Jefe de Carrera",
+      display_order: 59,
+      is_published: true
+    },
+    {
+      id: "faq-contacto-2",
+      category: "contacto",
+      question: "Que se pidio levantar desde Ingenieria Civil para seguir gestionando?",
+      answer: "Jefatura necesita actas de plenos y petitorios para coordinar con otras jefaturas y direcciones. Ademas, se pidio recopilar todas las fechas de pruebas, revisar que hizo COPRE con la actualizacion de protocolos tras el paro anterior y mantener comunicacion con los otros CEALES de la facultad.",
+      status: "review",
+      updated_label: "Reunion JC 22 abr",
+      source_label: "Reunion con Jefe de Carrera",
+      display_order: 61,
+      is_published: true
+    }
+  );
 
   const DEFAULT_AGREEMENT_SEED = [
     {
