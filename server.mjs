@@ -142,7 +142,7 @@ async function serveStatic(url, res, headOnly) {
   const file = await fs.readFile(filePath);
   res.writeHead(200, {
     "Content-Type": contentType,
-    "Cache-Control": ext === ".html" ? "no-store" : "public, max-age=86400"
+    "Cache-Control": "no-store"
   });
   if (!headOnly) res.end(file);
   else res.end();

@@ -1971,7 +1971,7 @@
 
   if ("serviceWorker" in navigator && window.location.protocol !== "file:") {
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("sw.js?v=40").then((registration) => {
+      navigator.serviceWorker.register("sw.js?v=41").then((registration) => {
         registration.update().catch(() => {});
 
         if (registration.waiting) {
