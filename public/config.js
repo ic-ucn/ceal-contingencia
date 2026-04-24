@@ -11,10 +11,10 @@ const LOCAL_HOSTS = new Set(["localhost", "127.0.0.1", "::1"]);
 const isLocalRuntime = LOCAL_HOSTS.has(window.location.hostname);
 
 window.CEAL_CONFIG = {
-  appName: "CEAL Contingencia",
-  institutionName: "UCN - Ingenieria Civil - CEAL",
+  appName: "CEAL",
+  institutionName: "Ingenieria Civil UCN",
   subtitle: "Contingencia estudiantil",
-  updateLabel: "Actualizado · Aviso asamblea 22 abr",
+  updateLabel: "Actualizado 23/04 · 18:40 hrs",
   apiBase: isLocalRuntime ? "" : PUBLIC_API_BASE,
   enableLocalFallback: isLocalRuntime,
   maxFileMB: 10,

@@ -6,35 +6,44 @@
   <meta name="theme-color" content="#06295e" />
   <meta name="description" content="Aplicacion CEAL para preguntas frecuentes, acuerdos y reportes anonimos de contingencia estudiantil." />
   <title>CEAL Contingencia</title>
-  <link rel="manifest" href="manifest.webmanifest?v=39" />
-  <link rel="icon" href="assets/logo-ingenieria-civil.png?v=39" type="image/png" />
-  <link rel="apple-touch-icon" href="assets/logo-ingenieria-civil.png?v=39" />
-  <link rel="stylesheet" href="styles.css?v=39" />
+  <link rel="manifest" href="manifest.webmanifest?v=40" />
+  <link rel="icon" href="assets/logo-ingenieria-civil.png?v=40" type="image/png" />
+  <link rel="apple-touch-icon" href="assets/logo-ingenieria-civil.png?v=40" />
+  <link rel="stylesheet" href="styles.css?v=40" />
 </head>
 <body>
   <a class="skip-link" href="#main">Saltar al contenido</a>
 
   <div class="app-shell">
     <header class="topbar" aria-label="Barra superior">
+      <button class="icon-button menu-toggle" type="button" id="menuToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="drawer">
+        <span></span><span></span><span></span>
+      </button>
+
       <a class="brand" href="#inicio" data-route="inicio" aria-label="Ir al inicio">
         <span class="brand-symbol" aria-hidden="true">
-          <img src="assets/logo-ingenieria-civil.png?v=39" alt="" />
+          <img src="assets/logo-ingenieria-civil.png?v=40" alt="" />
         </span>
         <span class="brand-copy">
-          <strong>UCN</strong>
-          <span>Ingenieria Civil - CEAL</span>
+          <strong>CEAL</strong>
+          <span>Ingeniería Civil UCN</span>
         </span>
       </a>
 
       <nav class="desktop-nav" aria-label="Navegacion principal">
         <a href="#inicio" data-route="inicio">Inicio</a>
-        <a href="#reportar" data-route="reportar">Reportar</a>
         <a href="#acuerdos" data-route="acuerdos">Acuerdos</a>
+        <a href="#reportar" data-route="reportar">Reportes</a>
       </nav>
 
-      <button class="icon-button menu-toggle" type="button" id="menuToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="drawer">
-        <span></span><span></span><span></span>
-      </button>
+      <div class="topbar-actions">
+        <button class="icon-button notification-button" type="button" data-show-notifications aria-label="Notificaciones">
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 9a6 6 0 1 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
+            <path d="M10 21h4"></path>
+          </svg>
+        </button>
+      </div>
     </header>
 
     <aside class="drawer" id="drawer" aria-hidden="true">
@@ -52,14 +61,20 @@
 
     <nav class="bottom-nav" aria-label="Navegacion movil">
       <a href="#inicio" data-route="inicio" aria-label="Inicio">
-        <span class="nav-icon" aria-hidden="true">I</span><span>Inicio</span>
-      </a>
-      <a href="#reportar" data-route="reportar" aria-label="Reportar">
-        <span class="nav-icon" aria-hidden="true">R</span><span>Reportar</span>
+        <span class="nav-icon" aria-hidden="true">⌂</span><span>Inicio</span>
       </a>
       <a href="#acuerdos" data-route="acuerdos" aria-label="Acuerdos">
-        <span class="nav-icon" aria-hidden="true">A</span><span>Acuerdos</span>
+        <span class="nav-icon" aria-hidden="true">☷</span><span>Acuerdos</span>
       </a>
+      <a href="#reportar" data-route="reportar" aria-label="Reportes">
+        <span class="nav-icon" aria-hidden="true">◇</span><span>Reportes</span>
+      </a>
+      <button type="button" data-open-question aria-label="Dudas">
+        <span class="nav-icon" aria-hidden="true">○</span><span>Dudas</span>
+      </button>
+      <button type="button" data-open-drawer aria-label="Más">
+        <span class="nav-icon" aria-hidden="true">•••</span><span>Más</span>
+      </button>
     </nav>
   </div>
 
@@ -68,6 +83,6 @@
 
   <script src="config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="app.js?v=39" defer></script>
+  <script src="app.js?v=40" defer></script>
 </body>
 </html>

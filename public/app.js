@@ -2,10 +2,10 @@
   "use strict";
 
   const config = {
-    appName: "CEAL Contingencia",
-    institutionName: "UCN - Ingenieria Civil - CEAL",
+    appName: "CEAL",
+    institutionName: "Ingenieria Civil UCN",
     subtitle: "Contingencia estudiantil",
-    updateLabel: "Actualizado hoy · 10:15",
+    updateLabel: "Actualizado 23/04 · 18:40 hrs",
     apiBase: "",
     enableLocalFallback: true,
     maxFileMB: 10,
@@ -214,20 +214,20 @@
     {
       id: "faq-asistencia-1",
       category: "asistencia",
-      question: "¿Qué pasa con los días previos a la nueva revalidación del sábado?",
-      answer: "Todavía no hay una definición cerrada publicada. En la reunión con Jefatura se dejó planteada la necesidad de aclarar qué ocurrirá con estudiantes durante estos días previos a la nueva revalidación del paro.",
+      question: "¿Cuál es el estado del paro hoy?",
+      answer: "El paro sigue vigente mientras se revisa el petitorio y se espera una bajada formal de actualizaciones para votar y ordenar los próximos pasos.",
       status: "review",
-      updated: "Reunión JC 22 abr",
-      source: "Reunión con Jefe de Carrera"
+      updated: "Actualización 23 abr",
+      source: "Actualización CEAL 23/04"
     },
     {
       id: "faq-evaluaciones-1",
       category: "evaluaciones",
       question: "¿Se recalendarizaron las evaluaciones?",
-      answer: "En el pleno se informó que la universidad rechazó inicialmente recalendarizar evaluaciones y luego autorizó la recalendarización solo para la jornada del martes 21. No se informaron garantías explícitas para los días siguientes si continuaba la paralización.",
+      answer: "Sigue pendiente de confirmar. El petitorio solicita recalendarizar evaluaciones, laboratorios, talleres y clases programadas desde el martes 21/04, además de una marcha blanca de un día al terminar la paralización.",
       status: "review",
-      updated: "Acta pleno 21 abr",
-      source: "Acta Pleno 21 de abril"
+      updated: "Petitorio 23 abr",
+      source: "Petitorio FEUCN Garantías y Seguridad"
     },
     {
       id: "faq-evaluaciones-2",
@@ -241,47 +241,47 @@
     {
       id: "faq-pleno-1",
       category: "pleno",
-      question: "¿Qué se comprometió la universidad en seguridad?",
-      answer: "Federación informó que el Director de Servicios, Cristian Zuleta, se comprometió a actualizar el Protocolo de Emergencias con indicaciones para amenazas como tiroteo a más tardar el lunes 27 de abril, y a presentar un Plan de Seguridad Integral durante la semana del 25 de mayo.",
-      status: "confirmed",
-      updated: "Acta pleno 21 abr",
-      source: "Acta Pleno 21 de abril"
+      question: "¿Qué medidas de seguridad están sobre la mesa?",
+      answer: "Se están discutiendo actualización de protocolos, responsables claros, simulacros, capacitaciones, cámaras, sala de control y medidas de control de acceso como torniquetes o lectores QR. Siguen como puntos en revisión.",
+      status: "review",
+      updated: "Actualización 23 abr",
+      source: "Petitorio FEUCN + actualización 23/04"
     },
     {
       id: "faq-pleno-2",
       category: "pleno",
-      question: "¿Qué se sabe de la asamblea online de Ingeniería Civil del jueves 23/04?",
-      answer: "Se informó que el jueves 23/04 se realizará una asamblea online de Ingeniería Civil. El horario de convocatoria se confirmará durante la jornada, por lo que se pidió estar atentos para participar y resolver dudas.",
-      status: "confirmed",
-      updated: "Aviso asamblea 22 abr",
-      source: "Comunicado Ingeniería Civil"
+      question: "¿Qué incluye el petitorio?",
+      answer: "Incluye fuero estudiantil, recalendarización, marcha blanca, uso de Transparente UCN para acuerdos y avances, actualización de protocolos de seguridad, prevencionista de riesgos para estudiantes y refuerzo de canales institucionales.",
+      status: "review",
+      updated: "Petitorio 23 abr",
+      source: "Petitorio FEUCN Garantías y Seguridad"
     },
     {
       id: "faq-pleno-3",
       category: "pleno",
-      question: "¿Cuál es la finalidad del paro y hay petitorio redactado?",
-      answer: "Con lo informado en los plenos, el paro busca presionar por garantías reales de seguridad, actualización y cumplimiento de protocolos, y resguardo académico frente a la contingencia. También se ha usado para evitar la desarticulación de la movilización mientras siguen las negociaciones. Hasta ahora no está incorporado en la app un petitorio único y cerrado como documento rector; lo que sí tenemos son actas, acuerdos y referencias a petitorios o propuestas discutidas en pleno.",
+      question: "¿El petitorio ya fue entregado formalmente?",
+      answer: "Según la actualización recibida, todavía debe bajarse y votarse antes de entregarse formalmente. Se informó que Vicerrectoría ya habría visto una versión filtrada, pero eso no reemplaza la entrega formal.",
       status: "review",
-      updated: "Plenos 20 y 21 abr",
-      source: "Acta Pleno 21 de abril + Pleno extraordinario 20 abril"
+      updated: "Actualización 23 abr",
+      source: "Actualización 23/04"
     },
     {
       id: "faq-evaluaciones-3",
       category: "evaluaciones",
       question: "¿Cómo están operando evaluaciones y presentaciones en estos días?",
-      answer: "No hay un criterio único. En la reunión con Jefatura se levantó que PPOOHH mantendría presentación el viernes, Investigación Aplicada dio facilidad a quienes no alcanzaron a exponer hoy, Wagner no hizo clase de Estructura porque no asistió nadie, y en Programación la inasistencia a evaluación debe justificarse por instructivo si asiste solo una persona. También se señaló buena recepción de algunos docentes para flexibilizar recalendarizaciones.",
+      answer: "No hay un criterio único publicado. Se reportan dudas en evaluaciones próximas, incluyendo Álgebra I. Revisa cada ramo por canales oficiales y reporta cambios, presiones o instrucciones contradictorias con respaldo.",
       status: "review",
-      updated: "Reunión JC 22 abr",
-      source: "Reunión con Jefe de Carrera"
+      updated: "Actualización 23 abr",
+      source: "Actualización CEAL 23/04"
     },
     {
       id: "faq-pleno-4",
       category: "pleno",
-      question: "¿FEUCN ya envió el petitorio?",
-      answer: "Según lo informado en la reunión con Jefatura, FEUCN aún no envía el petitorio. Se indicó que siguen en Coquimbo y que VRA no ha querido reunirse en modalidad online. Si esa posición se mantiene, se levantó incluso la posibilidad de llamar a una toma.",
+      question: "¿Qué se espera como próximo paso?",
+      answer: "Se espera una nueva bajada de información para votar, ajustar acuerdos y actualizar el estado del petitorio. Mientras no exista confirmación formal, los puntos se mantienen en revisión.",
       status: "review",
-      updated: "Reunión JC 22 abr",
-      source: "Reunión con Jefe de Carrera"
+      updated: "Actualización 23 abr",
+      source: "Actualización CEAL 23/04"
     },
     {
       id: "faq-contacto-2",
@@ -295,11 +295,11 @@
     {
       id: "faq-contacto-1",
       category: "contacto",
-      question: "¿Por dónde se bajan acuerdos y consultas de base?",
-      answer: "El pleno reafirma que los alcances de las bases deben levantarse a través de los centros de estudiantes y que los acuerdos deben difundirse a las carreras para evitar desinformación.",
+      question: "¿Dónde deberían publicarse acuerdos y avances?",
+      answer: "El petitorio solicita que acuerdos de paralizaciones y avances queden disponibles en Transparente UCN para evitar confusiones y mejorar el seguimiento.",
       status: "confirmed",
-      updated: "Acta pleno 21 abr",
-      source: "Acta Pleno 21 de abril"
+      updated: "Petitorio 23 abr",
+      source: "Petitorio FEUCN Garantías y Seguridad"
     },
     {
       id: "faq-asistencia-2",
@@ -315,39 +315,57 @@
   const AGREEMENTS = [
     {
       id: "agr-1",
-      title: "Actualización del protocolo de emergencias",
-      summary: "Dirección de Servicios se comprometió a actualizar el Protocolo de Emergencias con indicaciones para amenazas como tiroteo a más tardar el lunes 27 de abril.",
-      status: "confirmed",
-      date: "21 abr 2026",
-      area: "Seguridad",
-      source: "Acta Pleno 21 de abril"
+      title: "Petitorio FEUCN en revisión",
+      summary: "El petitorio de garantías y seguridad está en revisión y debe bajarse a las bases antes de su entrega formal. Incluye fuero estudiantil, recalendarización, marcha blanca, protocolos, transparencia y medidas de seguridad.",
+      status: "review",
+      date: "23 abr 2026",
+      area: "Petitorio",
+      source: "Petitorio FEUCN Garantías y Seguridad + actualización 23/04"
     },
     {
       id: "agr-2",
-      title: "Plan de seguridad integral",
-      summary: "Se informó el compromiso de presentar durante la semana del 25 de mayo una propuesta de plan de seguridad integral con medidas como registro de ingreso al campus.",
+      title: "Recalendarización y marcha blanca solicitadas",
+      summary: "El petitorio solicita recalendarizar evaluaciones, laboratorios, talleres y clases desde el martes 21/04, y sumar una marcha blanca de un día después de finalizada la paralización.",
       status: "review",
-      date: "Semana 25 may 2026",
-      area: "Seguridad",
-      source: "Acta Pleno 21 de abril"
+      date: "23 abr 2026",
+      area: "Evaluaciones",
+      source: "Petitorio FEUCN Garantías y Seguridad"
     },
     {
       id: "agr-3",
-      title: "Recalendarización de evaluaciones",
-      summary: "La recalendarización fue autorizada para la jornada del martes 21 tras presión estudiantil, pero el pleno dejó explícito que no había garantías para los días siguientes si seguía la paralización.",
+      title: "Actualización de protocolos de seguridad",
+      summary: "Se pide actualizar protocolos institucionales, incorporar escenarios como amenazas, artefactos explosivos y ataques armados, y aclarar medidas de evacuación o confinamiento según el tipo de emergencia.",
       status: "review",
-      date: "21 abr 2026",
-      area: "Evaluaciones",
-      source: "Acta Pleno 21 de abril"
+      date: "23 abr 2026",
+      area: "Seguridad",
+      source: "Petitorio FEUCN Garantías y Seguridad"
     },
     {
       id: "agr-4",
-      title: "Asamblea online de Ingeniería Civil el 23 de abril",
-      summary: "Se informó convocatoria a asamblea online de Ingeniería Civil para el jueves 23/04. El horario se confirmará durante la jornada y se pidió estar atentos para participar y resolver dudas.",
-      status: "confirmed",
+      title: "Transparente UCN y seguimiento",
+      summary: "Se solicita que acuerdos, avances, protocolos y seguimiento de compromisos estén disponibles para la comunidad, idealmente con trazabilidad y carta Gantt.",
+      status: "review",
       date: "23 abr 2026",
-      area: "Coordinación",
-      source: "Comunicado Ingeniería Civil"
+      area: "Transparencia",
+      source: "Petitorio FEUCN Garantías y Seguridad + actualización 23/04"
+    },
+    {
+      id: "agr-5",
+      title: "Medidas preventivas en evaluación",
+      summary: "Se discutieron medidas como control de acceso, torniquetes, lectores QR, cámaras y sala de control. Siguen como puntos en evaluación, no como medidas confirmadas.",
+      status: "review",
+      date: "23 abr 2026",
+      area: "Seguridad",
+      source: "Actualización 23/04"
+    },
+    {
+      id: "agr-6",
+      title: "Prevencionista para estudiantes",
+      summary: "El petitorio plantea incorporar una figura de prevención de riesgos enfocada en el estamento estudiantil, con funciones de comunicación, simulacros, capacitaciones y seguimiento.",
+      status: "review",
+      date: "23 abr 2026",
+      area: "Seguridad",
+      source: "Petitorio FEUCN Garantías y Seguridad"
     }
   ];
 
@@ -380,34 +398,92 @@
 
   const SITE_STATUS = {
     heroEyebrow: "Centro CEAL",
-    heroTitle: "Estado hoy",
-    heroLead: "El paro sigue vigente. Durante el jueves 23/04 habrá asamblea online de Ingeniería Civil y el horario se confirmará durante la jornada.",
-    activeBadgeLabel: "Paro vigente hoy",
+    heroTitle: "Inicio",
+    heroLead: "El paro sigue vigente mientras se revisa el petitorio y se espera una bajada formal de actualizaciones.",
+    activeBadgeLabel: "Paro vigente",
     activeBadgeTone: "review",
-    sourceBadgeLabel: "Fuentes: reunión JC + aviso asamblea",
+    sourceBadgeLabel: "Petitorio en revisión",
     sourceBadgeTone: "review",
     updateLabel: config.updateLabel,
-    currentKicker: "Estado actual",
-    currentTitle: "Paro vigente y asamblea online el 23/04",
-    currentSummary: "Sigue la paralización. Aún hay criterios dispares entre ramos y todavía no hay una definición cerrada sobre cómo se manejarán los días previos a la nueva revalidación del sábado.",
-    currentStatusLabel: "Activo",
+    currentKicker: "Estado de hoy",
+    currentTitle: "Estado de hoy",
+    currentSummary: "El paro sigue vigente mientras se revisa el petitorio y se espera una bajada formal de actualizaciones.",
+    currentStatusLabel: "En revisión",
     currentStatusTone: "review",
-    eventsKicker: "Próximo hito",
-    eventsTitle: "Asamblea online Ingeniería Civil",
+    eventsKicker: "Pendiente",
+    eventsTitle: "Pendiente de confirmar",
     events: [
-      { bullet: "23/04", text: "Asamblea online de Ingeniería Civil." },
-      { bullet: "Horario", text: "Se confirmará durante la jornada." },
-      { bullet: "Objetivo", text: "Resolver dudas y coordinar participación." }
+      { bullet: "1", text: "Entrega formal del petitorio." },
+      { bullet: "2", text: "Respuesta de vicerrectoría." },
+      { bullet: "3", text: "Criterio para evaluaciones próximas." }
     ],
-    lastUpdateKicker: "Ultima actualizacion",
-    lastUpdateTitle: "Aviso de asamblea del 23/04",
-    lastUpdateBody: "Se confirmó convocatoria a asamblea online de Ingeniería Civil para el jueves 23/04. El horario se informará durante la jornada y sigue pendiente aclarar qué ocurrirá antes de la nueva revalidación del sábado.",
+    lastUpdateKicker: "Seguimiento",
+    lastUpdateTitle: "Próximo paso",
+    lastUpdateBody: "Se espera nueva bajada de información para votar y actualizar acuerdos.",
     faqTitle: "FAQ",
-    faqIntro: "Respuestas publicadas.",
+    faqIntro: "Respuestas publicadas y puntos en revisión.",
     channelsKicker: "Fuentes",
     channelsTitle: "Canales base",
     channelsIntro: "Referencias y canales de coordinación."
   };
+
+  const DASHBOARD_IMPORTANT_ITEMS = [
+    {
+      id: "petitorio",
+      title: "Petitorio",
+      body: "Incluye garantías, recalendarización, marcha blanca, protocolos y transparencia.",
+      icon: "document"
+    },
+    {
+      id: "evaluaciones",
+      title: "Evaluaciones",
+      body: "No hay criterio único publicado. Revisa cada ramo y reporta cambios o presiones.",
+      icon: "clipboard"
+    },
+    {
+      id: "seguridad",
+      title: "Seguridad",
+      body: "Se discuten protocolos, cámaras, control de acceso, simulacros y responsables.",
+      icon: "shield-lock"
+    }
+  ];
+
+  const DASHBOARD_PENDING_ITEMS = [
+    "Entrega formal del petitorio",
+    "Respuesta de vicerrectoría",
+    "Criterio para evaluaciones próximas",
+    "Protocolo actualizado",
+    "Próximos pasos de votación"
+  ];
+
+  const DASHBOARD_QUICK_ACTIONS = [
+    {
+      id: "petition",
+      label: "Ver petitorio",
+      icon: "document",
+      href: "assets/petitorio-paralizacion-2026.pdf",
+      primary: true
+    },
+    {
+      id: "agreements",
+      label: "Ver acuerdos",
+      icon: "handshake",
+      route: "acuerdos",
+      soft: true
+    },
+    {
+      id: "report",
+      label: "Reportar un caso",
+      icon: "alert",
+      route: "reportar"
+    },
+    {
+      id: "question",
+      label: "Enviar duda",
+      icon: "message",
+      question: true
+    }
+  ];
 
   function emptyReportDraft() {
     return {
@@ -511,6 +587,70 @@
       </svg>`;
   }
 
+  function dashboardIcon(name) {
+    const icons = {
+      "shield-check": `
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3.2 5.4 5.8v5.4c0 4.6 2.8 8.5 6.6 9.8 3.8-1.3 6.6-5.2 6.6-9.8V5.8L12 3.2Z"></path>
+          <path d="m8.8 12 2.1 2.2 4.5-5"></path>
+        </svg>`,
+      "shield-lock": `
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3.2 5.4 5.8v5.4c0 4.6 2.8 8.5 6.6 9.8 3.8-1.3 6.6-5.2 6.6-9.8V5.8L12 3.2Z"></path>
+          <rect x="9" y="10.4" width="6" height="4.8" rx="1.2"></rect>
+          <path d="M10.4 10.4V9a1.6 1.6 0 0 1 3.2 0v1.4"></path>
+        </svg>`,
+      document: `
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M7 3.8h7l3 3v13.4H7z"></path>
+          <path d="M14 3.8v3h3"></path>
+          <path d="M9.5 11h5"></path>
+          <path d="M9.5 14h5"></path>
+          <path d="M9.5 17h3"></path>
+        </svg>`,
+      clipboard: `
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8.8 4.8H6.5A1.5 1.5 0 0 0 5 6.3v13.2A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5V6.3a1.5 1.5 0 0 0-1.5-1.5h-2.3"></path>
+          <rect x="8.8" y="3" width="6.4" height="3.6" rx="1.2"></rect>
+          <path d="m8.8 12 1.3 1.3 2.3-2.5"></path>
+          <path d="M14.5 12h2"></path>
+          <path d="m8.8 16.2 1.3 1.3 2.3-2.5"></path>
+          <path d="M14.5 16.2h2"></path>
+        </svg>`,
+      handshake: `
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m7.4 12.6 3.1-3.1a2 2 0 0 1 2.8 0l.8.8"></path>
+          <path d="m14.2 10.4 2.4 2.4a2 2 0 0 1 0 2.8l-2.1 2.1a2.4 2.4 0 0 1-3.4 0l-3.7-3.7"></path>
+          <path d="M3.5 10.8 7 7.3l3.2 3.2-3.5 3.5z"></path>
+          <path d="m20.5 10.8-3.5-3.5-3.2 3.2 3.5 3.5z"></path>
+        </svg>`,
+      alert: `
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10.4 4.4 2.9 17.3A1.8 1.8 0 0 0 4.5 20h15a1.8 1.8 0 0 0 1.6-2.7L13.6 4.4a1.8 1.8 0 0 0-3.2 0Z"></path>
+          <path d="M12 8.7v4.5"></path>
+          <path d="M12 16.8h.01"></path>
+        </svg>`,
+      message: `
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 5.4h14a1.8 1.8 0 0 1 1.8 1.8v7.6a1.8 1.8 0 0 1-1.8 1.8h-7.2L7 20v-3.4H5a1.8 1.8 0 0 1-1.8-1.8V7.2A1.8 1.8 0 0 1 5 5.4Z"></path>
+          <path d="M8 10.4h.01"></path>
+          <path d="M12 10.4h.01"></path>
+          <path d="M16 10.4h.01"></path>
+        </svg>`,
+      clock: `
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="8.2"></circle>
+          <path d="M12 7.5v5l3 1.8"></path>
+        </svg>`,
+      flag: `
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 21V4"></path>
+          <path d="M6 5h10.2l-1 3.2 1 3.2H6"></path>
+        </svg>`
+    };
+    return icons[name] || icons.document;
+  }
+
   function render() {
     state.route = getRouteFromHash();
 
@@ -534,139 +674,119 @@
   }
 
   function renderHome() {
-    const reports = loadJSON(STORAGE.reports, []);
-    const questions = loadJSON(STORAGE.questions, []);
     const filteredFaqs = getFilteredFaqs();
-    const officialSources = CHANNEL_LINKS;
 
     return `
-      <div class="page-stack">
-        <section class="hero-grid" aria-labelledby="faq-title">
-          <div class="hero-main">
-            <div class="hero-copy">
-              <p class="eyebrow">${escapeHTML(SITE_STATUS.heroEyebrow)}</p>
-              <h1 id="faq-title">${escapeHTML(SITE_STATUS.heroTitle)}</h1>
-              <p class="lead">${escapeHTML(SITE_STATUS.heroLead)}</p>
-              <div class="status-inline-row">
-                <span class="status-badge status-${escapeHTML(SITE_STATUS.activeBadgeTone)}"><span aria-hidden="true">${SITE_STATUS.activeBadgeTone === "confirmed" ? "OK" : "REV"}</span>${escapeHTML(SITE_STATUS.activeBadgeLabel)}</span>
-                <span class="status-badge status-${escapeHTML(SITE_STATUS.sourceBadgeTone)}"><span aria-hidden="true">${SITE_STATUS.sourceBadgeTone === "confirmed" ? "OK" : "REV"}</span>${escapeHTML(SITE_STATUS.sourceBadgeLabel)}</span>
-              </div>
-              <div class="meta-row" aria-label="Estado de actualización">
-                <span aria-hidden="true">UPD</span><span>${escapeHTML(SITE_STATUS.updateLabel)}</span><span class="dot"></span><span>${FAQS.length} respuestas cargadas</span>
-              </div>
-            </div>
-
-            <div class="search-card hero-search" aria-label="Buscar preguntas frecuentes">
-              <label class="search-input">
-                ${iconSearch()}
-                <input id="faqSearch" type="search" inputmode="search" autocomplete="off" placeholder="Buscar una pregunta..." value="${escapeHTML(state.faqQuery)}" />
-              </label>
-            </div>
-          </div>
+      <div class="page-stack home-dashboard">
+        <section class="dashboard-title" aria-labelledby="home-title">
+          <h1 id="home-title">Inicio</h1>
         </section>
 
-        <section class="status-dashboard" aria-label="Resumen de contingencia">
-          <article class="card status-highlight">
-            <div class="status-highlight-head">
-              <div>
-                <p class="section-kicker">${escapeHTML(SITE_STATUS.currentKicker)}</p>
-                <h2>${escapeHTML(SITE_STATUS.currentTitle)}</h2>
+        <section class="dashboard-top-grid" aria-label="Resumen principal">
+          <article class="dashboard-status-card">
+            <div class="dashboard-status-icon" aria-hidden="true">${dashboardIcon("shield-check")}</div>
+            <div class="dashboard-status-copy">
+              <h2>${escapeHTML(SITE_STATUS.currentTitle)}</h2>
+              <p>${escapeHTML(SITE_STATUS.currentSummary)}</p>
+              <div class="dashboard-badges">
+                <span class="dashboard-badge dashboard-badge-primary">${escapeHTML(SITE_STATUS.activeBadgeLabel)}</span>
+                <span class="dashboard-badge dashboard-badge-info">${escapeHTML(SITE_STATUS.sourceBadgeLabel)}</span>
+                <span class="dashboard-badge dashboard-badge-warning">Recalendarización pendiente</span>
               </div>
-              <span class="status-badge status-${escapeHTML(SITE_STATUS.currentStatusTone)}">${escapeHTML(SITE_STATUS.currentStatusLabel)}</span>
+              <div class="dashboard-updated">
+                ${dashboardIcon("clock")}
+                <span>${escapeHTML(SITE_STATUS.updateLabel)}</span>
+              </div>
             </div>
-            <p>${escapeHTML(SITE_STATUS.currentSummary)}</p>
           </article>
 
-          <div class="status-mini-grid">
-            <article class="card status-mini-card">
-              <p class="section-kicker">${escapeHTML(SITE_STATUS.eventsKicker)}</p>
-              <h3>${escapeHTML(SITE_STATUS.eventsTitle)}</h3>
-              <ul class="help-list compact-list">
-                ${SITE_STATUS.events.map((item) => `<li><span class="bullet">${escapeHTML(item.bullet)}</span><span>${escapeHTML(item.text)}</span></li>`).join("")}
-              </ul>
-            </article>
-
-            <article class="card status-mini-card">
-              <p class="section-kicker">${escapeHTML(SITE_STATUS.lastUpdateKicker)}</p>
-              <h3>${escapeHTML(SITE_STATUS.lastUpdateTitle)}</h3>
-              <p>${escapeHTML(SITE_STATUS.lastUpdateBody)}</p>
-            </article>
-          </div>
+          <article class="dashboard-pending-card">
+            <h2>Pendiente de confirmar</h2>
+            <ul>
+              ${DASHBOARD_PENDING_ITEMS.map((item) => `<li><span aria-hidden="true"></span>${escapeHTML(item)}</li>`).join("")}
+            </ul>
+          </article>
         </section>
 
-        <section class="category-row" aria-label="Filtros de preguntas frecuentes">
-          ${FAQ_CATEGORIES.map((category) => `
-            <button class="category-chip" type="button" data-faq-filter="${category.id}" aria-pressed="${state.faqFilter === category.id}">
-              <span class="chip-icon" aria-hidden="true">${category.icon}</span>${escapeHTML(category.label)}
-            </button>`).join("")}
-        </section>
-
-        <section class="card faq-section-intro" aria-labelledby="faq-section-title">
-          <div>
-            <h2 id="faq-section-title">${escapeHTML(SITE_STATUS.faqTitle)}</h2>
-            <p>${escapeHTML(SITE_STATUS.faqIntro)}</p>
-          </div>
-          <div class="meta-row">
-            <span>${filteredFaqs.length} resultado${filteredFaqs.length === 1 ? "" : "s"}</span>
-            <span class="dot"></span>
-            <span>Filtro: ${escapeHTML(categoryLabel(state.faqFilter))}</span>
-          </div>
-        </section>
-
-        <section class="content-grid">
-          <div class="faq-list" aria-live="polite">
-            ${filteredFaqs.length ? filteredFaqs.map(renderFaqCard).join("") : renderEmpty("No encontramos preguntas con ese filtro.", "Prueba otra búsqueda o envía una nueva duda para que el CEAL pueda responderla.")}
-          </div>
-
-          <aside class="rail" aria-label="Acciones rápidas">
-            <div class="rail-card">
-              <h2>Acciones rápidas</h2>
-              <p>Elige una acción.</p>
-              <div class="quick-actions">
-                <a class="btn btn-primary" href="#reportar" data-route="reportar">Enviar reporte</a>
-                <button class="btn btn-soft" type="button" data-open-question>Enviar nueva duda</button>
-                <a class="btn btn-soft" href="#acuerdos" data-route="acuerdos">Ver acuerdos</a>
-              </div>
+        <section class="dashboard-main-grid">
+          <section class="dashboard-important-section" aria-labelledby="important-title">
+            <h2 id="important-title" class="dashboard-section-title">Lo más importante</h2>
+            <div class="dashboard-important-grid">
+              ${DASHBOARD_IMPORTANT_ITEMS.map((item) => `
+                <article class="dashboard-info-card">
+                  <div class="dashboard-info-icon" aria-hidden="true">${dashboardIcon(item.icon)}</div>
+                  <div>
+                    <h3>${escapeHTML(item.title)}</h3>
+                    <p>${escapeHTML(item.body)}</p>
+                  </div>
+                </article>`).join("")}
             </div>
-            <div class="rail-card">
-              <h3>Estado de respuestas</h3>
-              <ul class="help-list">
-                <li><span class="bullet">OK</span><span><strong>Confirmado:</strong> con respaldo.</span></li>
-                <li><span class="bullet">REV</span><span><strong>En revision:</strong> pendiente de validacion.</span></li>
-                <li><span class="bullet">?</span><span><strong>Sin respuesta:</strong> sin definición publicada.</span></li>
-              </ul>
+          </section>
+
+          <aside class="dashboard-actions-panel" aria-labelledby="quick-actions-title">
+            <h2 id="quick-actions-title" class="dashboard-section-title">Acciones rápidas</h2>
+            <div class="dashboard-action-grid">
+              ${DASHBOARD_QUICK_ACTIONS.map(renderDashboardAction).join("")}
             </div>
           </aside>
+
+          <section class="dashboard-follow-section" aria-labelledby="follow-title">
+            <h2 id="follow-title" class="dashboard-section-title">Seguimiento</h2>
+            <article class="dashboard-follow-card">
+              <div class="dashboard-follow-icon" aria-hidden="true">${dashboardIcon("flag")}</div>
+              <div>
+                <h3>${escapeHTML(SITE_STATUS.lastUpdateTitle)}</h3>
+                <p>${escapeHTML(SITE_STATUS.lastUpdateBody)}</p>
+              </div>
+              <span class="dashboard-follow-arrow" aria-hidden="true">${iconChevron()}</span>
+            </article>
+          </section>
         </section>
 
-        <section class="cta-card" aria-label="Enviar otra duda">
-          <div class="cta-icon" aria-hidden="true">?</div>
-          <div>
-            <h2>Nueva duda</h2>
-            <p>Si no aparece aquí, envíala.</p>
-          </div>
-          <button class="btn btn-primary" type="button" data-open-question>Enviar nueva duda</button>
-        </section>
-
-        <section class="card sources-card sources-card-secondary" aria-label="Fuentes principales">
-          <div class="sources-head">
+        <section class="dashboard-faq-panel" aria-labelledby="faq-section-title">
+          <div class="faq-section-intro">
             <div>
-              <p class="section-kicker">${escapeHTML(SITE_STATUS.channelsKicker)}</p>
-              <h2>${escapeHTML(SITE_STATUS.channelsTitle)}</h2>
-              <p>${escapeHTML(SITE_STATUS.channelsIntro)}</p>
+              <h2 id="faq-section-title">${escapeHTML(SITE_STATUS.faqTitle)}</h2>
+              <p>${escapeHTML(SITE_STATUS.faqIntro)}</p>
             </div>
+            <label class="search-input dashboard-search">
+              ${iconSearch()}
+              <input id="faqSearch" type="search" inputmode="search" autocomplete="off" placeholder="Buscar una pregunta..." value="${escapeHTML(state.faqQuery)}" />
+            </label>
           </div>
-          <div class="sources-grid">
-            ${officialSources.map((source) => {
-              const cardBody = `<strong>${escapeHTML(source.label)}</strong><span>${escapeHTML(source.meta)}</span>`;
-              return source.href
-                ? `<a class="source-link source-link-plain" href="${escapeHTML(source.href)}" target="_blank" rel="noreferrer">${cardBody}</a>`
-                : `<div class="source-link source-link-plain is-static">${cardBody}</div>`;
-            }).join("")}
+
+          <div class="category-row" aria-label="Filtros de preguntas frecuentes">
+            ${FAQ_CATEGORIES.map((category) => `
+              <button class="category-chip" type="button" data-faq-filter="${category.id}" aria-pressed="${state.faqFilter === category.id}">
+                <span class="chip-icon" aria-hidden="true">${category.icon}</span>${escapeHTML(category.label)}
+              </button>`).join("")}
+          </div>
+
+          <div class="faq-list" aria-live="polite">
+            ${filteredFaqs.length ? filteredFaqs.map(renderFaqCard).join("") : renderEmpty("No encontramos preguntas con ese filtro.", "Prueba otra búsqueda o envía una nueva duda para que el CEAL pueda responderla.")}
           </div>
         </section>
       </div>
     `;
+  }
+
+  function renderDashboardAction(action) {
+    const className = [
+      "dashboard-action-card",
+      action.primary ? "is-primary" : "",
+      action.soft ? "is-soft" : ""
+    ].filter(Boolean).join(" ");
+    const body = `
+      <span class="dashboard-action-icon" aria-hidden="true">${dashboardIcon(action.icon)}</span>
+      <strong>${escapeHTML(action.label)}</strong>
+    `;
+    if (action.href) {
+      return `<a class="${className}" href="${escapeHTML(action.href)}" target="_blank" rel="noreferrer">${body}</a>`;
+    }
+    if (action.route) {
+      return `<a class="${className}" href="#${escapeHTML(action.route)}" data-route="${escapeHTML(action.route)}">${body}</a>`;
+    }
+    return `<button class="${className}" type="button" data-open-question>${body}</button>`;
   }
 
   function getFilteredFaqs() {
@@ -1760,6 +1880,16 @@
       return;
     }
 
+    if (target.closest?.("[data-open-drawer]")) {
+      openDrawer();
+      return;
+    }
+
+    if (target.closest?.("[data-show-notifications]")) {
+      toast("Sin notificaciones nuevas.", "success");
+      return;
+    }
+
     if (target.closest?.("[data-open-history]")) {
       openHistoryModal();
       return;
@@ -1841,7 +1971,7 @@
 
   if ("serviceWorker" in navigator && window.location.protocol !== "file:") {
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("sw.js?v=39").then((registration) => {
+      navigator.serviceWorker.register("sw.js?v=40").then((registration) => {
         registration.update().catch(() => {});
 
         if (registration.waiting) {
