@@ -36,7 +36,7 @@
   const PUBLISHED_CONTENT_SYNC_ENABLED = SUPABASE_ENABLED && Boolean(config.enablePublishedContentSync);
   let supabaseClient = null;
 
-  const ROUTES = new Set(["inicio", "reportar", "acuerdos"]);
+  const ROUTES = new Set(["inicio", "dudas", "reportar", "acuerdos"]);
 
   const FAQ_CATEGORIES = [
     { id: "todas", label: "Todas", icon: "=" },
@@ -485,6 +485,30 @@
     }
   ];
 
+  const HOME_SECTION_LINKS = [
+    {
+      id: "dudas",
+      title: "Dudas frecuentes",
+      body: "Busca respuestas y envía una pregunta si falta algo.",
+      icon: "message",
+      route: "dudas"
+    },
+    {
+      id: "acuerdos",
+      title: "Acuerdos",
+      body: "Revisa puntos publicados, pendientes y fuentes.",
+      icon: "handshake",
+      route: "acuerdos"
+    },
+    {
+      id: "reportar",
+      title: "Reportes",
+      body: "Registra evaluaciones, presión o información contradictoria.",
+      icon: "alert",
+      route: "reportar"
+    }
+  ];
+
   function emptyReportDraft() {
     return {
       type: "asistencia",
@@ -656,6 +680,7 @@
 
     const renderers = {
       inicio: renderHome,
+      dudas: renderFaqPage,
       reportar: renderReport,
       acuerdos: renderAgreements
     };
@@ -743,30 +768,70 @@
           </section>
         </section>
 
-        <section class="dashboard-faq-panel" aria-labelledby="faq-section-title">
-          <div class="faq-section-intro">
-            <div>
-              <h2 id="faq-section-title">${escapeHTML(SITE_STATUS.faqTitle)}</h2>
-              <p>${escapeHTML(SITE_STATUS.faqIntro)}</p>
-            </div>
-            <label class="search-input dashboard-search">
-              ${iconSearch()}
-              <input id="faqSearch" type="search" inputmode="search" autocomplete="off" placeholder="Buscar una pregunta..." value="${escapeHTML(state.faqQuery)}" />
-            </label>
-          </div>
-
-          <div class="category-row" aria-label="Filtros de preguntas frecuentes">
-            ${FAQ_CATEGORIES.map((category) => `
-              <button class="category-chip" type="button" data-faq-filter="${category.id}" aria-pressed="${state.faqFilter === category.id}">
-                <span class="chip-icon" aria-hidden="true">${category.icon}</span>${escapeHTML(category.label)}
-              </button>`).join("")}
-          </div>
-
-          <div class="faq-list" aria-live="polite">
-            ${filteredFaqs.length ? filteredFaqs.map(renderFaqCard).join("") : renderEmpty("No encontramos preguntas con ese filtro.", "Prueba otra búsqueda o envía una nueva duda para que el CEAL pueda responderla.")}
+        <section class="dashboard-sections-panel" aria-labelledby="sections-title">
+          <h2 id="sections-title" class="dashboard-section-title">Secciones</h2>
+          <div class="dashboard-section-grid">
+            ${HOME_SECTION_LINKS.map(renderHomeSectionLink).join("")}
           </div>
         </section>
+
+        ${renderFaqPanel()}
       </div>
+    `;
+  }
+
+  function renderFaqPage() {
+    return `
+      <div class="page-stack">
+        <section class="dashboard-title" aria-labelledby="dudas-title">
+          <p class="eyebrow">Dudas</p>
+          <h1 id="dudas-title">Preguntas frecuentes</h1>
+        </section>
+        ${renderFaqPanel({ panelClass: "dashboard-faq-panel is-standalone", titleId: "faq-page-title", showAskAction: true })}
+      </div>
+    `;
+  }
+
+  function renderFaqPanel({ panelClass = "dashboard-faq-panel", titleId = "faq-section-title", showAskAction = false } = {}) {
+    const filteredFaqs = getFilteredFaqs();
+    return `
+      <section class="${panelClass}" aria-labelledby="${titleId}">
+        <div class="faq-section-intro">
+          <div>
+            <h2 id="${titleId}">${escapeHTML(SITE_STATUS.faqTitle)}</h2>
+            <p>${escapeHTML(SITE_STATUS.faqIntro)}</p>
+          </div>
+          <label class="search-input dashboard-search">
+            ${iconSearch()}
+            <input id="faqSearch" type="search" inputmode="search" autocomplete="off" placeholder="Buscar una pregunta..." value="${escapeHTML(state.faqQuery)}" />
+          </label>
+          ${showAskAction ? `<button class="btn btn-primary" type="button" data-open-question>Enviar duda</button>` : ""}
+        </div>
+
+        <div class="category-row" aria-label="Filtros de preguntas frecuentes">
+          ${FAQ_CATEGORIES.map((category) => `
+            <button class="category-chip" type="button" data-faq-filter="${category.id}" aria-pressed="${state.faqFilter === category.id}">
+              <span class="chip-icon" aria-hidden="true">${category.icon}</span>${escapeHTML(category.label)}
+            </button>`).join("")}
+        </div>
+
+        <div class="faq-list" aria-live="polite">
+          ${filteredFaqs.length ? filteredFaqs.map(renderFaqCard).join("") : renderEmpty("No encontramos preguntas con ese filtro.", "Prueba otra búsqueda o envía una nueva duda para que el CEAL pueda responderla.")}
+        </div>
+      </section>
+    `;
+  }
+
+  function renderHomeSectionLink(item) {
+    return `
+      <a class="dashboard-section-card" href="#${escapeHTML(item.route)}" data-route="${escapeHTML(item.route)}">
+        <span class="dashboard-section-icon" aria-hidden="true">${dashboardIcon(item.icon)}</span>
+        <span>
+          <strong>${escapeHTML(item.title)}</strong>
+          <small>${escapeHTML(item.body)}</small>
+        </span>
+        <span class="dashboard-section-arrow" aria-hidden="true">${iconChevron()}</span>
+      </a>
     `;
   }
 
@@ -1971,7 +2036,7 @@
 
   if ("serviceWorker" in navigator && window.location.protocol !== "file:") {
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("sw.js?v=41").then((registration) => {
+      navigator.serviceWorker.register("sw.js?v=42").then((registration) => {
         registration.update().catch(() => {});
 
         if (registration.waiting) {

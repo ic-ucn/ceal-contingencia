@@ -6,10 +6,10 @@
   <meta name="theme-color" content="#06295e" />
   <meta name="description" content="Aplicacion CEAL para preguntas frecuentes, acuerdos y reportes anonimos de contingencia estudiantil." />
   <title>CEAL Contingencia</title>
-  <link rel="manifest" href="manifest.webmanifest?v=41" />
-  <link rel="icon" href="assets/logo-ingenieria-civil.png?v=41" type="image/png" />
-  <link rel="apple-touch-icon" href="assets/logo-ingenieria-civil.png?v=41" />
-  <link rel="stylesheet" href="styles.css?v=41" />
+  <link rel="manifest" href="manifest.webmanifest?v=42" />
+  <link rel="icon" href="assets/logo-ingenieria-civil.png?v=42" type="image/png" />
+  <link rel="apple-touch-icon" href="assets/logo-ingenieria-civil.png?v=42" />
+  <link rel="stylesheet" href="styles.css?v=42" />
 </head>
 <body>
   <a class="skip-link" href="#main">Saltar al contenido</a>
@@ -22,7 +22,7 @@
 
       <a class="brand" href="#inicio" data-route="inicio" aria-label="Ir al inicio">
         <span class="brand-symbol" aria-hidden="true">
-          <img src="assets/logo-ingenieria-civil.png?v=41" alt="" />
+          <img src="assets/logo-ingenieria-civil.png?v=42" alt="" />
         </span>
         <span class="brand-copy">
           <strong>CEAL</strong>
@@ -32,6 +32,7 @@
 
       <nav class="desktop-nav" aria-label="Navegacion principal">
         <a href="#inicio" data-route="inicio">Inicio</a>
+        <a href="#dudas" data-route="dudas">Dudas</a>
         <a href="#acuerdos" data-route="acuerdos">Acuerdos</a>
         <a href="#reportar" data-route="reportar">Reportes</a>
       </nav>
@@ -52,8 +53,10 @@
           <button class="icon-button drawer-close" type="button" data-close-drawer aria-label="Cerrar menu">x</button>
         </div>
         <a href="#inicio" data-route="inicio">Inicio</a>
-        <a href="#reportar" data-route="reportar">Reportar incidencia</a>
+        <a href="#dudas" data-route="dudas">Dudas frecuentes</a>
         <a href="#acuerdos" data-route="acuerdos">Acuerdos</a>
+        <a href="#reportar" data-route="reportar">Reportar incidencia</a>
+        <a href="assets/petitorio-paralizacion-2026.pdf" target="_blank" rel="noreferrer">Ver petitorio</a>
       </div>
     </aside>
 
@@ -69,9 +72,9 @@
       <a href="#reportar" data-route="reportar" aria-label="Reportes">
         <span class="nav-icon" aria-hidden="true">◇</span><span>Reportes</span>
       </a>
-      <button type="button" data-open-question aria-label="Dudas">
+      <a href="#dudas" data-route="dudas" aria-label="Dudas">
         <span class="nav-icon" aria-hidden="true">○</span><span>Dudas</span>
-      </button>
+      </a>
       <button type="button" data-open-drawer aria-label="Más">
         <span class="nav-icon" aria-hidden="true">•••</span><span>Más</span>
       </button>
@@ -83,6 +86,6 @@
 
   <script src="config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="app.js?v=41" defer></script>
+  <script src="app.js?v=42" defer></script>
 </body>
 </html>
