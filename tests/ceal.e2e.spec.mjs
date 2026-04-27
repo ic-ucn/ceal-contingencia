@@ -47,7 +47,7 @@ async function forceLocalOnlyConfig(page) {
 
 test("home renderiza FAQ y navegación principal", async ({ page }) => {
   await forceLocalOnlyConfig(page);
-  await page.goto("/?v=42#inicio");
+  await page.goto("/?v=43#inicio");
 
   await expect(page.getByRole("heading", { name: "Estado de hoy" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Pendiente de confirmar" })).toBeVisible();
@@ -61,7 +61,7 @@ test("home renderiza FAQ y navegación principal", async ({ page }) => {
 
 test("reportar permite enviar un reporte completo en modo local", async ({ page }) => {
   await forceLocalOnlyConfig(page);
-  await page.goto("/?v=42#reportar");
+  await page.goto("/?v=43#reportar");
 
   await expect(page.getByRole("heading", { name: "Contingencia estudiantil" })).toBeVisible();
 
@@ -83,7 +83,7 @@ test("reportar permite enviar un reporte completo en modo local", async ({ page 
 
 test("inicio permite abrir modal de duda y enviar una consulta", async ({ page }) => {
   await forceLocalOnlyConfig(page);
-  await page.goto("/?v=42#inicio");
+  await page.goto("/?v=43#inicio");
 
   await page.getByRole("button", { name: "Enviar duda" }).first().click();
   await expect(page.getByRole("heading", { name: /pregunta/i })).toBeVisible();
@@ -96,12 +96,33 @@ test("inicio permite abrir modal de duda y enviar una consulta", async ({ page }
   await expect(page.locator("#successQuestionFolio")).toContainText(/DUDA-/);
 });
 
+test("material permite buscar, previsualizar, guardar y registrar descargas", async ({ page }) => {
+  await forceLocalOnlyConfig(page);
+  await page.goto("/?v=43#material");
+
+  await expect(page.getByRole("heading", { name: "Biblioteca académica" })).toBeVisible();
+  await expect(page.getByPlaceholder("Buscar prueba, apunte, guía o ejercicio")).toBeVisible();
+  await expect(page.locator('[data-select-resource="res-ae-p2-2024"]')).toBeVisible();
+
+  await page.getByPlaceholder("Buscar prueba, apunte, guía o ejercicio").fill("hidráulica");
+  await expect(page.locator('[data-select-resource="res-hid-guia-2024"]')).toBeVisible();
+
+  await page.locator('[data-select-resource="res-hid-guia-2024"]').click();
+  await expect(page.locator(".academic-preview")).toContainText("Guía de ejercicios - Hidráulica");
+
+  await page.locator('[data-save-resource="res-hid-guia-2024"]').click();
+  await page.locator('[data-download-resource="res-hid-guia-2024"]').click();
+  await page.locator('.academic-sidebar [data-academic-view="saved"]').click();
+  await expect(page.getByRole("heading", { name: "Mis guardados" })).toBeVisible();
+  await expect(page.locator('[data-select-resource="res-hid-guia-2024"]')).toBeVisible();
+});
+
 test.describe("mobile shell", () => {
   test.use({ viewport: { width: 390, height: 844 } });
 
   test("drawer móvil abre y navega a reportar", async ({ page }) => {
     await forceLocalOnlyConfig(page);
-    await page.goto("/?v=42#inicio");
+    await page.goto("/?v=43#inicio");
 
     await page.locator("#menuToggle").click();
     await expect(page.getByRole("link", { name: "Reportar incidencia" })).toBeVisible();
@@ -113,7 +134,7 @@ test.describe("mobile shell", () => {
 });
 
 test("admin local carga el acceso interno", async ({ page }) => {
-  await page.goto("/admin.html?v=42");
+  await page.goto("/admin.html?v=43");
 
   await expect(page.getByRole("heading", { name: "Actualizar sin redeploy" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Ingresar al panel" })).toBeVisible();

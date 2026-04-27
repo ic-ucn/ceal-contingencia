@@ -1,15 +1,15 @@
-const CACHE_NAME = "ceal-contingencia-v42";
+const CACHE_NAME = "ceal-contingencia-v43";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./admin.html",
-  "./styles.css?v=42",
-  "./admin.css?v=42",
-  "./app.js?v=42",
-  "./admin.js?v=42",
-  "./manifest.webmanifest?v=42",
+  "./styles.css?v=43",
+  "./admin.css?v=43",
+  "./app.js?v=43",
+  "./admin.js?v=43",
+  "./manifest.webmanifest?v=43",
   "./assets/app-icon.svg",
-  "./assets/logo-ingenieria-civil.png?v=42",
+  "./assets/logo-ingenieria-civil.png?v=43",
   "./assets/petitorio-paralizacion-2026.pdf"
 ];
 

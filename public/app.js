@@ -29,14 +29,18 @@
   const STORAGE = {
     reports: "ceal.reports.v1",
     questions: "ceal.questions.v1",
-    reportDraft: "ceal.reportDraft.v1"
+    reportDraft: "ceal.reportDraft.v1",
+    academicSaved: "ceal.academic.saved.v1",
+    academicDownloads: "ceal.academic.downloads.v1",
+    academicContributions: "ceal.academic.contributions.v1",
+    academicReports: "ceal.academic.reports.v1"
   };
 
   const SUPABASE_ENABLED = Boolean(config.supabaseUrl && config.supabaseAnonKey);
   const PUBLISHED_CONTENT_SYNC_ENABLED = SUPABASE_ENABLED && Boolean(config.enablePublishedContentSync);
   let supabaseClient = null;
 
-  const ROUTES = new Set(["inicio", "dudas", "reportar", "acuerdos"]);
+  const ROUTES = new Set(["inicio", "material", "dudas", "reportar", "acuerdos"]);
 
   const FAQ_CATEGORIES = [
     { id: "todas", label: "Todas", icon: "=" },
@@ -209,6 +213,117 @@
     ],
     general: SUBJECTS.map((subject) => subject === "Otro" ? "__other__" : subject)
   };
+
+  const ACADEMIC_TYPES = [
+    { id: "todos", label: "Todo", icon: "folder" },
+    { id: "prueba", label: "Pruebas", icon: "clipboard" },
+    { id: "ejercicio", label: "Ejercicios", icon: "pencil" },
+    { id: "apunte", label: "Apuntes", icon: "notebook" },
+    { id: "ppt", label: "PPTs", icon: "presentation" },
+    { id: "pdf", label: "PDFs", icon: "document" },
+    { id: "guia", label: "Guías", icon: "book" },
+    { id: "resumen", label: "Resúmenes", icon: "list" }
+  ];
+
+  const ACADEMIC_SORTS = [
+    { id: "recent", label: "Más reciente" },
+    { id: "downloads", label: "Más descargado" },
+    { id: "rating", label: "Mejor valorado" },
+    { id: "course", label: "Por ramo" }
+  ];
+
+  const ACADEMIC_COURSE_ALIAS = {
+    "calculo 1": "Cálculo I",
+    "calculo i": "Cálculo I",
+    "calculo 2": "Cálculo II",
+    "calculo ii": "Cálculo II",
+    "algebra 1": "Álgebra I",
+    "algebra i": "Álgebra I",
+    "algebra 2": "Álgebra II",
+    "algebra ii": "Álgebra II",
+    "fisica 1": "Física",
+    "fisica": "Física",
+    "introduccion a la programacion": "Programación",
+    "programacion": "Programación",
+    "estatica aplicada": "Estática",
+    "estatica": "Estática",
+    "mecanica de suelos 1": "Mecánica de Suelos I",
+    "mecanica de suelos i": "Mecánica de Suelos I",
+    "mecanica de suelos 2": "Mecánica de Suelos II",
+    "mecanica de suelos ii": "Mecánica de Suelos II",
+    "hidraulica general": "Hidráulica",
+    "hidraulica": "Hidráulica",
+    "diseno en hormigon armado": "Hormigón Armado",
+    "hormigon armado": "Hormigón Armado",
+    "analisis estructural": "Análisis Estructural",
+    "mecanica de solidos": "Mecánica de Sólidos",
+    "mecanica racional": "Mecánica",
+    "diseno en acero": "Diseño en Acero",
+    "geomensura": "Topografía",
+    "probabilidad y estadistica": "Estadística",
+    "calculo numerico": "Métodos Numéricos",
+    "programacion de obras": "Programación y Gestión de Obras",
+    "gestion y administracion de obras": "Proyecto Gestión y Administración de Construcción",
+    "construccion y montaje de obras industriales": "Construcción de Obras Industriales",
+    "construccion de obras industriales": "Construcción de Obras Industriales",
+    "proyecto de infraestructura vial": "Proyecto Diseño de Infraestructura Vial",
+    "proyecto de estructuras industriales": "Proyecto Diseño de Estructuras Industriales",
+    "proyecto de obras hidraulicas": "Proyecto Diseño de Obras Hidráulicas",
+    "diseno sismico de edificios": "Análisis y Diseño Sísmico de Edificios"
+  };
+
+  const ACADEMIC_COURSE_META = {
+    "calculo-i": { semester: 1, area: "Ciencias básicas", icon: "x²", accent: "blue", description: "Límites, derivadas e introducción al cálculo diferencial aplicado a problemas de ingeniería." },
+    "calculo-ii": { semester: 2, area: "Ciencias básicas", icon: "∫x", accent: "orange", description: "Integrales, series y herramientas de cálculo para modelar fenómenos físicos y estructurales." },
+    "algebra-i": { semester: 2, area: "Ciencias básicas", icon: "x²", accent: "blue", description: "Matrices, sistemas lineales, espacios vectoriales y bases para cursos posteriores." },
+    "fisica": { semester: 2, area: "Ciencias básicas", icon: "⚛", accent: "blue", description: "Mecánica, energía y conceptos físicos base para entender sistemas de ingeniería." },
+    "programacion": { semester: 3, area: "Computación", icon: "</>", accent: "green", description: "Pensamiento algorítmico, código y resolución computacional de problemas." },
+    "estatica": { semester: 3, area: "Estructuras", icon: "△", accent: "blue", description: "Equilibrio de cuerpos, diagramas, reacciones y análisis de estructuras simples." },
+    "mecanica-de-solidos": { semester: 4, area: "Estructuras", icon: "σ", accent: "blue", description: "Esfuerzos, deformaciones y comportamiento interno de elementos estructurales." },
+    "mecanica-de-suelos-i": { semester: 4, area: "Geotecnia", icon: "▤", accent: "orange", description: "Propiedades de suelos, clasificación, compactación, permeabilidad y esfuerzos efectivos." },
+    "hidraulica": { semester: 5, area: "Hidráulica", icon: "◌", accent: "blue", description: "Flujo en conductos, energía, pérdidas y fundamentos para obras hidráulicas." },
+    "analisis-estructural": { semester: 5, area: "Estructuras", icon: "⌂", accent: "blue", description: "Cálculo de esfuerzos internos, deformaciones y métodos de análisis de estructuras." },
+    "hormigon-armado": { semester: 6, area: "Estructuras", icon: "▥", accent: "orange", description: "Diseño y verificación de elementos de hormigón armado bajo criterios normativos." },
+    "fundaciones": { semester: 7, area: "Geotecnia", icon: "▰", accent: "orange", description: "Criterios de diseño y revisión de fundaciones superficiales y profundas." },
+    "diseno-en-acero": { semester: 6, area: "Estructuras", icon: "Ⅰ", accent: "blue", description: "Diseño de elementos de acero, conexiones y criterios resistentes." },
+    "topografia": { semester: 3, area: "Terreno", icon: "⌖", accent: "green", description: "Medición, levantamientos, curvas de nivel y herramientas para obras civiles." },
+    "programacion-y-gestion-de-obras": { semester: 7, area: "Construcción", icon: "▦", accent: "orange", description: "Planificación, programación y control de obras de ingeniería civil." }
+  };
+
+  const ACADEMIC_RESOURCE_SEED = [
+    { id: "res-ae-p2-2024", course: "Análisis Estructural", title: "Prueba 2 - Análisis Estructural", type: "prueba", year: 2024, unit: "Sistemas isostáticos e hiperestáticos", format: "PDF", size: "1.2 MB", rating: 4.7, downloads: 1210, updatedDays: 3, source: "Aporte estudiantil", status: "published" },
+    { id: "res-hid-guia-2024", course: "Hidráulica", title: "Guía de ejercicios - Hidráulica", type: "ejercicio", year: 2024, unit: "Pérdidas de carga", format: "PDF", size: "980 KB", rating: 4.6, downloads: 980, updatedDays: 1, source: "Recopilación CEAL", status: "published" },
+    { id: "res-ha-resumen-2024", course: "Hormigón Armado", title: "Resumen de fórmulas - Hormigón Armado", type: "resumen", year: 2024, unit: "Flexión y corte", format: "PDF", size: "760 KB", rating: 4.8, downloads: 1600, updatedDays: 4, source: "Aporte estudiantil", status: "published" },
+    { id: "res-suelos-apunte-u3", course: "Mecánica de Suelos I", title: "Apuntes Unidad 3 - Mecánica de Suelos", type: "apunte", year: 2024, unit: "Esfuerzos efectivos", format: "PDF", size: "2.4 MB", rating: 4.5, downloads: 870, updatedDays: 2, source: "Recopilación histórica", status: "published" },
+    { id: "res-sismo-ppt-2023", course: "Análisis y Diseño Sísmico de Edificios", title: "PPT repaso - Sismología", type: "ppt", year: 2023, unit: "Espectros y respuesta", format: "PPTX", size: "5.8 MB", rating: 4.7, downloads: 760, updatedDays: 9, source: "Aporte estudiantil", status: "published" },
+    { id: "res-hid-p1-2024", course: "Hidráulica", title: "Prueba 1 - Hidráulica", type: "prueba", year: 2024, unit: "Energía específica", format: "PDF", size: "1.1 MB", rating: 4.4, downloads: 653, updatedDays: 6, source: "Recopilación histórica", status: "published" },
+    { id: "res-ms-ej-2023", course: "Mecánica de Sólidos", title: "Ejercicios - Resistencia de Materiales", type: "ejercicio", year: 2023, unit: "Torsión y flexión", format: "PDF", size: "1.5 MB", rating: 4.6, downloads: 598, updatedDays: 12, source: "Aporte estudiantil", status: "published" },
+    { id: "res-ae-apunte-u2", course: "Análisis Estructural", title: "Apuntes Unidad 2 - Análisis Estructural", type: "apunte", year: 2023, unit: "Método de fuerzas", format: "PDF", size: "2.1 MB", rating: 4.3, downloads: 512, updatedDays: 8, source: "Aporte estudiantil", status: "published" },
+    { id: "res-caminos-ppt", course: "Proyecto Diseño de Infraestructura Vial", title: "PPT introducción - Caminos", type: "ppt", year: 2023, unit: "Diseño geométrico", format: "PPTX", size: "6.2 MB", rating: 4.5, downloads: 430, updatedDays: 20, source: "Recopilación CEAL", status: "published" },
+    { id: "res-suelos-final-2023", course: "Mecánica de Suelos I", title: "Prueba final - Mecánica de Suelos 2023", type: "prueba", year: 2023, unit: "Consolidación y corte", format: "PDF", size: "1.8 MB", rating: 4.7, downloads: 1100, updatedDays: 5, source: "Recopilación histórica", status: "published" },
+    { id: "res-calculo2-prueba-2024", course: "Cálculo II", title: "Prueba Cálculo II 2024", type: "prueba", year: 2024, unit: "Integrales impropias", format: "PDF", size: "920 KB", rating: 4.4, downloads: 720, updatedDays: 3, source: "Aporte estudiantil", status: "published" },
+    { id: "res-fisica-pruebas", course: "Física", title: "Pack pruebas de Física", type: "prueba", year: 2024, unit: "Mecánica", format: "PDF", size: "3.2 MB", rating: 4.6, downloads: 256, updatedDays: 1, source: "Recopilación CEAL", status: "published" },
+    { id: "res-programacion-apuntes", course: "Programación", title: "Apuntes de Programación", type: "apunte", year: 2024, unit: "Funciones y arreglos", format: "PDF", size: "1.9 MB", rating: 4.5, downloads: 198, updatedDays: 2, source: "Aporte estudiantil", status: "published" },
+    { id: "res-estatica-guia-u2", course: "Estática", title: "Guía de estática - Unidad 2", type: "guia", year: 2024, unit: "Reacciones y equilibrio", format: "PDF", size: "1.4 MB", rating: 4.8, downloads: 310, updatedDays: 2, source: "Docencia CEAL", status: "published" },
+    { id: "res-algebra-ejercicios", course: "Álgebra I", title: "Ejercicios resueltos - Álgebra I", type: "ejercicio", year: 2024, unit: "Matrices", format: "PDF", size: "840 KB", rating: 4.6, downloads: 690, updatedDays: 7, source: "Aporte estudiantil", status: "published" },
+    { id: "res-fundaciones-pdf", course: "Fundaciones", title: "PDF criterios de fundaciones", type: "pdf", year: 2023, unit: "Capacidad de soporte", format: "PDF", size: "2.8 MB", rating: 4.2, downloads: 355, updatedDays: 18, source: "Recopilación histórica", status: "review" }
+  ];
+
+  const ACADEMIC_BACKEND_CONTRACT = {
+    tables: ["academic_courses", "academic_resources", "academic_contributions", "academic_resource_reports", "academic_download_events", "academic_saved_resources"],
+    statuses: ["pending", "review", "published", "needs_fix", "archived", "reported"],
+    endpoints: [
+      "GET /api/academic/courses",
+      "GET /api/academic/resources",
+      "POST /api/academic/contributions",
+      "POST /api/academic/resource-reports",
+      "POST /api/academic/download-events",
+      "POST /api/academic/saved-resources"
+    ]
+  };
+
+  const ACADEMIC_COURSES = buildAcademicCourses();
+  const ACADEMIC_RESOURCES = buildAcademicResources();
 
   const FAQS = [
     {
@@ -487,6 +602,13 @@
 
   const HOME_SECTION_LINKS = [
     {
+      id: "material",
+      title: "Material por ramo",
+      body: "Busca pruebas, apuntes, guías y ejercicios por malla.",
+      icon: "folder",
+      route: "material"
+    },
+    {
       id: "dudas",
       title: "Dudas frecuentes",
       body: "Busca respuestas y envía una pregunta si falta algo.",
@@ -527,6 +649,18 @@
     faqQuery: "",
     openFaqId: "faq-asistencia-1",
     agreementFilter: "todos",
+    academic: {
+      view: "library",
+      query: "",
+      course: "todos",
+      curriculum: "todos",
+      semester: "todos",
+      area: "todos",
+      type: "todos",
+      format: "todos",
+      sort: "recent",
+      selectedResourceId: "res-ae-p2-2024"
+    },
     report: { ...emptyReportDraft(), ...loadJSON(STORAGE.reportDraft, emptyReportDraft()) },
     files: [],
     isSubmitting: false
@@ -572,6 +706,167 @@
       .replace(/[\u0300-\u036f]/g, "")
       .toLowerCase()
       .trim();
+  }
+
+  function slugify(value) {
+    return normalizeText(value)
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+  }
+
+  function canonicalCourseName(name) {
+    const key = normalizeText(name);
+    return ACADEMIC_COURSE_ALIAS[key] || name;
+  }
+
+  function buildAcademicCourses() {
+    const bySlug = new Map();
+    ["malla_o", "malla_p"].forEach((curriculumId) => {
+      const subjects = CURRICULUM_SUBJECTS[curriculumId] || [];
+      subjects.forEach((rawName, index) => {
+        if (!rawName || rawName === "__other__") return;
+        const name = canonicalCourseName(rawName);
+        const slug = slugify(name);
+        const existing = bySlug.get(slug) || {
+          id: slug,
+          name,
+          aliases: [],
+          mallaIds: [],
+          mallas: [],
+          sourceOrder: index,
+          semester: Math.max(1, Math.min(10, Math.ceil((index + 1) / 6))),
+          area: guessCourseArea(name),
+          description: `Recursos para estudiar ${name}: pruebas anteriores, ejercicios, apuntes y material de repaso.`,
+          icon: "□",
+          accent: "blue"
+        };
+        const meta = ACADEMIC_COURSE_META[slug] || {};
+        existing.semester = meta.semester || existing.semester;
+        existing.area = meta.area || existing.area;
+        existing.description = meta.description || existing.description;
+        existing.icon = meta.icon || existing.icon;
+        existing.accent = meta.accent || existing.accent;
+        existing.sourceOrder = Math.min(existing.sourceOrder, index);
+        if (!existing.aliases.includes(rawName)) existing.aliases.push(rawName);
+        if (!existing.mallaIds.includes(curriculumId)) existing.mallaIds.push(curriculumId);
+        const label = curriculumLabel(curriculumId);
+        if (!existing.mallas.includes(label)) existing.mallas.push(label);
+        bySlug.set(slug, existing);
+      });
+    });
+    return Array.from(bySlug.values()).sort((a, b) => a.semester - b.semester || a.name.localeCompare(b.name, "es"));
+  }
+
+  function buildAcademicResources() {
+    return ACADEMIC_RESOURCE_SEED.map((item) => {
+      const courseName = canonicalCourseName(item.course);
+      const courseId = slugify(courseName);
+      const course = ACADEMIC_COURSES.find((entry) => entry.id === courseId);
+      return {
+        ...item,
+        courseId,
+        courseName,
+        semester: course?.semester || 0,
+        area: course?.area || "General",
+        mallaIds: course?.mallaIds || [],
+        mallas: course?.mallas || [],
+        typeLabel: academicTypeLabel(item.type),
+        format: String(item.format || "PDF").toUpperCase(),
+        updatedLabel: item.updatedDays === 1 ? "ayer" : `hace ${item.updatedDays || 1} días`
+      };
+    });
+  }
+
+  function guessCourseArea(name) {
+    const key = normalizeText(name);
+    if (/suelo|fundacion|geotec|roca/.test(key)) return "Geotecnia";
+    if (/hidraul|hidrolog|sanitaria|ambiental/.test(key)) return "Hidráulica";
+    if (/estructura|hormigon|acero|sism|solido|estatica|dinamica/.test(key)) return "Estructuras";
+    if (/calculo|algebra|fisica|quimica|estadistica|ecuaciones|numerico/.test(key)) return "Ciencias básicas";
+    if (/programacion|bim|modelo/.test(key)) return "Computación";
+    if (/obra|construccion|gestion|industrial|transito|vial/.test(key)) return "Construcción";
+    if (/topografia|geomensura|dibujo|camino/.test(key)) return "Terreno";
+    return "General";
+  }
+
+  function academicTypeLabel(type) {
+    return ACADEMIC_TYPES.find((item) => item.id === type)?.label || type;
+  }
+
+  function academicFormatClass(format) {
+    const value = normalizeText(format);
+    if (value.includes("ppt")) return "format-ppt";
+    if (value.includes("doc")) return "format-doc";
+    if (value.includes("xls")) return "format-xls";
+    return "format-pdf";
+  }
+
+  function getAcademicSavedIds() {
+    const value = loadJSON(STORAGE.academicSaved, []);
+    return Array.isArray(value) ? value : [];
+  }
+
+  function getAcademicDownloads() {
+    const value = loadJSON(STORAGE.academicDownloads, []);
+    return Array.isArray(value) ? value : [];
+  }
+
+  function getAcademicContributions() {
+    const value = loadJSON(STORAGE.academicContributions, []);
+    return Array.isArray(value) ? value : [];
+  }
+
+  function getCourseStats(courseId) {
+    const resources = ACADEMIC_RESOURCES.filter((item) => item.courseId === courseId);
+    const types = [...new Set(resources.map((item) => item.type))];
+    const updatedDays = resources.length ? Math.min(...resources.map((item) => item.updatedDays || 20)) : 30;
+    const coverage = resources.length >= 8 ? "actualizado" : resources.length >= 3 ? "con material" : "faltan recursos";
+    return { resources, count: resources.length, types, updatedDays, coverage };
+  }
+
+  function getFilteredAcademicResources() {
+    const filters = state.academic;
+    const query = normalizeText(filters.query);
+    let items = ACADEMIC_RESOURCES.filter((item) => {
+      const haystack = normalizeText(`${item.title} ${item.courseName} ${item.unit} ${item.typeLabel} ${item.year} ${item.format}`);
+      if (query && !haystack.includes(query)) return false;
+      if (filters.course !== "todos" && item.courseId !== filters.course) return false;
+      if (filters.curriculum !== "todos" && !item.mallaIds.includes(filters.curriculum)) return false;
+      if (filters.semester !== "todos" && String(item.semester) !== String(filters.semester)) return false;
+      if (filters.area !== "todos" && item.area !== filters.area) return false;
+      if (filters.type !== "todos" && item.type !== filters.type) return false;
+      if (filters.format !== "todos" && normalizeText(item.format) !== normalizeText(filters.format)) return false;
+      return true;
+    });
+    items = items.slice().sort((a, b) => {
+      if (filters.sort === "downloads") return b.downloads - a.downloads;
+      if (filters.sort === "rating") return b.rating - a.rating;
+      if (filters.sort === "course") return a.courseName.localeCompare(b.courseName, "es") || b.year - a.year;
+      return (a.updatedDays || 99) - (b.updatedDays || 99);
+    });
+    return items;
+  }
+
+  function getFilteredAcademicCourses() {
+    const filters = state.academic;
+    const query = normalizeText(filters.query);
+    return ACADEMIC_COURSES.filter((course) => {
+      const stats = getCourseStats(course.id);
+      const haystack = normalizeText(`${course.name} ${course.aliases.join(" ")} ${course.area} ${course.mallas.join(" ")}`);
+      if (query && !haystack.includes(query) && !stats.resources.some((resource) => normalizeText(resource.title).includes(query))) return false;
+      if (filters.course !== "todos" && course.id !== filters.course) return false;
+      if (filters.curriculum !== "todos" && !course.mallaIds.includes(filters.curriculum)) return false;
+      if (filters.semester !== "todos" && String(course.semester) !== String(filters.semester)) return false;
+      if (filters.area !== "todos" && course.area !== filters.area) return false;
+      if (filters.type !== "todos" && !stats.types.includes(filters.type)) return false;
+      return true;
+    });
+  }
+
+  function selectedAcademicResource(resources = getFilteredAcademicResources()) {
+    return ACADEMIC_RESOURCES.find((item) => item.id === state.academic.selectedResourceId)
+      || resources[0]
+      || ACADEMIC_RESOURCES[0];
   }
 
   function getRouteFromHash() {
@@ -661,6 +956,48 @@
           <path d="M12 10.4h.01"></path>
           <path d="M16 10.4h.01"></path>
         </svg>`,
+      folder: `
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3.8 7.3a2 2 0 0 1 2-2h4l2 2h6.4a2 2 0 0 1 2 2v7.4a2 2 0 0 1-2 2H5.8a2 2 0 0 1-2-2Z"></path>
+        </svg>`,
+      pencil: `
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m4.5 16.8-.7 3.4 3.4-.7L18.7 8a2.3 2.3 0 0 0-3.3-3.3Z"></path>
+          <path d="m14.8 5.3 3.9 3.9"></path>
+        </svg>`,
+      notebook: `
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M7 4.2h10.2A1.8 1.8 0 0 1 19 6v12a1.8 1.8 0 0 1-1.8 1.8H7z"></path>
+          <path d="M5 6h3"></path><path d="M5 10h3"></path><path d="M5 14h3"></path><path d="M5 18h3"></path>
+          <path d="M11.2 8.5h4.5"></path><path d="M11.2 12h4.5"></path>
+        </svg>`,
+      presentation: `
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4.5h16"></path><path d="M5.8 4.5v10.2h12.4V4.5"></path>
+          <path d="M12 14.7v4.8"></path><path d="m8.6 20 3.4-3 3.4 3"></path>
+        </svg>`,
+      book: `
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4.5 5.8A2.8 2.8 0 0 1 7.3 3h12.2v15.6H7.3a2.8 2.8 0 0 0-2.8 2.8Z"></path>
+          <path d="M4.5 5.8v15.6"></path><path d="M8 7h7"></path>
+        </svg>`,
+      list: `
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8 6h12"></path><path d="M8 12h12"></path><path d="M8 18h12"></path>
+          <path d="M4 6h.01"></path><path d="M4 12h.01"></path><path d="M4 18h.01"></path>
+        </svg>`,
+      star: `
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m12 3.8 2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 16.1l-4.8 2.6.9-5.4-3.9-3.8 5.4-.8Z"></path>
+        </svg>`,
+      download: `
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 4v10"></path><path d="m8 10 4 4 4-4"></path><path d="M5 19h14"></path>
+        </svg>`,
+      upload: `
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 20V10"></path><path d="m8 14 4-4 4 4"></path><path d="M5 5h14"></path>
+        </svg>`,
       clock: `
         <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="8.2"></circle>
@@ -680,6 +1017,7 @@
 
     const renderers = {
       inicio: renderHome,
+      material: renderMaterial,
       dudas: renderFaqPage,
       reportar: renderReport,
       acuerdos: renderAgreements
@@ -832,6 +1170,328 @@
         </span>
         <span class="dashboard-section-arrow" aria-hidden="true">${iconChevron()}</span>
       </a>
+    `;
+  }
+
+  function renderMaterial() {
+    const resources = getFilteredAcademicResources();
+    const courses = getFilteredAcademicCourses();
+    const selected = selectedAcademicResource(resources);
+    if (selected && state.academic.selectedResourceId !== selected.id) state.academic.selectedResourceId = selected.id;
+    const view = state.academic.view;
+
+    return `
+      <div class="academic-layout">
+        ${renderAcademicSidebar()}
+        <section class="academic-workspace" aria-labelledby="academic-title">
+          <header class="academic-hero">
+            <div>
+              <p class="eyebrow">Apoyo académico</p>
+              <h1 id="academic-title">Biblioteca académica</h1>
+              <p>Recursos útiles para estudiar Ingeniería Civil UCN.</p>
+            </div>
+            <div class="academic-hero-actions">
+              <button class="btn btn-soft" type="button" data-open-contribution>Subir aporte</button>
+              <button class="btn btn-primary" type="button" data-academic-view="manage">Gestión Docencia CEAL</button>
+            </div>
+          </header>
+
+          ${renderAcademicFilters()}
+
+          <div class="academic-mobile-tabs" aria-label="Vistas de material">
+            ${renderAcademicViewButton("library", "Biblioteca")}
+            ${renderAcademicViewButton("courses", "Por ramo")}
+            ${renderAcademicViewButton("saved", "Guardados")}
+            ${renderAcademicViewButton("downloads", "Descargas")}
+          </div>
+
+          ${view === "courses" ? renderAcademicCoursesView(courses) : ""}
+          ${view === "saved" ? renderAcademicSavedView() : ""}
+          ${view === "downloads" ? renderAcademicDownloadsView() : ""}
+          ${view === "uploads" ? renderAcademicUploadsView() : ""}
+          ${view === "requests" ? renderAcademicRequestsView() : ""}
+          ${view === "manage" ? renderAcademicManageView() : ""}
+          ${view === "library" ? renderAcademicLibraryView(resources, selected) : ""}
+        </section>
+      </div>
+    `;
+  }
+
+  function renderAcademicSidebar() {
+    const items = [
+      ["library", "Biblioteca académica", "book"],
+      ["courses", "Por ramo", "folder"],
+      ["saved", "Mis guardados", "star"],
+      ["downloads", "Mis descargas", "download"],
+      ["uploads", "Subidas", "upload"],
+      ["requests", "Solicitudes", "message"],
+      ["manage", "Gestión Docencia CEAL", "clipboard"]
+    ];
+    return `
+      <aside class="academic-sidebar" aria-label="Material académico">
+        <div class="academic-sidebar-brand">
+          <img src="assets/logo-ingenieria-civil.png?v=43" alt="" />
+          <strong>CEAL</strong>
+          <span>Ingeniería Civil UCN</span>
+        </div>
+        <nav>
+          ${items.map(([view, label, icon]) => `
+            <button class="academic-side-link" type="button" data-academic-view="${view}" aria-current="${state.academic.view === view ? "page" : "false"}">
+              ${dashboardIcon(icon)}<span>${escapeHTML(label)}</span>
+            </button>
+          `).join("")}
+        </nav>
+        <div class="academic-sidebar-card">
+          <strong>¿No encuentras algo?</strong>
+          <span>Solicita o sube un recurso para revisión.</span>
+          <button class="btn btn-soft" type="button" data-open-contribution>Subir aporte</button>
+        </div>
+      </aside>
+    `;
+  }
+
+  function renderAcademicViewButton(view, label) {
+    return `<button class="academic-view-chip" type="button" data-academic-view="${view}" aria-pressed="${state.academic.view === view}">${escapeHTML(label)}</button>`;
+  }
+
+  function renderAcademicFilters() {
+    const semesters = [...new Set(ACADEMIC_COURSES.map((course) => course.semester))].sort((a, b) => a - b);
+    const areas = [...new Set(ACADEMIC_COURSES.map((course) => course.area))].sort((a, b) => a.localeCompare(b, "es"));
+    const formats = [...new Set(ACADEMIC_RESOURCES.map((resource) => resource.format))].sort();
+    return `
+      <section class="academic-filters" aria-label="Filtros de biblioteca">
+        <label class="academic-search">
+          ${iconSearch()}
+          <input id="academicSearch" type="search" autocomplete="off" placeholder="Buscar prueba, apunte, guía o ejercicio" value="${escapeHTML(state.academic.query)}" />
+          <span>/</span>
+        </label>
+        <div class="academic-filter-row">
+          ${renderAcademicSelect("academicCourseFilter", "Ramo", state.academic.course, [["todos", "Ramo"], ...ACADEMIC_COURSES.map((course) => [course.id, course.name])])}
+          ${renderAcademicSelect("academicSemesterFilter", "Semestre", state.academic.semester, [["todos", "Semestre"], ...semesters.map((semester) => [String(semester), `Semestre ${semester}`])])}
+          ${renderAcademicSelect("academicCurriculumFilter", "Malla", state.academic.curriculum, [["todos", "Malla"], ...CURRICULUMS.filter((item) => item.id !== "general").map((item) => [item.id, item.label])])}
+          ${renderAcademicSelect("academicAreaFilter", "Área", state.academic.area, [["todos", "Área"], ...areas.map((area) => [area, area])])}
+          ${renderAcademicSelect("academicFormatFilter", "Formato", state.academic.format, [["todos", "Formato"], ...formats.map((format) => [format, format])])}
+          <button class="academic-clear" type="button" data-clear-academic-filters>Limpiar filtros</button>
+        </div>
+        <div class="academic-type-row" aria-label="Tipos de recurso">
+          ${ACADEMIC_TYPES.map((type) => `
+            <button class="academic-type-chip" type="button" data-academic-type="${type.id}" aria-pressed="${state.academic.type === type.id}">
+              ${dashboardIcon(type.icon)}<span>${escapeHTML(type.label)}</span>
+            </button>
+          `).join("")}
+        </div>
+      </section>
+    `;
+  }
+
+  function renderAcademicSelect(id, label, value, options) {
+    return `
+      <label class="academic-select" for="${id}">
+        <span class="sr-only">${escapeHTML(label)}</span>
+        <select id="${id}">
+          ${options.map(([optionValue, optionLabel]) => `<option value="${escapeHTML(optionValue)}" ${String(value) === String(optionValue) ? "selected" : ""}>${escapeHTML(optionLabel)}</option>`).join("")}
+        </select>
+      </label>
+    `;
+  }
+
+  function renderAcademicLibraryView(resources, selected) {
+    return `
+      <section class="academic-library-grid">
+        <div class="academic-results">
+          <div class="academic-sortbar">
+            <span>Ordenar por:</span>
+            <div class="segmented-control">
+              ${ACADEMIC_SORTS.map((sort) => `<button type="button" data-academic-sort="${sort.id}" aria-pressed="${state.academic.sort === sort.id}">${escapeHTML(sort.label)}</button>`).join("")}
+            </div>
+            <strong>${resources.length} recursos</strong>
+          </div>
+          <div class="academic-resource-list" role="list">
+            ${resources.length ? resources.map(renderAcademicResourceRow).join("") : renderEmpty("No hay recursos con esos filtros.", "Prueba limpiar filtros o solicita material a Docencia CEAL.")}
+          </div>
+        </div>
+        ${renderAcademicPreview(selected)}
+      </section>
+    `;
+  }
+
+  function renderAcademicResourceRow(resource) {
+    const isSelected = state.academic.selectedResourceId === resource.id;
+    return `
+      <button class="academic-resource-row ${isSelected ? "is-selected" : ""}" type="button" data-select-resource="${escapeHTML(resource.id)}" role="listitem">
+        <span class="academic-file-icon ${academicFormatClass(resource.format)}">${escapeHTML(resource.format)}</span>
+        <span class="academic-resource-title">
+          <strong>${escapeHTML(resource.title)}</strong>
+          <small>${escapeHTML(resource.courseName)} · ${escapeHTML(resource.typeLabel)} · ${escapeHTML(resource.unit)}</small>
+        </span>
+        <span>${escapeHTML(resource.courseName)}</span>
+        <span>${resource.semester}</span>
+        <span>${resource.year}</span>
+        <span class="academic-format ${academicFormatClass(resource.format)}">${escapeHTML(resource.format)}</span>
+        <span>★ ${resource.rating.toFixed(1)}</span>
+        <span>${formatCompactNumber(resource.downloads)}</span>
+      </button>
+    `;
+  }
+
+  function renderAcademicPreview(resource) {
+    if (!resource) return `<aside class="academic-preview">${renderEmpty("Selecciona un recurso.", "El panel mostrará una vista previa y acciones rápidas.")}</aside>`;
+    const saved = getAcademicSavedIds().includes(resource.id);
+    return `
+      <aside class="academic-preview" aria-label="Vista previa de recurso">
+        <header>
+          <div class="academic-preview-title">
+            <span class="academic-file-icon ${academicFormatClass(resource.format)}">${escapeHTML(resource.format)}</span>
+            <div>
+              <h2>${escapeHTML(resource.title)}</h2>
+              <p>${escapeHTML(resource.courseName)} · ${resource.semester}° semestre · ${resource.year}</p>
+            </div>
+          </div>
+          <button class="icon-button" type="button" data-clear-preview aria-label="Cerrar vista previa">x</button>
+        </header>
+        <div class="academic-preview-meta">
+          <span>${escapeHTML(resource.typeLabel)}</span>
+          <span>${escapeHTML(resource.format)}</span>
+          <span>${escapeHTML(resource.size)}</span>
+          <span>★ ${resource.rating.toFixed(1)}</span>
+          <span>${formatCompactNumber(resource.downloads)} descargas</span>
+        </div>
+        <div class="academic-pdf-preview" aria-hidden="true">
+          <div class="academic-preview-toolbar"><span>1 / 6</span><span>100%</span><span>+</span><span>↧</span></div>
+          <div class="academic-paper">
+            <strong>${escapeHTML(resource.title)}</strong>
+            <small>${escapeHTML(resource.unit)}</small>
+            <div class="academic-diagram">
+              <span></span><span></span><span></span>
+            </div>
+            <p>1. Determine las reacciones y desarrolle el procedimiento principal.</p>
+            <p>2. Justifique supuestos, unidades y resultado final.</p>
+            <div class="academic-diagram is-secondary">
+              <span></span><span></span><span></span>
+            </div>
+          </div>
+        </div>
+        <div class="academic-preview-actions">
+          <button class="btn btn-soft" type="button" data-save-resource="${escapeHTML(resource.id)}">${saved ? "Guardado" : "Guardar"}</button>
+          <button class="btn btn-primary" type="button" data-download-resource="${escapeHTML(resource.id)}">Descargar</button>
+          <button class="btn btn-danger" type="button" data-report-resource="${escapeHTML(resource.id)}">Reportar error</button>
+        </div>
+        <footer>
+          <span>Fuente: ${escapeHTML(resource.source)}</span>
+          <span class="academic-verified">Publicado</span>
+        </footer>
+      </aside>
+    `;
+  }
+
+  function renderAcademicCoursesView(courses) {
+    const popular = ["algebra-i", "calculo-ii", "fisica", "programacion"].map((id) => ACADEMIC_COURSES.find((course) => course.id === id)).filter(Boolean);
+    return `
+      <section class="academic-courses-view">
+        <div class="academic-section-head">
+          <h2>Material por ramo</h2>
+          <p>${courses.length} ramos cruzados con malla O/P y recursos disponibles.</p>
+        </div>
+        <div class="academic-popular-row">
+          ${popular.map((course) => `<button type="button" data-select-course="${course.id}"><span>${escapeHTML(course.icon)}</span>${escapeHTML(course.name)}</button>`).join("")}
+        </div>
+        <div class="academic-course-list">
+          ${courses.map(renderAcademicCourseCard).join("")}
+        </div>
+      </section>
+    `;
+  }
+
+  function renderAcademicCourseCard(course) {
+    const stats = getCourseStats(course.id);
+    return `
+      <article class="academic-course-card">
+        <button type="button" data-select-course="${escapeHTML(course.id)}">
+          <span class="academic-course-icon accent-${escapeHTML(course.accent)}">${escapeHTML(course.icon)}</span>
+          <span>
+            <strong>${escapeHTML(course.name)}</strong>
+            <small>Semestre ${course.semester} · ${stats.count} recursos · ${stats.updatedDays === 1 ? "actualizado ayer" : `actualizado hace ${stats.updatedDays} días`}</small>
+            <em>${escapeHTML(course.mallas.join(" · "))}</em>
+          </span>
+          ${iconChevron()}
+        </button>
+      </article>
+    `;
+  }
+
+  function renderAcademicSavedView() {
+    const savedIds = getAcademicSavedIds();
+    const resources = ACADEMIC_RESOURCES.filter((resource) => savedIds.includes(resource.id));
+    return `<section class="academic-simple-panel"><h2>Mis guardados</h2><div class="academic-resource-list">${resources.length ? resources.map(renderAcademicResourceRow).join("") : renderEmpty("Aún no guardas recursos.", "Usa Guardar en cualquier recurso para verlo acá.")}</div></section>`;
+  }
+
+  function renderAcademicDownloadsView() {
+    const downloads = getAcademicDownloads();
+    const resources = downloads.map((item) => ACADEMIC_RESOURCES.find((resource) => resource.id === item.resourceId)).filter(Boolean);
+    return `<section class="academic-simple-panel"><h2>Mis descargas</h2><p class="muted-copy">${downloads.length} eventos guardados en este dispositivo.</p><div class="academic-resource-list">${resources.length ? resources.map(renderAcademicResourceRow).join("") : renderEmpty("Todavía no descargas recursos.", "Las descargas demo se registran localmente.")}</div></section>`;
+  }
+
+  function renderAcademicUploadsView() {
+    const contributions = getAcademicContributions();
+    return `
+      <section class="academic-simple-panel">
+        <div class="academic-section-head">
+          <h2>Subidas</h2>
+          <button class="btn btn-primary" type="button" data-open-contribution>Subir aporte</button>
+        </div>
+        <div class="academic-submission-list">
+          ${contributions.length ? contributions.map((item) => `
+            <article>
+              <strong>${escapeHTML(item.title)}</strong>
+              <span>${escapeHTML(item.courseName)} · ${escapeHTML(item.typeLabel)} · pendiente de revisión</span>
+            </article>`).join("") : renderEmpty("Sin aportes enviados.", "Sube pruebas, apuntes, guías o ejercicios para que Docencia CEAL los revise.")}
+        </div>
+      </section>
+    `;
+  }
+
+  function renderAcademicRequestsView() {
+    const lowCoverage = ACADEMIC_COURSES.filter((course) => getCourseStats(course.id).count < 2).slice(0, 8);
+    return `
+      <section class="academic-simple-panel">
+        <h2>Solicitudes de material</h2>
+        <p class="muted-copy">Ramos con poca cobertura para priorizar recopilación.</p>
+        <div class="academic-course-list compact">
+          ${lowCoverage.map(renderAcademicCourseCard).join("")}
+        </div>
+      </section>
+    `;
+  }
+
+  function renderAcademicManageView() {
+    const contributions = getAcademicContributions();
+    const reports = loadJSON(STORAGE.academicReports, []);
+    const operationalBlocks = ["Ramos normalizados", "Recursos publicados", "Aportes pendientes", "Reportes de archivo", "Descargas", "Guardados"];
+    return `
+      <section class="academic-manage-grid">
+        <article class="academic-manage-card">
+          <h2>Gestión Docencia CEAL</h2>
+          <p>Base lista para ordenar recursos por ramo, revisar aportes y mantener el material actualizado.</p>
+          <div class="academic-contract-list">
+            ${operationalBlocks.map((item) => `<span>${escapeHTML(item)}</span>`).join("")}
+          </div>
+        </article>
+        <article class="academic-manage-card">
+          <h3>Aportes pendientes</h3>
+          <strong>${contributions.length}</strong>
+          <p>Revisar, corregir datos del recurso y publicar.</p>
+        </article>
+        <article class="academic-manage-card">
+          <h3>Archivos reportados</h3>
+          <strong>${Array.isArray(reports) ? reports.length : 0}</strong>
+          <p>Errores, links caídos o material mal clasificado.</p>
+        </article>
+        <article class="academic-manage-card">
+          <h3>Ramos con poco material</h3>
+          <strong>${ACADEMIC_COURSES.filter((course) => getCourseStats(course.id).count < 2).length}</strong>
+          <p>Prioridad para campaña de aportes.</p>
+        </article>
+      </section>
     `;
   }
 
@@ -1414,6 +2074,46 @@
       });
     }
 
+    const academicSearch = document.getElementById("academicSearch");
+    if (academicSearch) {
+      academicSearch.addEventListener("input", (event) => {
+        state.academic.query = event.target.value;
+        render();
+        const input = document.getElementById("academicSearch");
+        if (input) {
+          input.focus();
+          const end = input.value.length;
+          input.setSelectionRange(end, end);
+        }
+      });
+    }
+
+    [
+      ["academicCourseFilter", "course"],
+      ["academicSemesterFilter", "semester"],
+      ["academicCurriculumFilter", "curriculum"],
+      ["academicAreaFilter", "area"],
+      ["academicFormatFilter", "format"]
+    ].forEach(([id, key]) => {
+      const input = document.getElementById(id);
+      if (input) {
+        input.addEventListener("change", (event) => {
+          state.academic[key] = event.target.value;
+          if (key === "course" && event.target.value !== "todos") {
+            const resource = ACADEMIC_RESOURCES.find((item) => item.courseId === event.target.value);
+            if (resource) state.academic.selectedResourceId = resource.id;
+          }
+          render();
+        });
+      }
+    });
+
+    const contributionForm = document.getElementById("academicContributionForm");
+    if (contributionForm) contributionForm.addEventListener("submit", submitAcademicContribution);
+
+    const resourceReportForm = document.getElementById("academicResourceReportForm");
+    if (resourceReportForm) resourceReportForm.addEventListener("submit", submitAcademicResourceReport);
+
     const reportForm = document.getElementById("reportForm");
     if (reportForm) {
       reportForm.addEventListener("input", updateReportDraftFromDOM);
@@ -1803,6 +2503,178 @@
     }
   }
 
+  function toggleAcademicSaved(resourceId) {
+    const saved = getAcademicSavedIds();
+    const next = saved.includes(resourceId)
+      ? saved.filter((id) => id !== resourceId)
+      : [...saved, resourceId];
+    saveJSON(STORAGE.academicSaved, next);
+    toast(next.includes(resourceId) ? "Recurso guardado." : "Recurso quitado de guardados.", "success");
+  }
+
+  function recordAcademicDownload(resourceId) {
+    const resource = ACADEMIC_RESOURCES.find((item) => item.id === resourceId);
+    const downloads = getAcademicDownloads();
+    downloads.unshift({
+      id: cryptoRandomId("DESC"),
+      resourceId,
+      title: resource?.title || "Recurso",
+      courseName: resource?.courseName || "",
+      createdAt: new Date().toISOString()
+    });
+    saveJSON(STORAGE.academicDownloads, downloads.slice(0, 80));
+  }
+
+  function openAcademicContributionModal() {
+    const courseOptions = ACADEMIC_COURSES.map((course) => `<option value="${escapeHTML(course.id)}" ${state.academic.course === course.id ? "selected" : ""}>${escapeHTML(course.name)}</option>`).join("");
+    showModal(`
+      <div class="modal-head">
+        <div>
+          <p class="eyebrow" style="margin-bottom:8px;">Apoyo académico</p>
+          <h2>Subir aporte</h2>
+          <p style="color: var(--text-soft); margin-bottom: 0;">Queda pendiente de revisión por Docencia CEAL antes de publicarse.</p>
+        </div>
+        <button class="icon-button modal-close" type="button" data-close-modal aria-label="Cerrar">x</button>
+      </div>
+      <form id="academicContributionForm" class="field-grid" novalidate>
+        <label class="field-grid">
+          <strong>Ramo</strong>
+          <select id="academicContributionCourse" required>
+            <option value="">Selecciona ramo</option>
+            ${courseOptions}
+          </select>
+        </label>
+        <label class="field-grid">
+          <strong>Tipo de recurso</strong>
+          <select id="academicContributionType" required>
+            ${ACADEMIC_TYPES.filter((type) => type.id !== "todos").map((type) => `<option value="${escapeHTML(type.id)}">${escapeHTML(type.label)}</option>`).join("")}
+          </select>
+        </label>
+        <label class="field-grid">
+          <strong>Título</strong>
+          <input id="academicContributionTitle" class="form-control" type="text" placeholder="Ej: Prueba 1 Hidráulica 2024" required />
+        </label>
+        <div class="form-two">
+          <label class="field-grid">
+            <strong>Año</strong>
+            <input id="academicContributionYear" class="form-control" type="number" min="2018" max="2026" value="2024" />
+          </label>
+          <label class="field-grid">
+            <strong>Formato</strong>
+            <select id="academicContributionFormat">
+              <option>PDF</option>
+              <option>PPTX</option>
+              <option>DOCX</option>
+              <option>XLSX</option>
+              <option>Link</option>
+            </select>
+          </label>
+        </div>
+        <label class="field-grid">
+          <strong>Unidad o tema</strong>
+          <input id="academicContributionUnit" class="form-control" type="text" placeholder="Ej: energía específica, matrices, flexión" />
+        </label>
+        <label class="field-grid">
+          <strong>Archivo o link</strong>
+          <input id="academicContributionLink" class="form-control" type="text" placeholder="Pega un link o escribe nombre del archivo" />
+        </label>
+        <label class="check-row">
+          <input id="academicContributionConsent" type="checkbox" required />
+          <span>Confirmo que este material puede compartirse con fines académicos.</span>
+        </label>
+        <div class="form-actions">
+          <button class="btn btn-primary" id="academicSubmitContribution" type="submit">Enviar aporte</button>
+          <button class="btn btn-soft" type="button" data-close-modal>Cancelar</button>
+        </div>
+      </form>
+    `);
+    wireCurrentPage();
+  }
+
+  function submitAcademicContribution(event) {
+    event.preventDefault();
+    const courseId = document.getElementById("academicContributionCourse")?.value || "";
+    const course = ACADEMIC_COURSES.find((item) => item.id === courseId);
+    const type = document.getElementById("academicContributionType")?.value || "pdf";
+    const title = String(document.getElementById("academicContributionTitle")?.value || "").trim();
+    const consent = document.getElementById("academicContributionConsent")?.checked;
+    if (!courseId || !title || !consent) {
+      toast("Completa ramo, título y confirmación para enviar.", "error");
+      return;
+    }
+    const contributions = getAcademicContributions();
+    contributions.unshift({
+      id: cryptoRandomId("APORTE"),
+      courseId,
+      courseName: course?.name || "Ramo",
+      type,
+      typeLabel: academicTypeLabel(type),
+      title,
+      year: document.getElementById("academicContributionYear")?.value || "",
+      format: document.getElementById("academicContributionFormat")?.value || "",
+      unit: document.getElementById("academicContributionUnit")?.value || "",
+      link: document.getElementById("academicContributionLink")?.value || "",
+      status: "pending",
+      createdAt: new Date().toISOString()
+    });
+    saveJSON(STORAGE.academicContributions, contributions.slice(0, 80));
+    closeModal();
+    state.academic.view = "uploads";
+    render();
+    toast("Aporte recibido en demo.", "success");
+  }
+
+  function openAcademicResourceReportModal(resourceId) {
+    const resource = ACADEMIC_RESOURCES.find((item) => item.id === resourceId);
+    if (!resource) return;
+    showModal(`
+      <div class="modal-head">
+        <div>
+          <p class="eyebrow" style="margin-bottom:8px;">Reportar recurso</p>
+          <h2>${escapeHTML(resource.title)}</h2>
+          <p style="color: var(--text-soft); margin-bottom: 0;">Avísanos si está caído, mal clasificado o tiene información incorrecta.</p>
+        </div>
+        <button class="icon-button modal-close" type="button" data-close-modal aria-label="Cerrar">x</button>
+      </div>
+      <form id="academicResourceReportForm" class="field-grid" data-resource-id="${escapeHTML(resource.id)}" novalidate>
+        <label class="field-grid">
+          <strong>Problema</strong>
+          <select id="academicResourceReportReason">
+            <option value="caido">Archivo caído</option>
+            <option value="mal-clasificado">Mal clasificado</option>
+            <option value="duplicado">Duplicado</option>
+            <option value="contenido">Contenido incorrecto</option>
+          </select>
+        </label>
+        <label class="field-grid">
+          <strong>Detalle opcional</strong>
+          <textarea id="academicResourceReportDetail" class="form-control" rows="4" maxlength="400" placeholder="Describe brevemente el problema"></textarea>
+        </label>
+        <div class="form-actions">
+          <button class="btn btn-danger" type="submit">Reportar error</button>
+          <button class="btn btn-soft" type="button" data-close-modal>Cancelar</button>
+        </div>
+      </form>
+    `);
+    wireCurrentPage();
+  }
+
+  function submitAcademicResourceReport(event) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const reports = loadJSON(STORAGE.academicReports, []);
+    reports.unshift({
+      id: cryptoRandomId("MAT-REP"),
+      resourceId: form.dataset.resourceId,
+      reason: document.getElementById("academicResourceReportReason")?.value || "caido",
+      detail: document.getElementById("academicResourceReportDetail")?.value || "",
+      createdAt: new Date().toISOString()
+    });
+    saveJSON(STORAGE.academicReports, reports.slice(0, 80));
+    closeModal();
+    toast("Reporte registrado en demo.", "success");
+  }
+
   function openHistoryModal() {
     const reports = loadJSON(STORAGE.reports, []);
     const questions = loadJSON(STORAGE.questions, []);
@@ -1866,6 +2738,12 @@
     if (value < 1024) return `${value} B`;
     if (value < 1024 * 1024) return `${(value / 1024).toFixed(1)} KB`;
     return `${(value / (1024 * 1024)).toFixed(1)} MB`;
+  }
+
+  function formatCompactNumber(value) {
+    const number = Number(value || 0);
+    if (number >= 1000) return `${(number / 1000).toFixed(number >= 10000 ? 0 : 1)}k`;
+    return String(number);
   }
 
   function cryptoRandomId(prefix) {
@@ -1955,6 +2833,93 @@
       return;
     }
 
+    const academicView = target.closest?.("[data-academic-view]");
+    if (academicView) {
+      state.academic.view = academicView.dataset.academicView;
+      render();
+      return;
+    }
+
+    const academicType = target.closest?.("[data-academic-type]");
+    if (academicType) {
+      state.academic.type = academicType.dataset.academicType;
+      render();
+      return;
+    }
+
+    const academicSort = target.closest?.("[data-academic-sort]");
+    if (academicSort) {
+      state.academic.sort = academicSort.dataset.academicSort;
+      render();
+      return;
+    }
+
+    const selectResource = target.closest?.("[data-select-resource]");
+    if (selectResource) {
+      state.academic.selectedResourceId = selectResource.dataset.selectResource;
+      state.academic.view = "library";
+      render();
+      return;
+    }
+
+    const selectCourse = target.closest?.("[data-select-course]");
+    if (selectCourse) {
+      state.academic.course = selectCourse.dataset.selectCourse;
+      state.academic.view = "library";
+      const resource = ACADEMIC_RESOURCES.find((item) => item.courseId === state.academic.course);
+      if (resource) state.academic.selectedResourceId = resource.id;
+      render();
+      return;
+    }
+
+    if (target.closest?.("[data-clear-academic-filters]")) {
+      state.academic = {
+        ...state.academic,
+        query: "",
+        course: "todos",
+        curriculum: "todos",
+        semester: "todos",
+        area: "todos",
+        type: "todos",
+        format: "todos",
+        sort: "recent"
+      };
+      render();
+      return;
+    }
+
+    const saveResource = target.closest?.("[data-save-resource]");
+    if (saveResource) {
+      toggleAcademicSaved(saveResource.dataset.saveResource);
+      render();
+      return;
+    }
+
+    const downloadResource = target.closest?.("[data-download-resource]");
+    if (downloadResource) {
+      recordAcademicDownload(downloadResource.dataset.downloadResource);
+      toast("Descarga registrada en demo.", "success");
+      render();
+      return;
+    }
+
+    const reportResource = target.closest?.("[data-report-resource]");
+    if (reportResource) {
+      openAcademicResourceReportModal(reportResource.dataset.reportResource);
+      return;
+    }
+
+    if (target.closest?.("[data-open-contribution]")) {
+      openAcademicContributionModal();
+      return;
+    }
+
+    if (target.closest?.("[data-clear-preview]")) {
+      state.academic.selectedResourceId = getFilteredAcademicResources()[0]?.id || ACADEMIC_RESOURCES[0]?.id || "";
+      render();
+      return;
+    }
+
     if (target.closest?.("[data-open-history]")) {
       openHistoryModal();
       return;
@@ -2036,7 +3001,7 @@
 
   if ("serviceWorker" in navigator && window.location.protocol !== "file:") {
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("sw.js?v=42").then((registration) => {
+      navigator.serviceWorker.register("sw.js?v=43").then((registration) => {
         registration.update().catch(() => {});
 
         if (registration.waiting) {
